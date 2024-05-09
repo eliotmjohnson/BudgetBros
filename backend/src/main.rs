@@ -1,8 +1,6 @@
 use actix_web::{main, App, HttpServer};
 
 fn main() {
-    println!("Backend is gonna be lit!!!! #rustftw");
-
     #[main]
     async fn main() -> std::io::Result<()> {
         let port = 8080;

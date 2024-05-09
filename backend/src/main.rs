@@ -11,5 +11,5 @@ fn main() {
             .workers(2)
             .run()
             .await
-}
+    }   
 }

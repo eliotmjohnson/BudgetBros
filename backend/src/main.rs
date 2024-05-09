@@ -1,3 +1,3 @@
 fn main() {
-    println!("Hello, world!");
+    println!("Backend is gonna be lit!!!! #rustftw");
 }

@@ -1,6 +1,6 @@
 use actix_web::{main, web::Data, App, HttpServer};
 use dotenv::dotenv;
-use sqlx::{Pool, Postgres};
+use sqlx::{Pool, Postgres, postgres::PgPoolOptions};
 
 pub struct AppState {
     db: Pool<Postgres>
@@ -9,11 +9,13 @@ pub struct AppState {
 
 #[main]
 async fn main() -> std::io::Result<()> {
+    let port = 8080;
     dotenv().ok();
+
     let db_url = std::env::var("DB_URL")
         .expect("DB_URL env var must be set"); 
 
-    let pool = sqlx::postgres::PgPoolOptions::new()
+    let pool = PgPoolOptions::new()
         .max_connections(5)
         .connect(&db_url)
         .await
@@ -21,7 +23,6 @@ async fn main() -> std::io::Result<()> {
 
     println!("Dat Cockroach DB is connected, yo!");
 
-    let port = 8080;
     println!("Backend is gonna be lit!!!! #rustftw. Server running on port {}", port);
 
     HttpServer::new(move || {

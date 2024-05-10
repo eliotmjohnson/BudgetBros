@@ -1,0 +1,9 @@
+<aside class="sidebar">
+    <div class="tabs-wrapper">
+        <LinkButton
+            *ngFor="let tab of tabs"
+            [description]="tab.description"
+            [iconName]="tab.iconName"
+        />
+    </div>
+</aside>

@@ -1,4 +1,4 @@
-use actix_web::{dev::ServiceRequest, error::Error, main, web::{self, Data}, App, HttpServer, Result};
+use actix_web::{dev::ServiceRequest, error::Error, main, web::{self, Data}, App, HttpMessage, HttpServer, Result};
 use actix_web_httpauth::{extractors::{
         bearer::{self, BearerAuth}, 
         AuthenticationError
@@ -19,7 +19,7 @@ pub struct TokenClaims {
     id: i32,
 }
 
-async fn validator(req: ServiceRequest, credentials: BearerAuth) -> Result<ServiceRequest, (Error, ServiceRequest)> {
+async fn token_validator(req: ServiceRequest, credentials: BearerAuth) -> Result<ServiceRequest, (Error, ServiceRequest)> {
     let jwt_secret = std::env::var("JWT_SECRET").expect("JWT secret not found");
     let key: Hmac<Sha256> = Hmac::new_from_slice(jwt_secret.as_bytes()).unwrap();
     let token_string = credentials.token();
@@ -60,7 +60,8 @@ async fn main() -> std::io::Result<()> {
     println!("Backend is gonna be lit!!!! #rustftw!!. Server running on port {}", port);
 
     HttpServer::new(move || {
-        let bearer_middleware = HttpAuthentication::bearer(validator);
+        let bearer_middleware = HttpAuthentication::bearer(token_validator);
+
         App::new()
             .app_data(Data::new( AppState { db: pool.clone() } ))
             // .service(basic_auth) <- add back in when auth route done

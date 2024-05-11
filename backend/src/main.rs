@@ -66,7 +66,7 @@ async fn main() -> std::io::Result<()> {
 
         App::new()
             .app_data(Data::new( AppState { db: pool.clone() } ))
-            // .service(basic_auth) <- add back in when auth route done
+            // .service(login) <- add back in when auth route done
             // .service(register_user) <- add in when route ready
     })
         .bind(("127.0.0.1", port))?

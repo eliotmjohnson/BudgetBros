@@ -1,15 +1,49 @@
-use actix_web::{main, web::Data, App, HttpServer};
+use actix_web::{dev::ServiceRequest, error::Error, main, web::{self, Data}, App, HttpServer, Result};
+use actix_web_httpauth::extractors::{
+        bearer::{self, BearerAuth}, 
+        AuthenticationError
+    };
+use argonautica::config;
 use dotenv::dotenv;
+use hmac::{Mac, Hmac};
+use jwt::VerifyWithKey;
+use serde::{Deserialize, Serialize};
+use sha2::Sha256;
 use sqlx::{Pool, Postgres, postgres::PgPoolOptions};
-use std::io::Result;
 
 pub struct AppState {
     db: Pool<Postgres>
 }
 
+#[derive(Serialize, Deserialize, Clone)]
+pub struct TokenClaims {
+    id: i32,
+}
+
+async fn validator(req: ServiceRequest, credentials: BearerAuth) -> Result<ServiceRequest, (Error, ServiceRequest)> {
+    let jwt_secret = std::env::var("JWT_SECRET").expect("JWT secret not found");
+    let key: Hmac<Sha256> = Hmac::new_from_slice(jwt_secret.as_bytes()).unwrap();
+    let token_string = credentials.token();
+
+    let claims: Result<TokenClaims, &str> = token_string
+        .verify_with_key(&key)
+        .map_err(|_| "Invalid token");
+
+    match claims {
+        Ok(value) => {
+            req.extensions_mut().insert(value);
+            Ok(req)
+        }
+        Err(_) => {
+            let config = req.app_data::<bearer::Config>().cloned().unwrap_or_default().scope("");
+
+            Err((AuthenticationError::from(config).into(), req))
+        }
+    }
+}
 
 #[main]
-async fn main() -> Result<()> {
+async fn main() -> std::io::Result<()> {
     let port = 8080;
     dotenv().ok();
 

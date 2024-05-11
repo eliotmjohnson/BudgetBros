@@ -14,11 +14,13 @@ pub struct AppState {
     db: Pool<Postgres>
 }
 
+// Will move this into another module soon
 #[derive(Serialize, Deserialize, Clone)]
 pub struct TokenClaims {
     id: i32,
 }
 
+// Will move this into another module soon
 async fn token_validator(req: ServiceRequest, credentials: BearerAuth) -> Result<ServiceRequest, (Error, ServiceRequest)> {
     let jwt_secret = std::env::var("JWT_SECRET").expect("JWT secret not found");
     let key: Hmac<Sha256> = Hmac::new_from_slice(jwt_secret.as_bytes()).unwrap();

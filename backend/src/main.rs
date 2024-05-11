@@ -1,9 +1,8 @@
 use actix_web::{dev::ServiceRequest, error::Error, main, web::{self, Data}, App, HttpServer, Result};
-use actix_web_httpauth::extractors::{
+use actix_web_httpauth::{extractors::{
         bearer::{self, BearerAuth}, 
         AuthenticationError
-    };
-use argonautica::config;
+    }, middleware::HttpAuthentication};
 use dotenv::dotenv;
 use hmac::{Mac, Hmac};
 use jwt::VerifyWithKey;
@@ -61,8 +60,11 @@ async fn main() -> std::io::Result<()> {
     println!("Backend is gonna be lit!!!! #rustftw!!. Server running on port {}", port);
 
     HttpServer::new(move || {
+        let bearer_middleware = HttpAuthentication::bearer(validator);
         App::new()
             .app_data(Data::new( AppState { db: pool.clone() } ))
+            // .service(basic_auth) <- add back in when auth route done
+            // .service(register_user) <- add in when route ready
     })
         .bind(("127.0.0.1", port))?
         .workers(2)

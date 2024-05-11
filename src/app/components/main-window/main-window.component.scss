@@ -1,0 +1,21 @@
+:host {
+    flex: 1;
+}
+
+.main-window {
+    display: flex;
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+}
+
+.logo-overlay {
+    position: absolute;
+    top: 5rem;
+    left: 5rem;
+    rotate: 23deg;
+    font-size: 80rem;
+    height: 80rem;
+    width: 80rem;
+    opacity: 0.13;
+}

@@ -10,6 +10,10 @@ use serde::{Deserialize, Serialize};
 use sha2::Sha256;
 use sqlx::{Pool, Postgres, postgres::PgPoolOptions};
 
+use crate::services::users;
+mod models;
+mod services;
+
 pub struct AppState {
     db: Pool<Postgres>
 }
@@ -57,6 +61,12 @@ async fn main() -> std::io::Result<()> {
         .await
         .expect("Failed to connect to database"); 
 
+    sqlx::migrate!("./migrations")
+        .set_locking(false)
+        .run(&pool)
+        .await
+        .expect("Failed to migrate database");
+
     println!("Dat Cockroach DB is connected, yo!");
 
     println!("Backend is gonna be lit!!!! #rustftw!!. Server running on port {}", port);
@@ -66,6 +76,7 @@ async fn main() -> std::io::Result<()> {
 
         App::new()
             .app_data(Data::new( AppState { db: pool.clone() } ))
+            .service(users::get_all_users)
             // .service(login) <- add back in when auth route done
             // .service(register_user) <- add in when route ready
     })

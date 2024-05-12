@@ -3,11 +3,14 @@ use crate::{models::user::User, AppState};
 
 #[get("/users")]
 async fn get_all_users(state: Data<AppState>) -> impl Responder {
-    match sqlx::query_as::<_, User>(
-        "SELECT * FROM users"
-    )
-    .fetch_all(&state.db)
-    .await 
+    let users_result = 
+        sqlx::query_as::<_, User>(
+            "SELECT * FROM users"
+        )   
+        .fetch_all(&state.db)
+        .await;
+
+    match users_result
     {
         Ok(users) => HttpResponse::Ok().json(users),
         Err(e) => {

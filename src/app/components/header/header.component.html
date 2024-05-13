@@ -3,8 +3,23 @@
         <strong class="logo-strong">Budget</strong>Bro
         <mat-icon class="logo-icon" fontIcon="attach_money"></mat-icon>
     </h1>
-    <button mat-button color="primary" class="account">
+    <button
+        mat-button
+        color="primary"
+        class="account"
+        [matMenuTriggerFor]="accountMenu"
+    >
         <mat-icon fontIcon="account_circle" />
         Alex Johnson
     </button>
+    <mat-menu #accountMenu="matMenu">
+        <button mat-menu-item>
+            <mat-icon>person</mat-icon>
+            Account
+        </button>
+        <button mat-menu-item>
+            <mat-icon>logout</mat-icon>
+            Logout
+        </button>
+    </mat-menu>
 </header>

@@ -33,7 +33,10 @@ $BudgetBros-theme: mat.define-light-theme(
 @include mat.typography-hierarchy($BudgetBros-theme);
 
 /* You can add global styles to this file, and also import other style files */
-
+* {
+    box-sizing: border-box;
+    margin: 0;
+}
 html,
 body {
     height: 100%;

@@ -1,11 +1,41 @@
-use actix_web::{get, web::Data, HttpResponse, Responder};
-use actix_web_httpauth::extractors::basic::BasicAuth;
+use actix_web::{dev::ServiceRequest, get, web::Data, Error, HttpMessage, HttpResponse, Responder};
+use actix_web_httpauth::extractors::{basic::BasicAuth, bearer::{self, BearerAuth}, AuthenticationError};
 use argonautica::Verifier;
 use hmac::{Hmac, Mac};
-use jwt::SignWithKey;
+use jwt::{SignWithKey, VerifyWithKey};
+use serde::{Deserialize, Serialize};
 use sha2::Sha256;
 
-use crate::{models::user::AuthUser, AppState, TokenClaims};
+use crate::{models::user::AuthUser, AppState};
+
+// Will move this into another module soon
+#[derive(Serialize, Deserialize, Clone)]
+pub struct TokenClaims {
+    id: i32,
+}
+
+// Will move this into another module soon
+pub async fn token_validator(req: ServiceRequest, credentials: BearerAuth) -> Result<ServiceRequest, (Error, ServiceRequest)> {
+    let jwt_secret = std::env::var("JWT_SECRET").expect("JWT secret not found");
+    let key: Hmac<Sha256> = Hmac::new_from_slice(jwt_secret.as_bytes()).unwrap();
+    let token_string = credentials.token();
+
+    let claims: Result<TokenClaims, &str> = token_string
+        .verify_with_key(&key)
+        .map_err(|_| "Invalid token");
+
+    match claims {
+        Ok(value) => {
+            req.extensions_mut().insert(value);
+            Ok(req)
+        }
+        Err(_) => {
+            let config = req.app_data::<bearer::Config>().cloned().unwrap_or_default().scope("");
+
+            Err((AuthenticationError::from(config).into(), req))
+        }
+    }
+}
 
 #[get("/login")]
 async fn login(state: Data<AppState>, credentials: BasicAuth) -> impl Responder {

@@ -1,13 +1,7 @@
-use actix_web::{dev::ServiceRequest, error::Error, main, web::{self, Data}, App, HttpMessage, HttpServer, Result};
-use actix_web_httpauth::{extractors::{
-        bearer::{self, BearerAuth}, 
-        AuthenticationError
-    }, middleware::HttpAuthentication};
+use actix_web::web::Data;
+use actix_web::{main, App, HttpServer};
+use actix_web_httpauth::middleware::HttpAuthentication;
 use dotenv::dotenv;
-use hmac::{Mac, Hmac};
-use jwt::VerifyWithKey;
-use serde::{Deserialize, Serialize};
-use sha2::Sha256;
 use sqlx::{Pool, Postgres, postgres::PgPoolOptions};
 
 use crate::services::users;
@@ -17,35 +11,6 @@ mod services;
 
 pub struct AppState {
     db: Pool<Postgres>
-}
-
-// Will move this into another module soon
-#[derive(Serialize, Deserialize, Clone)]
-pub struct TokenClaims {
-    id: i32,
-}
-
-// Will move this into another module soon
-async fn token_validator(req: ServiceRequest, credentials: BearerAuth) -> Result<ServiceRequest, (Error, ServiceRequest)> {
-    let jwt_secret = std::env::var("JWT_SECRET").expect("JWT secret not found");
-    let key: Hmac<Sha256> = Hmac::new_from_slice(jwt_secret.as_bytes()).unwrap();
-    let token_string = credentials.token();
-
-    let claims: Result<TokenClaims, &str> = token_string
-        .verify_with_key(&key)
-        .map_err(|_| "Invalid token");
-
-    match claims {
-        Ok(value) => {
-            req.extensions_mut().insert(value);
-            Ok(req)
-        }
-        Err(_) => {
-            let config = req.app_data::<bearer::Config>().cloned().unwrap_or_default().scope("");
-
-            Err((AuthenticationError::from(config).into(), req))
-        }
-    }
 }
 
 #[main]
@@ -73,7 +38,7 @@ async fn main() -> std::io::Result<()> {
     println!("Backend is gonna be lit!!!! #rustftw!!. Server running on port {}", port);
 
     HttpServer::new(move || {
-        let bearer_middleware = HttpAuthentication::bearer(token_validator);
+        let bearer_middleware = HttpAuthentication::bearer(auth::token_validator);
 
         App::new()
             .app_data(Data::new( AppState { db: pool.clone() } ))

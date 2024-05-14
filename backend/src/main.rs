@@ -11,7 +11,7 @@ use sha2::Sha256;
 use sqlx::{Pool, Postgres, postgres::PgPoolOptions};
 
 use crate::services::users;
-use crate::services::login;
+use crate::services::auth;
 mod models;
 mod services;
 
@@ -78,7 +78,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .app_data(Data::new( AppState { db: pool.clone() } ))
             .service(users::get_all_users)
-            .service(login::login)
+            .service(auth::login)
             // .service(login) <- add back in when auth route done
             // .service(register_user) <- add in when route ready
     })

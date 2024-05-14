@@ -1,4 +1,4 @@
 #[path = "users.service.rs"]
 pub mod users;
-#[path = "login.service.rs"]
-pub mod login;
+#[path = "auth.service.rs"]
+pub mod auth;

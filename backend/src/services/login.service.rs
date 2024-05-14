@@ -26,8 +26,7 @@ async fn login(state: Data<AppState>, credentials: BasicAuth) -> impl Responder 
             let found_user = sqlx::query_as::<_, AuthUser>(
                 "SELECT id, email, password 
                 FROM users 
-                WHERE email = $1
-                "
+                WHERE email = $1"
             )
                 .bind(username.to_string())
                 .fetch_one(&state.db)

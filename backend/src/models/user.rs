@@ -16,3 +16,10 @@ pub struct User {
     last_name: String,
     email: String,
 }
+
+#[derive(Serialize, FromRow)]
+pub struct AuthUser {
+    pub id: i32,
+    pub email: String,
+    pub password: String  
+}

@@ -1,0 +1,50 @@
+<section
+    class="form-wrapper {{
+        register
+            ? isRegistering
+                ? ''
+                : 'hide-card'
+            : !isRegistering
+            ? ''
+            : 'hide-card'
+    }}"
+>
+    <form class="login-form" [formGroup]="loginForm">
+        <h1 class="title">{{ register ? "Register" : "Login" }}</h1>
+        <mat-form-field appearance="outline">
+            <mat-label class="login-label">Username</mat-label>
+            <input type="text" matInput formControlName="username" />
+            <mat-error
+                *ngIf="loginForm.controls.username.errors as usernameErrors"
+            >
+                Username is required
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label class="login-label">Password</mat-label>
+            <input type="password" matInput formControlName="password" />
+            <mat-error
+                *ngIf="loginForm.controls.password.errors as usernameErrors"
+            >
+                Password is required
+            </mat-error>
+        </mat-form-field>
+        <button
+            class="submit-{{ register ? 'register' : 'login' }}"
+            type="submit"
+            mat-flat-button
+            color="primary"
+        >
+            {{ register ? "Register" : "Login" }}
+        </button>
+    </form>
+    <button
+        class="register-button"
+        (click)="flipCard()"
+        mat-button
+        color="primary"
+    >
+        {{ register ? "Login" : "Register" }}
+    </button>
+    <mat-icon class="logo-overlay" fontIcon="attach_money" />
+</section>

@@ -1,0 +1,10 @@
+<main class="card-flip">
+    <div class="card {{ isRegistering ? 'flipped' : '' }}">
+        <AuthForm (emitFlipCard)="flipCard()" [isRegistering]="isRegistering" />
+        <AuthForm
+            (emitFlipCard)="flipCard()"
+            [isRegistering]="isRegistering"
+            [register]="true"
+        />
+    </div>
+</main>

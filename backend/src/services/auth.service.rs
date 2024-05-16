@@ -1,5 +1,3 @@
-use core::hash;
-
 use actix_web::{dev::ServiceRequest, get, post, web::{Data, Json}, Error, HttpMessage, HttpResponse, Responder};
 use actix_web_httpauth::extractors::{basic::BasicAuth, bearer::{self, BearerAuth}, AuthenticationError};
 use argonautica::{Verifier, Hasher};
@@ -8,7 +6,7 @@ use jwt::{SignWithKey, VerifyWithKey};
 use serde::{Deserialize, Serialize};
 use sha2::Sha256;
 
-use crate::{models::user::{self, AuthUser, NewUser, User}, AppState};
+use crate::{models::user::{AuthUser, NewUser, User}, AppState};
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct TokenClaims {

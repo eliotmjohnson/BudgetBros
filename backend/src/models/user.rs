@@ -21,7 +21,7 @@ pub struct User {
 
 #[derive(Serialize, FromRow)]
 pub struct AuthUser {
-    pub id: i32,
+    pub id: i64,
     pub email: String,
     pub password: String  
 }

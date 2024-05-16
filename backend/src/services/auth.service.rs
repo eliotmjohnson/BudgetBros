@@ -10,7 +10,12 @@ use crate::{models::user::{AuthUser, NewUser, User}, AppState};
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct TokenClaims {
-    id: i32,
+    id: i64,
+}
+
+#[derive(Serialize)]
+pub struct LoginResponse {
+    token: String,
 }
 
 pub async fn token_validator(req: ServiceRequest, credentials: BearerAuth) -> Result<ServiceRequest, (Error, ServiceRequest)> {
@@ -78,6 +83,9 @@ async fn login(state: Data<AppState>, credentials: BasicAuth) -> impl Responder 
     let username = credentials.user_id();
     let password = credentials.password();
 
+    println!("username: {}", username);
+    println!("password: {:?}", password);
+
     match password {
         None => {
             return HttpResponse::Unauthorized().json("Must provide password!");
@@ -108,7 +116,7 @@ async fn login(state: Data<AppState>, credentials: BasicAuth) -> impl Responder 
                         let claims = TokenClaims { id: user.id };
                         let token_str = claims.sign_with_key(&jwt_secret).unwrap();
 
-                        HttpResponse::Ok().json(token_str)
+                        HttpResponse::Ok().json(LoginResponse { token: token_str })
                     } else {
                         HttpResponse::Unauthorized().json("Incorrect username or password!")
                     }

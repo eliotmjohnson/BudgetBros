@@ -1,12 +1,14 @@
-use actix_web::{dev::ServiceRequest, get, web::Data, Error, HttpMessage, HttpResponse, Responder};
+use core::hash;
+
+use actix_web::{dev::ServiceRequest, get, post, web::{Data, Json}, Error, HttpMessage, HttpResponse, Responder};
 use actix_web_httpauth::extractors::{basic::BasicAuth, bearer::{self, BearerAuth}, AuthenticationError};
-use argonautica::Verifier;
+use argonautica::{Verifier, Hasher};
 use hmac::{Hmac, Mac};
 use jwt::{SignWithKey, VerifyWithKey};
 use serde::{Deserialize, Serialize};
 use sha2::Sha256;
 
-use crate::{models::user::AuthUser, AppState};
+use crate::{models::user::{self, AuthUser, NewUser, User}, AppState};
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct TokenClaims {
@@ -35,8 +37,41 @@ pub async fn token_validator(req: ServiceRequest, credentials: BearerAuth) -> Re
     }
 }
 
+#[post("/register")]
+async fn register_user(state: Data<AppState>, body: Json<NewUser>) -> impl Responder {
+    let new_user = body.into_inner();
+    let hash_secret = std::env::var("HASH_SECRET").expect("HASH_SECRET must be set!");
+    let mut hasher = Hasher::default();
+
+    let password_hash = hasher
+        .with_password(new_user.password)
+        .with_secret_key(hash_secret)
+        .hash()
+        .unwrap();
+
+    println!("password_hash: {}", password_hash);
+
+    let create_user_result = sqlx::query_as::<_, User>(
+        "INSERT INTO users (first_name, last_name, email, password)
+        VALUES ($1, $2, $3, $4)
+        RETURNING id, first_name, last_name, email"
+    )
+        .bind(new_user.first_name)
+        .bind(new_user.last_name)
+        .bind(new_user.email)
+        .bind(password_hash)
+        .fetch_one(&state.db)
+        .await;
+
+    match create_user_result {
+        Ok(created_user) => HttpResponse::Ok().json(created_user),
+        Err(e) => HttpResponse::InternalServerError().json(format!("{:?}", e))
+    }
+}
+
 #[get("/login")]
 async fn login(state: Data<AppState>, credentials: BasicAuth) -> impl Responder {
+    println!("HERE");
     let jwt_secret: Hmac<Sha256> = Hmac::new_from_slice(
         std::env::var("JWT_SECRET")
             .expect("JWT_SECRET must be set!")
@@ -45,6 +80,8 @@ async fn login(state: Data<AppState>, credentials: BasicAuth) -> impl Responder 
 
     let username = credentials.user_id();
     let password = credentials.password();
+    
+    println!("username: {}, password: {:?}", username, password);
 
     match password {
         None => {

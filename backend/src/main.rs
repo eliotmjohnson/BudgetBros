@@ -44,6 +44,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(Data::new( AppState { db: pool.clone() } ))
             .service(users::get_all_users)
             .service(auth::login)
+            .service(auth::register_user)
             // .service(login) <- add back in when auth route done
             // .service(register_user) <- add in when route ready
     })

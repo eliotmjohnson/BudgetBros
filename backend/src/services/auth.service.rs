@@ -69,7 +69,6 @@ async fn register_user(state: Data<AppState>, body: Json<NewUser>) -> impl Respo
 
 #[get("/login")]
 async fn login(state: Data<AppState>, credentials: BasicAuth) -> impl Responder {
-    println!("HERE");
     let jwt_secret: Hmac<Sha256> = Hmac::new_from_slice(
         std::env::var("JWT_SECRET")
             .expect("JWT_SECRET must be set!")
@@ -78,8 +77,6 @@ async fn login(state: Data<AppState>, credentials: BasicAuth) -> impl Responder 
 
     let username = credentials.user_id();
     let password = credentials.password();
-    
-    println!("username: {}, password: {:?}", username, password);
 
     match password {
         None => {

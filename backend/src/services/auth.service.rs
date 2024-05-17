@@ -15,6 +15,8 @@ pub struct TokenClaims {
 
 #[derive(Serialize)]
 pub struct LoginResponse {
+    id: i64,
+    email: String,
     token: String,
 }
 
@@ -116,12 +118,18 @@ async fn login(state: Data<AppState>, credentials: BasicAuth) -> impl Responder 
                         let claims = TokenClaims { id: user.id };
                         let token_str = claims.sign_with_key(&jwt_secret).unwrap();
 
-                        HttpResponse::Ok().json(LoginResponse { token: token_str })
+                        HttpResponse::Ok().json(
+                            LoginResponse { 
+                                id: user.id,
+                                email: user.email,
+                                token: token_str 
+                            }   
+                        )
                     } else {
-                        HttpResponse::Unauthorized().json("Incorrect username or password!")
+                        HttpResponse::Unauthorized().json("Incorrect password!")
                     }
                 }
-                Err(e) => HttpResponse::InternalServerError().json(format!("{:?}", e))
+                Err(e) => HttpResponse::InternalServerError().json(format!("Incorrect login credentials or error logging in - {:?}", e))
             }
         }
     }

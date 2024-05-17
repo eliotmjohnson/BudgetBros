@@ -1,3 +1,4 @@
+use actix_cors::Cors;
 use actix_web::web::Data;
 use actix_web::{main, App, HttpServer};
 use actix_web_httpauth::middleware::HttpAuthentication;
@@ -13,9 +14,11 @@ pub struct AppState {
     db: Pool<Postgres>
 }
 
+const PORT: u16 = 8080;
+const FE_URL: &str = "http://localhost:4200";
+
 #[main]
 async fn main() -> std::io::Result<()> {
-    let port = 8080;
     dotenv().ok();
 
     let db_url = std::env::var("DB_URL")
@@ -34,20 +37,23 @@ async fn main() -> std::io::Result<()> {
         .expect("Failed to migrate database");
 
     println!("Dat Cockroach DB is connected, yo!");
-
-    println!("Backend is gonna be lit!!!! #rustftw!!. Server running on port {}", port);
+    println!("Backend is gonna be lit!!!! #rustftw!!. Server running on port {}", PORT);
 
     HttpServer::new(move || {
         let bearer_middleware = HttpAuthentication::bearer(auth::token_validator);
 
         App::new()
+            .wrap(
+                Cors::default()
+                    .allowed_origin(FE_URL)
+                    .supports_credentials()
+            )
             .app_data(Data::new( AppState { db: pool.clone() } ))
             .service(users::get_all_users)
             .service(auth::login)
-            // .service(login) <- add back in when auth route done
-            // .service(register_user) <- add in when route ready
+            .service(auth::register_user)
     })
-        .bind(("127.0.0.1", port))?
+        .bind(("127.0.0.1", PORT))?
         .workers(2)
         .run()
         .await

@@ -7,23 +7,6 @@ header {
     align-items: center;
     border-bottom: white 3px solid;
 
-    .title {
-        position: relative;
-        margin: 0rem;
-        opacity: 0.7;
-
-        .logo-strong {
-            color: rgb(60, 183, 60);
-        }
-
-        .logo-icon {
-            position: absolute;
-            top: 0.3rem;
-            left: 6.7rem;
-            z-index: -1;
-        }
-    }
-
     .account {
         display: flex;
         align-items: center;

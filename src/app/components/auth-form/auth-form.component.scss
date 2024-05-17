@@ -1,0 +1,74 @@
+:host {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden; /* Safari */
+    backface-visibility: hidden;
+}
+
+:host.back {
+    transform: rotateY(180deg);
+}
+
+.login-logo {
+    margin-bottom: 1rem;
+}
+
+.title {
+    font-size: 1.8rem;
+    font-weight: 300;
+}
+
+.form-wrapper {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: display 0s 0s;
+    overflow: hidden;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 0.5rem;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-label {
+    cursor: text;
+}
+
+.register-button {
+    font-size: 0.7rem;
+}
+
+.submit-login,
+.submit-register {
+    color: white !important;
+}
+
+.hide-card {
+    visibility: hidden;
+    transition: visibility 0s 0.8s;
+}
+
+.logo-overlay {
+    position: absolute;
+    bottom: -6rem;
+    left: 10rem;
+    rotate: 25deg;
+    font-size: 20rem;
+    height: 20rem;
+    width: 20rem;
+    opacity: 0.13;
+    z-index: -1;
+}

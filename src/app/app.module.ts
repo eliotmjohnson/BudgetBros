@@ -11,17 +11,18 @@ import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { LinkButtonComponent } from './components/link-button/link-button.component';
 import { MainWindowComponent } from './components/main-window/main-window.component';
-
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AuthFormComponent } from './components/auth-form/auth-form.component';
+import { BBLogoComponent } from './components/bb-logo/bb-logo.component';
 
 @NgModule({
     declarations: [
@@ -32,7 +33,8 @@ import { AuthFormComponent } from './components/auth-form/auth-form.component';
         MainWindowComponent,
         HomeComponent,
         LoginComponent,
-        AuthFormComponent
+        AuthFormComponent,
+        BBLogoComponent
     ],
     imports: [
         BrowserModule,
@@ -45,7 +47,8 @@ import { AuthFormComponent } from './components/auth-form/auth-form.component';
         MatMenuModule,
         MatFormFieldModule,
         MatInputModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        MatProgressSpinnerModule
     ],
     providers: [],
     bootstrap: [AppComponent]

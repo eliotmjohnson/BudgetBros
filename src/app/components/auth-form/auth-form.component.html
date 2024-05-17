@@ -1,30 +1,55 @@
-<section
-    class="form-wrapper {{
-        register
-            ? isRegistering
-                ? ''
-                : 'hide-card'
-            : !isRegistering
-            ? ''
-            : 'hide-card'
-    }}"
->
-    <form class="login-form" [formGroup]="loginForm">
+<section class="form-wrapper {{ isRegisterForm }}">
+    <form
+        class="login-form"
+        (submit)="loginOrRegister($event)"
+        [formGroup]="register ? registerForm : loginForm"
+    >
+        <BBLogo class="login-logo" />
         <h1 class="title">{{ register ? "Register" : "Login" }}</h1>
+        <ng-container *ngIf="register">
+            <mat-form-field appearance="outline">
+                <mat-label class="login-label">First Name</mat-label>
+                <input type="text" matInput formControlName="firstName" />
+                <mat-error *ngIf="registerForm.controls.firstName.errors">
+                    First Name is required
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label class="login-label">Last Name</mat-label>
+                <input type="text" matInput formControlName="lastName" />
+                <mat-error *ngIf="registerForm.controls.lastName.errors">
+                    Last Name is required
+                </mat-error>
+            </mat-form-field>
+        </ng-container>
         <mat-form-field appearance="outline">
-            <mat-label class="login-label">Username</mat-label>
-            <input type="text" matInput formControlName="username" />
+            <mat-label class="login-label">{{
+                register ? "Email" : "Username"
+            }}</mat-label>
+            <input
+                type="text"
+                matInput
+                formControlName="{{ register ? 'email' : 'username' }}"
+            />
             <mat-error
-                *ngIf="loginForm.controls.username.errors as usernameErrors"
+                *ngIf="
+                    (register
+                        ? registerForm.controls.email
+                        : loginForm.controls.username
+                    ).errors
+                "
             >
-                Username is required
+                {{ register ? "Email" : "Username" }} is required
             </mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline">
             <mat-label class="login-label">Password</mat-label>
             <input type="password" matInput formControlName="password" />
             <mat-error
-                *ngIf="loginForm.controls.password.errors as usernameErrors"
+                *ngIf="
+                    (register ? registerForm : loginForm).controls.password
+                        .errors
+                "
             >
                 Password is required
             </mat-error>
@@ -32,10 +57,13 @@
         <button
             class="submit-{{ register ? 'register' : 'login' }}"
             type="submit"
+            [disabled]="isSubmitButtonDisabled"
             mat-flat-button
             color="primary"
         >
-            {{ register ? "Register" : "Login" }}
+            <ng-container *ngIf="!authService.isSubmitting; else spinner">
+                {{ register ? "Register" : "Login" }}
+            </ng-container>
         </button>
     </form>
     <button
@@ -48,3 +76,7 @@
     </button>
     <mat-icon class="logo-overlay" fontIcon="attach_money" />
 </section>
+
+<ng-template #spinner>
+    <mat-spinner [diameter]="25" />
+</ng-template>

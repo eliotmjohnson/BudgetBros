@@ -1,13 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { map } from 'rxjs';
+import { BehaviorSubject, delay, map, of, tap } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
-    isLoggedIn: boolean = false;
+    isLoggedIn = false;
+    isSubmitting = false;
 
     constructor(private http: HttpClient, private router: Router) {}
 
@@ -19,15 +20,25 @@ export class AuthService {
                     return true;
                 } else {
                     this.isLoggedIn = false;
-                    return this.router.parseUrl('/login');
+                    return false;
                 }
             })
         );
     }
 
+    login() {
+        this.isSubmitting = true;
+        return of('TestToken').pipe(delay(1000));
+    }
+
+    register() {
+        this.isSubmitting = true;
+        return of('TestToken').pipe(delay(1000));
+    }
+
     logout() {
         this.isLoggedIn = false;
-        // localStorage.removeItem('token');
+        localStorage.removeItem('token');
         this.router.navigateByUrl('/login');
     }
 }

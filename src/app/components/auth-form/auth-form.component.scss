@@ -10,8 +10,12 @@
     transform: rotateY(180deg);
 }
 
+.login-logo {
+    margin-bottom: 1rem;
+}
+
 .title {
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-weight: 300;
 }
 
@@ -59,7 +63,7 @@
 
 .logo-overlay {
     position: absolute;
-    top: 11rem;
+    bottom: -6rem;
     left: 10rem;
     rotate: 25deg;
     font-size: 20rem;

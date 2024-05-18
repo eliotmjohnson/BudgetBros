@@ -1,1 +1,9 @@
+<main
+    @loaderOverlayAnimation
+    class="bb-main-overlay"
+    *ngIf="authService.isLoading"
+>
+    <BBLogo fontSize="4rem" height="4rem" color="white" />
+    <mat-spinner color="accent" />
+</main>
 <router-outlet></router-outlet>

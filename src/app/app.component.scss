@@ -1,1 +1,14 @@
-
+.bb-main-overlay {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgb(81, 156, 81);
+    z-index: 9999;
+}

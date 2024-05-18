@@ -20,6 +20,27 @@ pub struct LoginResponse {
     token: String,
 }
 
+#[derive(Deserialize)]
+struct TokenValidation {
+    token: String
+}
+
+#[post("/validate-token")]
+async fn validate_token(_state: Data<AppState>, body: Json<TokenValidation>) -> impl Responder {
+    let jwt_secret = std::env::var("JWT_SECRET").expect("JWT secret not found");
+    let key: Hmac<Sha256> = Hmac::new_from_slice(jwt_secret.as_bytes()).unwrap();
+    let token_string = body.into_inner().token;
+
+    let claims: Result<TokenClaims, &str> = token_string
+        .verify_with_key(&key)
+        .map_err(|_| "Invalid token");
+
+        match claims {
+            Ok(_) => HttpResponse::Ok().json("success"),
+            Err(_) => HttpResponse::Unauthorized().json("fail")
+        }
+}
+
 pub async fn token_validator(req: ServiceRequest, credentials: BearerAuth) -> Result<ServiceRequest, (Error, ServiceRequest)> {
     let jwt_secret = std::env::var("JWT_SECRET").expect("JWT secret not found");
     let key: Hmac<Sha256> = Hmac::new_from_slice(jwt_secret.as_bytes()).unwrap();
@@ -85,13 +106,8 @@ async fn login(state: Data<AppState>, credentials: BasicAuth) -> impl Responder 
     let username = credentials.user_id();
     let password = credentials.password();
 
-    println!("username: {}", username);
-    println!("password: {:?}", password);
-
     match password {
-        None => {
-            return HttpResponse::Unauthorized().json("Must provide password!");
-        }
+        None => HttpResponse::Unauthorized().json("Must provide password!"),
         Some(password) => {
             let found_user = sqlx::query_as::<_, AuthUser>(
                 "SELECT id, email, password 

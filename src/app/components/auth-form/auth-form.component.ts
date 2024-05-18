@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { User } from 'src/app/models/user';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -66,17 +67,24 @@ export class AuthFormComponent {
         e.preventDefault();
 
         if (this.isRegistering) {
-            this.authService.register().subscribe((data) => {
-                this.authService.isLoggedIn = true;
-                this.authService.isSubmitting = false;
-                localStorage.setItem('token', data);
-                this.router.navigateByUrl('/home');
+            const newUser = this.registerForm.value;
+
+            this.authService.register(newUser as User).subscribe(createdUser => {
+
+                this.authService.login(createdUser.email, newUser.password!).subscribe(loginRes => {
+                    this.authService.isLoggedIn = true;
+                    this.authService.isSubmitting = false;
+                    localStorage.setItem('token', loginRes.token);
+                    this.router.navigateByUrl('/home');
+                })
             });
         } else {
-            this.authService.login().subscribe((data) => {
+            const loginCreds = this.loginForm.value;
+
+            this.authService.login(loginCreds.username!, loginCreds.password!).subscribe(loginRes => {
                 this.authService.isLoggedIn = true;
                 this.authService.isSubmitting = false;
-                localStorage.setItem('token', data);
+                localStorage.setItem('token', loginRes.token);
                 this.router.navigateByUrl('/home');
             });
         }

@@ -1,7 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { delay, map, of } from 'rxjs';
+import { catchError, map, of } from 'rxjs';
+import { BASE_BE_URL } from '../constants/constants';
+import { User, UserLoginResponse } from '../models/user';
 
 @Injectable({
     providedIn: 'root'
@@ -15,29 +17,34 @@ export class AuthService {
 
     validateAuthToken(token: string) {
         this.isLoading = true;
-        return this.http.get<any>('https://swapi.dev/api/people/1').pipe(
-            map((data) => {
-                if (data.name === 'Luke Skywalker') {
-                    this.isLoading = false;
-                    this.isLoggedIn = true;
-                    return true;
-                } else {
-                    this.isLoading = false;
-                    this.isLoggedIn = false;
-                    return false;
-                }
+        return this.http.post<'success' | 'fail'>(`${BASE_BE_URL}/validate-token`, { token }).pipe(
+            map(() => {
+                this.isLoading = false;
+                this.isLoggedIn = true;
+                return true;
+            })
+            , catchError(() => {
+                this.isLoading = false;
+                this.isLoggedIn = false;
+                localStorage.removeItem('token');
+                return of(false);
             })
         );
     }
 
-    login() {
+    login(username: string, password: string) {
+        const auth = btoa(`${username}:${password}`).toString();
+        const headers = new HttpHeaders({
+            Authorization: `Basic ${auth}`
+        });
+
         this.isSubmitting = true;
-        return of('TestToken').pipe(delay(1000));
+        return this.http.get<UserLoginResponse>(`${BASE_BE_URL}/login`, { headers })
     }
 
-    register() {
+    register(newUser: User) {
         this.isSubmitting = true;
-        return of('TestToken').pipe(delay(1000));
+        return this.http.post<User>(`${BASE_BE_URL}/register`, newUser);
     }
 
     logout() {

@@ -11,14 +11,14 @@ export const authGuard: CanActivateFn = (route, state) => {
     if (token) {
         if (!authService.isLoggedIn) {
             return authService.validateAuthToken(token).pipe(
-                map(res => {
+                map((res) => {
                     if (res) return true;
-                    
+
                     return router.parseUrl('/login');
                 })
             );
         }
-        
+
         return true;
     } else {
         return router.parseUrl('/login');

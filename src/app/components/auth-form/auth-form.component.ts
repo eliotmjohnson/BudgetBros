@@ -69,24 +69,30 @@ export class AuthFormComponent {
         if (this.isRegistering) {
             const newUser = this.registerForm.value;
 
-            this.authService.register(newUser as User).subscribe(createdUser => {
-
-                this.authService.login(createdUser.email, newUser.password!).subscribe(loginRes => {
-                    this.authService.isLoggedIn = true;
-                    this.authService.isSubmitting = false;
-                    localStorage.setItem('token', loginRes.token);
-                    this.router.navigateByUrl('/home');
-                })
-            });
+            this.authService
+                .register(newUser as User)
+                .subscribe((createdUser) => {
+                    this.authService
+                        .login(createdUser.email, newUser.password!)
+                        .subscribe((loginRes) => {
+                            this.authService.isLoggedIn = true;
+                            this.authService.isSubmitting = false;
+                            localStorage.setItem('token', loginRes.token);
+                            this.router.navigateByUrl('/home');
+                        });
+                });
         } else {
             const loginCreds = this.loginForm.value;
 
-            this.authService.login(loginCreds.username!, loginCreds.password!).subscribe(loginRes => {
-                this.authService.isLoggedIn = true;
-                this.authService.isSubmitting = false;
-                localStorage.setItem('token', loginRes.token);
-                this.router.navigateByUrl('/home');
-            });
+            this.authService
+                .login(loginCreds.username!, loginCreds.password!)
+                .subscribe((loginRes) => {
+                    this.authService.isLoggedIn = true;
+                    this.authService.isSubmitting = false;
+                    this.authService.loggedInUserName = loginRes.email;
+                    localStorage.setItem('token', loginRes.token);
+                    this.router.navigateByUrl('/home');
+                });
         }
     }
 }

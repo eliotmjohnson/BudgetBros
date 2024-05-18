@@ -15,7 +15,7 @@ async fn get_all_users(state: Data<AppState>) -> impl Responder {
         Ok(users) => HttpResponse::Ok().json(users),
         Err(e) => {
             println!("{}", e);
-            return HttpResponse::InternalServerError().finish();
+            HttpResponse::InternalServerError().finish()
         }
     }
 }

@@ -40,18 +40,21 @@ async fn main() -> std::io::Result<()> {
     println!("Backend is gonna be lit!!!! #rustftw!!. Server running on port {}", PORT);
 
     HttpServer::new(move || {
-        let bearer_middleware = HttpAuthentication::bearer(auth::token_validator);
+        let _bearer_middleware = HttpAuthentication::bearer(auth::token_validator);
 
         App::new()
             .wrap(
                 Cors::default()
                     .allowed_origin(FE_URL)
+                    .allow_any_method()
+                    .allow_any_header()
                     .supports_credentials()
             )
             .app_data(Data::new( AppState { db: pool.clone() } ))
             .service(users::get_all_users)
             .service(auth::login)
             .service(auth::register_user)
+            .service(auth::validate_token)
     })
         .bind(("127.0.0.1", PORT))?
         .workers(2)

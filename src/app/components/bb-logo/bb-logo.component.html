@@ -1,4 +1,13 @@
-<h1 class="title">
-    <strong class="logo-strong">Budget</strong>Bro
-    <mat-icon class="logo-icon" fontIcon="attach_money"></mat-icon>
+<h1 class="title" [style]="{ 'font-size': fontSize }">
+    <strong class="logo-strong" [style]="{ color: color }">Budget</strong>Bro
+    <mat-icon
+        class="logo-icon"
+        [style]="{
+            'font-size': height,
+            height: height,
+            width: height,
+            translate: translate
+        }"
+        fontIcon="attach_money"
+    ></mat-icon>
 </h1>

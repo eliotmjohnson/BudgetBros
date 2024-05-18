@@ -4,7 +4,7 @@
         (submit)="loginOrRegister($event)"
         [formGroup]="register ? registerForm : loginForm"
     >
-        <BBLogo class="login-logo" />
+        <BBLogo class="login-logo" translate="-0.35rem .05rem" />
         <h1 class="title">{{ register ? "Register" : "Login" }}</h1>
         <ng-container *ngIf="register">
             <mat-form-field appearance="outline">

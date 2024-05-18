@@ -7,7 +7,7 @@
         [matMenuTriggerFor]="accountMenu"
     >
         <mat-icon fontIcon="account_circle" />
-        Alex Johnson
+        {{ authService.loggedInUserName }}
     </button>
     <mat-menu #accountMenu="matMenu">
         <button mat-menu-item>

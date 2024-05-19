@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { BudgetItem } from 'src/app/models/budget';
 
 @Component({
     selector: 'BudgetCategoryCard',
@@ -6,6 +7,6 @@ import { Component, Input } from '@angular/core';
     styleUrls: ['./budget-category-card.component.scss']
 })
 export class BudgetCategoryCardComponent {
-    @Input() budgetCategoryItems: any[] = [];
+    @Input() budgetCategoryItems: BudgetItem[] = [];
     @Input() name = '';
 }

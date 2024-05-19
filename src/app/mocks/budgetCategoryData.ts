@@ -1,4 +1,6 @@
-export const budgetCategoryData = [
+import { BudgetCategory } from '../models/budget';
+
+export const budgetCategoryData: BudgetCategory[] = [
     {
         name: 'Savings',
         budgetItems: [

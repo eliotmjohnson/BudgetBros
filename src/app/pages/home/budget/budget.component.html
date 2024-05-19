@@ -10,18 +10,11 @@
 </header>
 <section class="budget-dashboard-wrapper">
     <div class="budgets">
-        <Card width="100%"> Hello World! Hello World!!! </Card>
-        <Card width="100%"> Hello World! Hello World!!! </Card>
-        <Card width="100%"> Hello World! Hello World!!! </Card>
-        <Card width="100%"> Hello World! Hello World!!! </Card>
-        <Card width="100%">Hello World!</Card>
-        <Card width="100%">Hello World!</Card>
-        <Card width="100%">Hello World!</Card>
-        <Card width="100%">Hello World!</Card>
-        <Card width="100%">Hello World!</Card>
-        <Card width="100%">Hello World!</Card>
+        <BudgetCategoryCard
+            *ngFor="let budgetCategory of budgetCategories"
+            [budgetCategoryItems]="budgetCategory.budgetItems"
+            [name]="budgetCategory.name"
+        />
     </div>
-    <Card class="details-card" width="40%" height="100%">
-        <h1>Hello World!</h1>
-    </Card>
+    <Card class="details-card" width="40%" height="100%"></Card>
 </section>

@@ -14,7 +14,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { AppComponent } from './app.component';
-import { HeaderComponent } from './components/header/header.component';
+import { HomeHeaderComponent } from './components/home-header/home-header.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { LinkButtonComponent } from './components/link-button/link-button.component';
 import { HomeComponent } from './pages/home/home.component';
@@ -28,11 +28,13 @@ import { GoalsComponent } from './pages/home/goals/goals.component';
 import { AccountsComponent } from './pages/home/accounts/accounts.component';
 import { SettingsComponent } from './pages/home/settings/settings.component';
 import { CardComponent } from './components/card/card.component';
+import { BudgetCategoryCardComponent } from './components/budget-category-card/budget-category-card.component';
+import { BudgetCategoryItemComponent } from './components/budget-category-item/budget-category-item.component';
 
 @NgModule({
     declarations: [
         AppComponent,
-        HeaderComponent,
+        HomeHeaderComponent,
         SidebarComponent,
         LinkButtonComponent,
         HomeComponent,
@@ -44,7 +46,9 @@ import { CardComponent } from './components/card/card.component';
         GoalsComponent,
         AccountsComponent,
         SettingsComponent,
-        CardComponent
+        CardComponent,
+        BudgetCategoryCardComponent,
+        BudgetCategoryItemComponent
     ],
     imports: [
         BrowserModule,

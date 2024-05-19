@@ -1,12 +1,24 @@
-use actix_web::{dev::ServiceRequest, get, post, web::{Data, Json}, Error, HttpMessage, HttpResponse, Responder};
-use actix_web_httpauth::extractors::{basic::BasicAuth, bearer::{self, BearerAuth}, AuthenticationError};
-use argonautica::{Verifier, Hasher};
+use actix_web::{
+    dev::ServiceRequest,
+    get, post,
+    web::{Data, Json},
+    Error, HttpMessage, HttpResponse, Responder,
+};
+use actix_web_httpauth::extractors::{
+    basic::BasicAuth,
+    bearer::{self, BearerAuth},
+    AuthenticationError,
+};
+use argonautica::{Hasher, Verifier};
 use hmac::{Hmac, Mac};
 use jwt::{SignWithKey, VerifyWithKey};
 use serde::{Deserialize, Serialize};
 use sha2::Sha256;
 
-use crate::{models::user::{AuthUser, NewUser, User}, AppState};
+use crate::{
+    models::user::{AuthUser, NewUser, User},
+    AppState,
+};
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct TokenClaims {
@@ -22,11 +34,11 @@ pub struct LoginResponse {
 
 #[derive(Deserialize)]
 struct TokenValidation {
-    token: String
+    token: String,
 }
 
 #[post("/validate-token")]
-async fn validate_token(_state: Data<AppState>, body: Json<TokenValidation>) -> impl Responder {
+async fn validate_token(state: Data<AppState>, body: Json<TokenValidation>) -> impl Responder {
     let jwt_secret = std::env::var("JWT_SECRET").expect("JWT secret not found");
     let key: Hmac<Sha256> = Hmac::new_from_slice(jwt_secret.as_bytes()).unwrap();
     let token_string = body.into_inner().token;
@@ -35,13 +47,35 @@ async fn validate_token(_state: Data<AppState>, body: Json<TokenValidation>) -> 
         .verify_with_key(&key)
         .map_err(|_| "Invalid token");
 
-        match claims {
-            Ok(_) => HttpResponse::Ok().json("success"),
-            Err(_) => HttpResponse::Unauthorized().json("fail")
+    match claims {
+        Ok(claims) => {
+            let user_id = claims.id;
+            let found_user = sqlx::query_as::<_, AuthUser>(
+                "SELECT id, email, password 
+                FROM users 
+                WHERE id = $1",
+            )
+            .bind(user_id)
+            .fetch_one(&state.db)
+            .await;
+
+            match found_user {
+                Ok(user) => HttpResponse::Ok().json(LoginResponse {
+                    id: user.id,
+                    email: user.email,
+                    token: token_string,
+                }),
+                Err(_) => HttpResponse::Unauthorized().json("Can't find user"),
+            }
         }
+        Err(_) => HttpResponse::Unauthorized().json("Token is not valid"),
+    }
 }
 
-pub async fn token_validator(req: ServiceRequest, credentials: BearerAuth) -> Result<ServiceRequest, (Error, ServiceRequest)> {
+pub async fn token_validator(
+    req: ServiceRequest,
+    credentials: BearerAuth,
+) -> Result<ServiceRequest, (Error, ServiceRequest)> {
     let jwt_secret = std::env::var("JWT_SECRET").expect("JWT secret not found");
     let key: Hmac<Sha256> = Hmac::new_from_slice(jwt_secret.as_bytes()).unwrap();
     let token_string = credentials.token();
@@ -56,7 +90,11 @@ pub async fn token_validator(req: ServiceRequest, credentials: BearerAuth) -> Re
             Ok(req)
         }
         Err(_) => {
-            let config = req.app_data::<bearer::Config>().cloned().unwrap_or_default().scope("");
+            let config = req
+                .app_data::<bearer::Config>()
+                .cloned()
+                .unwrap_or_default()
+                .scope("");
 
             Err((AuthenticationError::from(config).into(), req))
         }
@@ -80,18 +118,18 @@ async fn register_user(state: Data<AppState>, body: Json<NewUser>) -> impl Respo
     let create_user_result = sqlx::query_as::<_, User>(
         "INSERT INTO users (first_name, last_name, email, password)
         VALUES ($1, $2, $3, $4)
-        RETURNING id, first_name, last_name, email"
+        RETURNING id, first_name, last_name, email",
     )
-        .bind(new_user.first_name)
-        .bind(new_user.last_name)
-        .bind(new_user.email)
-        .bind(password_hash)
-        .fetch_one(&state.db)
-        .await;
+    .bind(new_user.first_name)
+    .bind(new_user.last_name)
+    .bind(new_user.email)
+    .bind(password_hash)
+    .fetch_one(&state.db)
+    .await;
 
     match create_user_result {
         Ok(created_user) => HttpResponse::Ok().json(created_user),
-        Err(e) => HttpResponse::InternalServerError().json(format!("{:?}", e))
+        Err(e) => HttpResponse::InternalServerError().json(format!("{:?}", e)),
     }
 }
 
@@ -100,8 +138,9 @@ async fn login(state: Data<AppState>, credentials: BasicAuth) -> impl Responder 
     let jwt_secret: Hmac<Sha256> = Hmac::new_from_slice(
         std::env::var("JWT_SECRET")
             .expect("JWT_SECRET must be set!")
-            .as_bytes()
-    ).unwrap();
+            .as_bytes(),
+    )
+    .unwrap();
 
     let username = credentials.user_id();
     let password = credentials.password();
@@ -112,15 +151,16 @@ async fn login(state: Data<AppState>, credentials: BasicAuth) -> impl Responder 
             let found_user = sqlx::query_as::<_, AuthUser>(
                 "SELECT id, email, password 
                 FROM users 
-                WHERE email = $1"
+                WHERE email = $1",
             )
-                .bind(username.to_string())
-                .fetch_one(&state.db)
-                .await;
+            .bind(username.to_string())
+            .fetch_one(&state.db)
+            .await;
 
             match found_user {
                 Ok(user) => {
-                    let hash_secret = std::env::var("HASH_SECRET").expect("HASH_SECRET must be set!");
+                    let hash_secret =
+                        std::env::var("HASH_SECRET").expect("HASH_SECRET must be set!");
                     let mut verifier = Verifier::default();
 
                     let is_valid = verifier
@@ -134,18 +174,19 @@ async fn login(state: Data<AppState>, credentials: BasicAuth) -> impl Responder 
                         let claims = TokenClaims { id: user.id };
                         let token_str = claims.sign_with_key(&jwt_secret).unwrap();
 
-                        HttpResponse::Ok().json(
-                            LoginResponse { 
-                                id: user.id,
-                                email: user.email,
-                                token: token_str 
-                            }   
-                        )
+                        HttpResponse::Ok().json(LoginResponse {
+                            id: user.id,
+                            email: user.email,
+                            token: token_str,
+                        })
                     } else {
                         HttpResponse::Unauthorized().json("Incorrect password!")
                     }
                 }
-                Err(e) => HttpResponse::InternalServerError().json(format!("Incorrect login credentials or error logging in - {:?}", e))
+                Err(e) => HttpResponse::InternalServerError().json(format!(
+                    "Incorrect login credentials or error logging in - {:?}",
+                    e
+                )),
             }
         }
     }

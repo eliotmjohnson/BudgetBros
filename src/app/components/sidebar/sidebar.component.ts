@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
     selector: 'Sidebar',
@@ -6,6 +6,7 @@ import { Component } from '@angular/core';
     styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent {
+    currentTab = 'Budget';
     tabs = [
         { description: 'Budget', iconName: 'savings' },
         { description: 'Transactions', iconName: 'paid' },

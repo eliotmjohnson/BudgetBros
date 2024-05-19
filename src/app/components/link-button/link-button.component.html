@@ -1,4 +1,22 @@
-<a mat-button [color]="variant" class="link-button">
+<a
+    mat-button
+    (click)="onClick.emit(description)"
+    [routerLink]="description.toLowerCase()"
+    class="link-button"
+    *ngIf="!isActive; else selectedButton"
+>
     <mat-icon [fontIcon]="iconName"></mat-icon>
     {{ description }}
 </a>
+
+<ng-template #selectedButton>
+    <a
+        mat-raised-button
+        (click)="onClick.emit(description)"
+        [color]="variant"
+        class="link-button raised"
+    >
+        <mat-icon [fontIcon]="iconName"></mat-icon>
+        {{ description }}
+    </a>
+</ng-template>

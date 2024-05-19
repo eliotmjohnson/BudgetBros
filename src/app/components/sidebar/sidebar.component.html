@@ -4,6 +4,9 @@
             *ngFor="let tab of tabs"
             [description]="tab.description"
             [iconName]="tab.iconName"
+            variant="primary"
+            [isActive]="currentTab === tab.description"
+            (onClick)="currentTab = $event"
         />
     </div>
 </aside>

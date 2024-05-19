@@ -17,12 +17,17 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { LinkButtonComponent } from './components/link-button/link-button.component';
-import { MainWindowComponent } from './components/main-window/main-window.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AuthFormComponent } from './components/auth-form/auth-form.component';
 import { BBLogoComponent } from './components/bb-logo/bb-logo.component';
+import { BudgetComponent } from './pages/home/budget/budget.component';
+import { TransactionsComponent } from './pages/home/transactions/transactions.component';
+import { GoalsComponent } from './pages/home/goals/goals.component';
+import { AccountsComponent } from './pages/home/accounts/accounts.component';
+import { SettingsComponent } from './pages/home/settings/settings.component';
+import { CardComponent } from './components/card/card.component';
 
 @NgModule({
     declarations: [
@@ -30,11 +35,16 @@ import { BBLogoComponent } from './components/bb-logo/bb-logo.component';
         HeaderComponent,
         SidebarComponent,
         LinkButtonComponent,
-        MainWindowComponent,
         HomeComponent,
         LoginComponent,
         AuthFormComponent,
-        BBLogoComponent
+        BBLogoComponent,
+        BudgetComponent,
+        TransactionsComponent,
+        GoalsComponent,
+        AccountsComponent,
+        SettingsComponent,
+        CardComponent
     ],
     imports: [
         BrowserModule,

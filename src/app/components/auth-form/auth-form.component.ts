@@ -77,6 +77,7 @@ export class AuthFormComponent {
                         .subscribe((loginRes) => {
                             this.authService.isLoggedIn = true;
                             this.authService.isSubmitting = false;
+                            this.authService.loggedInUserName = loginRes.email;
                             localStorage.setItem('token', loginRes.token);
                             this.router.navigateByUrl('/home');
                         });

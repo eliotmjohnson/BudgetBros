@@ -1,0 +1,61 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.header {
+    display: flex;
+    height: 3rem;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+
+    .title-wrapper {
+        display: flex;
+        flex-direction: column;
+
+        .title {
+            font-weight: bold;
+            font-size: 1.3rem;
+        }
+
+        p {
+            font-weight: 400;
+            opacity: 0.5;
+            margin: 0;
+        }
+
+        h1 {
+            margin: 0;
+        }
+    }
+
+    .date-selection {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        p {
+            font-weight: 400;
+            margin: 0;
+        }
+    }
+}
+
+.budget-dashboard-wrapper {
+    display: flex;
+    flex: 1;
+    width: 100%;
+    min-height: 0rem;
+    gap: 2rem;
+
+    .budgets {
+        display: flex;
+        flex-direction: column;
+        width: 60%;
+        height: 100%;
+        gap: 2rem;
+        overflow-y: scroll;
+    }
+}

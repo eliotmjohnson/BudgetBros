@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
     selector: 'LinkButton',
@@ -9,4 +9,6 @@ export class LinkButtonComponent {
     @Input() description = '';
     @Input() iconName = '';
     @Input() variant = '';
+    @Input() isActive = false;
+    @Output() onClick = new EventEmitter<string>();
 }

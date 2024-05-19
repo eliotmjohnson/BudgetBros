@@ -19,11 +19,12 @@ export class AuthService {
     validateAuthToken(token: string) {
         this.isLoading = true;
         return this.http
-            .post<'success'>(`${BASE_BE_URL}/validate-token`, { token })
+            .post<UserLoginResponse>(`${BASE_BE_URL}/validate-token`, { token })
             .pipe(
-                map(() => {
+                map((res) => {
                     this.isLoading = false;
                     this.isLoggedIn = true;
+                    this.loggedInUserName = res.email;
                     return true;
                 }),
                 catchError(() => {

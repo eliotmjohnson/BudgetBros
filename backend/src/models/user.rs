@@ -7,7 +7,7 @@ pub struct NewUser {
     pub first_name: String,
     pub last_name: String,
     pub email: String,
-    pub password: String
+    pub password: String,
 }
 
 #[derive(Serialize, FromRow, Debug)]
@@ -23,5 +23,5 @@ pub struct User {
 pub struct AuthUser {
     pub id: i64,
     pub email: String,
-    pub password: String  
+    pub password: String,
 }

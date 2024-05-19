@@ -1,0 +1,18 @@
+<Card>
+    <span class="header">
+        <h1>{{ name }}</h1>
+        <p>Planned</p>
+        <p>Remaining</p>
+    </span>
+    <section class="budget-items-wrapper">
+        <BudgetCategoryItem
+            *ngFor="let item of budgetCategoryItems"
+            [itemTitle]="item.itemTitle"
+            [plannedAmount]="item.plannedAmount"
+            [fund]="item.fund"
+        />
+        <span class="add-item-button">
+            <button mat-button color="primary">Add Item</button>
+        </span>
+    </section>
+</Card>

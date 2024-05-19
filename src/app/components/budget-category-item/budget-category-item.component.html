@@ -1,0 +1,15 @@
+<span class="budget-item-wrapper">
+    <span class="title-wrapper">
+        <mat-icon class="fund-logo" *ngIf="fund" fontIcon="savings" />
+        <h1>{{ itemTitle }}</h1>
+    </span>
+    <p>{{ plannedAmount | currency }}</p>
+    <p>{{ remainingAmount | currency }}</p>
+</span>
+<div class="progress-indicator">
+    <span [style.width]="progressPercentage + '%'" class="progress"></span>
+    <span
+        [style.width]="100 - progressPercentage + '%'"
+        class="non-progress"
+    ></span>
+</div>

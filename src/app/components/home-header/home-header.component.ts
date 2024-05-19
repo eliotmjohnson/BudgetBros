@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
-    selector: 'CustomHeader',
-    templateUrl: './header.component.html',
-    styleUrls: ['./header.component.scss']
+    selector: 'HomeHeader',
+    templateUrl: './home-header.component.html',
+    styleUrls: ['./home-header.component.scss']
 })
-export class HeaderComponent {
+export class HomeHeaderComponent {
     constructor(public authService: AuthService) {}
 
     logout() {

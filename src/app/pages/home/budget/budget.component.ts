@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { budgetCategoryData } from 'src/app/mocks/budgetCategoryData';
 
 @Component({
     selector: 'app-budget',
@@ -7,4 +8,5 @@ import { Component } from '@angular/core';
 })
 export class BudgetComponent {
     currentDate = new Date().toLocaleDateString();
+    budgetCategories = budgetCategoryData;
 }

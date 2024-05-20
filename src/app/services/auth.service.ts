@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, map, of } from 'rxjs';
 import { BASE_BE_URL } from '../constants/constants';
-import { User, UserLoginResponse } from '../models/user';
+import { SessionRefreshResponse, User, UserLoginResponse } from '../models/user';
 
 @Injectable({
     providedIn: 'root'
@@ -18,8 +18,13 @@ export class AuthService {
 
     validateAuthToken(token: string) {
         this.isLoading = true;
+        const email = localStorage.getItem('userEmail');
+
         return this.http
-            .post<UserLoginResponse>(`${BASE_BE_URL}/validate-token`, { token })
+            .post<SessionRefreshResponse>(`${BASE_BE_URL}/session-refresh`, { 
+                token,
+                email
+            })
             .pipe(
                 map((res) => {
                     this.isLoading = false;
@@ -56,6 +61,7 @@ export class AuthService {
     logout() {
         this.isLoggedIn = false;
         localStorage.removeItem('token');
+        localStorage.removeItem('userEmail');
         this.router.navigateByUrl('/login');
     }
 }

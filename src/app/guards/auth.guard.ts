@@ -10,7 +10,7 @@ export const authGuard: CanActivateFn = (route, state) => {
 
     if (token) {
         if (!authService.isLoggedIn) {
-            return authService.validateAuthToken(token).pipe(
+            return authService.refreshSession(token).pipe(
                 map((res) => {
                     if (res) return true;
 

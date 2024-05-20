@@ -16,7 +16,7 @@ export class AuthService {
 
     constructor(private http: HttpClient, private router: Router) {}
 
-    validateAuthToken(token: string) {
+    refreshSession(token: string) {
         this.isLoading = true;
         const email = localStorage.getItem('userEmail');
 

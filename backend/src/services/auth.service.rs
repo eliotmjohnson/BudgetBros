@@ -22,7 +22,7 @@ use crate::{
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct TokenClaims {
-    id: i64,
+    id: i64
 }
 
 #[derive(Serialize)]
@@ -64,6 +64,7 @@ async fn session_refresh(state: Data<AppState>, body: Json<SessionData>) -> impl
                     })
                 }
                 None => {
+                    println!("hitting DB");
                     let found_user = sqlx::query_as::<_, AuthUser>(
                     "SELECT id, email, password 
                     FROM users 

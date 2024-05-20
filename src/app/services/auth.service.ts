@@ -30,12 +30,18 @@ export class AuthService {
                     this.isLoading = false;
                     this.isLoggedIn = true;
                     this.loggedInUserName = res.email;
+
+                    if (!email) localStorage.setItem('userEmail', res.email)
+
                     return true;
                 }),
                 catchError(() => {
                     this.isLoading = false;
                     this.isLoggedIn = false;
+
                     localStorage.removeItem('token');
+                    localStorage.removeItem('userEmail');
+                    
                     return of(false);
                 })
             );

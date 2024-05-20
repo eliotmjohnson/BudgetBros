@@ -64,7 +64,6 @@ async fn session_refresh(state: Data<AppState>, body: Json<SessionData>) -> impl
                     })
                 }
                 None => {
-                    println!("hitting DB");
                     let found_user = sqlx::query_as::<_, AuthUser>(
                     "SELECT id, email, password 
                     FROM users 

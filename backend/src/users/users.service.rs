@@ -41,8 +41,6 @@ pub async fn get_auth_user_by_email(state: Data<AppState>, username: &str) -> Re
 }
 
 pub async fn create_user(state: Data<AppState>, new_user: NewUser, password_hash: String) -> Result<User, sqlx::Error> {
-    println!("{}", new_user.password);
-
     let create_user_result = sqlx::query_as::<_, User>(
         "INSERT INTO users (first_name, last_name, email, password)
         VALUES ($1, $2, $3, $4)

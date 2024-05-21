@@ -46,16 +46,17 @@ async fn main() -> std::io::Result<()> {
         let _bearer_middleware = HttpAuthentication::bearer(auth_middleware::token_validator);
 
         App::new()
-            .app_data(Data::new(AppState { db: pool.clone() }))
             .wrap(
                 Cors::default()
                     .allowed_origin(FE_URL)
+                    .allow_any_origin()
                     .allow_any_method()
                     .allow_any_header()
                     .supports_credentials(),
             )
+            .app_data(Data::new(AppState { db: pool.clone() }))
             .service(
-                scope("/")
+                scope("")
                 .service(auth_controllers::login_handler)
                 .service(auth_controllers::register_user_handler)
                 .service(auth_controllers::session_refresh)

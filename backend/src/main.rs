@@ -1,14 +1,15 @@
 use actix_cors::Cors;
-use actix_web::web::Data;
+use actix_web::web::{scope, Data};
 use actix_web::{main, App, HttpServer};
 use actix_web_httpauth::middleware::HttpAuthentication;
 use dotenv::dotenv;
 use sqlx::{postgres::PgPoolOptions, Pool, Postgres};
 
 use crate::services::auth;
-use crate::services::users;
+use crate::users::users_controllers;
 mod models;
 mod services;
+mod users;
 
 pub struct AppState {
     db: Pool<Postgres>,
@@ -53,7 +54,10 @@ async fn main() -> std::io::Result<()> {
                     .supports_credentials(),
             )
             .app_data(Data::new(AppState { db: pool.clone() }))
-            .service(users::get_all_users)
+            .service(
+                scope("/users")
+                .service(users_controllers::get_all_users_handler)
+            )
             .service(auth::login)
             .service(auth::register_user)
             .service(auth::session_refresh)

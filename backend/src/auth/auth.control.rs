@@ -1,42 +1,22 @@
-use actix_web::{
-    dev::ServiceRequest,
-    get, post,
-    web::{Data, Json},
-    Error, HttpMessage, HttpResponse, Responder,
-};
-use actix_web_httpauth::extractors::{
-    basic::BasicAuth,
-    bearer::{self, BearerAuth},
-    AuthenticationError,
-};
+use actix_web::{get, post, web::{Data, Json}, HttpResponse, Responder};
+use actix_web_httpauth::extractors::basic::BasicAuth;
 use argonautica::{Hasher, Verifier};
 use hmac::{Hmac, Mac};
-use jwt::{SignWithKey, VerifyWithKey};
-use serde::{Deserialize, Serialize};
 use sha2::Sha256;
+use jwt::{VerifyWithKey, SignWithKey};
 
 use crate::{
-    models::user::{AuthUser, NewUser, User},
-    AppState,
+    auth::auth_models::{LoginResponse, SessionData, TokenClaims}, 
+    users::{
+        users_models::NewUser, 
+        users_services::{
+            create_user, 
+            get_auth_user_by_email, 
+            get_user_by_id
+        }
+    }, 
+    AppState
 };
-
-#[derive(Serialize, Deserialize, Clone)]
-pub struct TokenClaims {
-    id: i64
-}
-
-#[derive(Serialize)]
-pub struct LoginResponse {
-    id: i64,
-    email: String,
-    token: String,
-}
-
-#[derive(Deserialize)]
-pub struct SessionData {
-    email: Option<String>,
-    token: String,
-}
 
 #[post("/session-refresh")]
 async fn session_refresh(state: Data<AppState>, body: Json<SessionData>) -> impl Responder {
@@ -64,14 +44,7 @@ async fn session_refresh(state: Data<AppState>, body: Json<SessionData>) -> impl
                     })
                 }
                 None => {
-                    let found_user = sqlx::query_as::<_, AuthUser>(
-                    "SELECT id, email, password 
-                    FROM users 
-                    WHERE id = $1",
-                )
-                .bind(user_id)
-                .fetch_one(&state.db)
-                .await;
+                    let found_user = get_user_by_id(state, user_id).await;
     
                 match found_user {
                     Ok(user) => HttpResponse::Ok().json(LoginResponse {
@@ -88,60 +61,21 @@ async fn session_refresh(state: Data<AppState>, body: Json<SessionData>) -> impl
     }
 }
 
-pub async fn token_validator(
-    req: ServiceRequest,
-    credentials: BearerAuth,
-) -> Result<ServiceRequest, (Error, ServiceRequest)> {
-    let jwt_secret = std::env::var("JWT_SECRET").expect("JWT secret not found");
-    let key: Hmac<Sha256> = Hmac::new_from_slice(jwt_secret.as_bytes()).unwrap();
-    let token_string = credentials.token();
-
-    let claims: Result<TokenClaims, &str> = token_string
-        .verify_with_key(&key)
-        .map_err(|_| "Invalid token");
-
-    match claims {
-        Ok(value) => {
-            req.extensions_mut().insert(value);
-            Ok(req)
-        }
-        Err(_) => {
-            let config = req
-                .app_data::<bearer::Config>()
-                .cloned()
-                .unwrap_or_default()
-                .scope("");
-
-            Err((AuthenticationError::from(config).into(), req))
-        }
-    }
-}
-
 #[post("/register")]
-async fn register_user(state: Data<AppState>, body: Json<NewUser>) -> impl Responder {
+async fn register_user_handler(state: Data<AppState>, body: Json<NewUser>) -> impl Responder {
     let new_user = body.into_inner();
     let hash_secret = std::env::var("HASH_SECRET").expect("HASH_SECRET must be set!");
     let mut hasher = Hasher::default();
 
     let password_hash = hasher
-        .with_password(new_user.password)
+        .with_password(new_user.password.clone())
         .with_secret_key(hash_secret)
         .hash()
         .unwrap();
 
     println!("password_hash: {}", password_hash);
 
-    let create_user_result = sqlx::query_as::<_, User>(
-        "INSERT INTO users (first_name, last_name, email, password)
-        VALUES ($1, $2, $3, $4)
-        RETURNING id, first_name, last_name, email",
-    )
-    .bind(new_user.first_name)
-    .bind(new_user.last_name)
-    .bind(new_user.email)
-    .bind(password_hash)
-    .fetch_one(&state.db)
-    .await;
+    let create_user_result = create_user(state, new_user, password_hash).await;
 
     match create_user_result {
         Ok(created_user) => HttpResponse::Ok().json(created_user),
@@ -150,7 +84,7 @@ async fn register_user(state: Data<AppState>, body: Json<NewUser>) -> impl Respo
 }
 
 #[get("/login")]
-async fn login(state: Data<AppState>, credentials: BasicAuth) -> impl Responder {
+async fn login_handler(state: Data<AppState>, credentials: BasicAuth) -> impl Responder {
     let jwt_secret: Hmac<Sha256> = Hmac::new_from_slice(
         std::env::var("JWT_SECRET")
             .expect("JWT_SECRET must be set!")
@@ -164,14 +98,7 @@ async fn login(state: Data<AppState>, credentials: BasicAuth) -> impl Responder 
     match password {
         None => HttpResponse::Unauthorized().json("Must provide password!"),
         Some(password) => {
-            let found_user = sqlx::query_as::<_, AuthUser>(
-                "SELECT id, email, password 
-                FROM users 
-                WHERE email = $1",
-            )
-            .bind(username.to_string())
-            .fetch_one(&state.db)
-            .await;
+            let found_user = get_auth_user_by_email(state, username).await;
 
             match found_user {
                 Ok(user) => {

@@ -5,9 +5,9 @@ use actix_web_httpauth::middleware::HttpAuthentication;
 use dotenv::dotenv;
 use sqlx::{postgres::PgPoolOptions, Pool, Postgres};
 
+use crate::auth::auth_controllers;
+use crate::auth::auth_middleware;
 use crate::users::users_controllers;
-mod models;
-mod services;
 mod users;
 mod auth;
 
@@ -43,7 +43,7 @@ async fn main() -> std::io::Result<()> {
     );
 
     HttpServer::new(move || {
-        let _bearer_middleware = HttpAuthentication::bearer(auth::token_validator);
+        let _bearer_middleware = HttpAuthentication::bearer(auth_middleware::token_validator);
 
         App::new()
             .wrap(
@@ -55,12 +55,15 @@ async fn main() -> std::io::Result<()> {
             )
             .app_data(Data::new(AppState { db: pool.clone() }))
             .service(
+                scope("/")
+                .service(auth_controllers::login_handler)
+                .service(auth_controllers::register_user_handler)
+                .service(auth_controllers::session_refresh)
+            )
+            .service(
                 scope("/users")
                 .service(users_controllers::get_all_users_handler)
             )
-            .service(auth::login)
-            .service(auth::register_user)
-            .service(auth::session_refresh)
     })
     .bind(("127.0.0.1", PORT))?
     .workers(2)

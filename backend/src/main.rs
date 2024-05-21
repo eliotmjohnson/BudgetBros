@@ -5,11 +5,11 @@ use actix_web_httpauth::middleware::HttpAuthentication;
 use dotenv::dotenv;
 use sqlx::{postgres::PgPoolOptions, Pool, Postgres};
 
-use crate::services::auth;
 use crate::users::users_controllers;
 mod models;
 mod services;
 mod users;
+mod auth;
 
 pub struct AppState {
     db: Pool<Postgres>,

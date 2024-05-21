@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use sqlx::{self, FromRow};
 
-#[derive(Deserialize, FromRow, Debug)]
+#[derive(Deserialize, FromRow, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct NewUser {
     pub first_name: String,

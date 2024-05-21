@@ -10,3 +10,5 @@ export type UserLoginResponse = {
     email: string;
     token: string;
 }
+
+export type SessionRefreshResponse = UserLoginResponse;

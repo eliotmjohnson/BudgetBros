@@ -56,7 +56,7 @@ async fn main() -> std::io::Result<()> {
             .service(users::get_all_users)
             .service(auth::login)
             .service(auth::register_user)
-            .service(auth::validate_token)
+            .service(auth::session_refresh)
     })
     .bind(("127.0.0.1", PORT))?
     .workers(2)

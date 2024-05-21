@@ -1,5 +1,8 @@
 use actix_web::dev::ServiceRequest;
-use actix_web_httpauth::extractors::{bearer::{self, BearerAuth}, AuthenticationError};
+use actix_web_httpauth::extractors::{
+    bearer::{self, BearerAuth}, 
+    AuthenticationError
+};
 use hmac::{Hmac, Mac};
 use sha2::Sha256;
 use jwt::VerifyWithKey;

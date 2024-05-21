@@ -7,7 +7,15 @@ use jwt::{VerifyWithKey, SignWithKey};
 
 use crate::{
     auth::auth_models::{LoginResponse, SessionData, TokenClaims}, 
-    users::{users_models::{NewUser, User}, users_services::{create_user, get_auth_user_by_email, get_user_by_id}}, AppState
+    users::{
+        users_models::NewUser, 
+        users_services::{
+            create_user, 
+            get_auth_user_by_email, 
+            get_user_by_id
+        }
+    }, 
+    AppState
 };
 
 #[post("/session-refresh")]
@@ -60,14 +68,14 @@ async fn register_user_handler(state: Data<AppState>, body: Json<NewUser>) -> im
     let mut hasher = Hasher::default();
 
     let password_hash = hasher
-        .with_password(new_user.password)
+        .with_password(new_user.password.clone())
         .with_secret_key(hash_secret)
         .hash()
         .unwrap();
 
     println!("password_hash: {}", password_hash);
 
-    let create_user_result = create_user(state, new_user.clone(), password_hash).await;
+    let create_user_result = create_user(state, new_user, password_hash).await;
 
     match create_user_result {
         Ok(created_user) => HttpResponse::Ok().json(created_user),

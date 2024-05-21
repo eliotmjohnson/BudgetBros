@@ -46,6 +46,7 @@ async fn main() -> std::io::Result<()> {
         let _bearer_middleware = HttpAuthentication::bearer(auth_middleware::token_validator);
 
         App::new()
+            .app_data(Data::new(AppState { db: pool.clone() }))
             .wrap(
                 Cors::default()
                     .allowed_origin(FE_URL)
@@ -53,7 +54,6 @@ async fn main() -> std::io::Result<()> {
                     .allow_any_header()
                     .supports_credentials(),
             )
-            .app_data(Data::new(AppState { db: pool.clone() }))
             .service(
                 scope("/")
                 .service(auth_controllers::login_handler)

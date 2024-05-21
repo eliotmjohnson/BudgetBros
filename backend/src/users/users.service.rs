@@ -41,14 +41,16 @@ pub async fn get_auth_user_by_email(state: Data<AppState>, username: &str) -> Re
 }
 
 pub async fn create_user(state: Data<AppState>, new_user: NewUser, password_hash: String) -> Result<User, sqlx::Error> {
+    println!("{}", new_user.password);
+
     let create_user_result = sqlx::query_as::<_, User>(
         "INSERT INTO users (first_name, last_name, email, password)
         VALUES ($1, $2, $3, $4)
         RETURNING id, first_name, last_name, email",
     )
-    .bind(new_user.first_name.clone())
-    .bind(new_user.last_name.clone())
-    .bind(new_user.email.clone())
+    .bind(new_user.first_name)
+    .bind(new_user.last_name)
+    .bind(new_user.email)
     .bind(password_hash)
     .fetch_one(&state.db)
     .await;

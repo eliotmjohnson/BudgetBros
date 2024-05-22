@@ -6,3 +6,6 @@ pub mod auth_middleware;
 
 #[path = "auth.models.rs"]
 pub mod auth_models;
+
+#[path = "auth.router.rs"]
+pub mod auth_router;

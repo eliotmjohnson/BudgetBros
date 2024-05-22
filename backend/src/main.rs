@@ -5,7 +5,7 @@ use actix_web_httpauth::middleware::HttpAuthentication;
 use dotenv::dotenv;
 use sqlx::{postgres::PgPoolOptions, Pool, Postgres};
 
-use crate::auth::auth_controllers;
+use crate::auth::auth_router::auth_router;
 use crate::auth::auth_middleware;
 use crate::users::users_controllers;
 mod users;
@@ -55,12 +55,7 @@ async fn main() -> std::io::Result<()> {
                     .supports_credentials(),
             )
             .app_data(Data::new(AppState { db: pool.clone() }))
-            .service(
-                scope("")
-                .service(auth_controllers::login_handler)
-                .service(auth_controllers::register_user_handler)
-                .service(auth_controllers::session_refresh)
-            )
+            .configure(auth_router)
             .service(
                 scope("/users")
                 .service(users_controllers::get_all_users_handler)

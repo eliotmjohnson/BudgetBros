@@ -59,7 +59,6 @@ async fn main() -> std::io::Result<()> {
             .configure(users_router)
     })
     .bind(("127.0.0.1", PORT))?
-    .workers(2)
     .run()
     .await
 }

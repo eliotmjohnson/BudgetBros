@@ -1,13 +1,13 @@
 use actix_cors::Cors;
-use actix_web::web::{scope, Data};
+use actix_web::web::Data;
 use actix_web::{main, App, HttpServer};
 use actix_web_httpauth::middleware::HttpAuthentication;
 use dotenv::dotenv;
 use sqlx::{postgres::PgPoolOptions, Pool, Postgres};
 
 use crate::auth::auth_router::auth_router;
+use crate::users::users_router::users_router;
 use crate::auth::auth_middleware;
-use crate::users::users_controllers;
 mod users;
 mod auth;
 
@@ -56,10 +56,7 @@ async fn main() -> std::io::Result<()> {
             )
             .app_data(Data::new(AppState { db: pool.clone() }))
             .configure(auth_router)
-            .service(
-                scope("/users")
-                .service(users_controllers::get_all_users_handler)
-            )
+            .configure(users_router)
     })
     .bind(("127.0.0.1", PORT))?
     .workers(2)

@@ -1,6 +1,5 @@
 use actix_cors::Cors;
-use actix_web::web::Data;
-use actix_web::{main, App, HttpServer};
+use actix_web::{web::Data, main, App, HttpServer};
 use actix_web_httpauth::middleware::HttpAuthentication;
 use dotenv::dotenv;
 use sqlx::{postgres::PgPoolOptions, Pool, Postgres};

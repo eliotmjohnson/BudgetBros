@@ -1,7 +1,8 @@
 use actix_cors::Cors;
-use actix_web::{web::Data, main, App, HttpServer};
+use actix_web::{web::Data, main, App, HttpServer, middleware::Logger};
 use actix_web_httpauth::middleware::HttpAuthentication;
 use dotenv::dotenv;
+use env_logger::Env;
 use sqlx::{postgres::PgPoolOptions, Pool, Postgres};
 
 use crate::auth::auth_router::auth_router;
@@ -41,10 +42,14 @@ async fn main() -> std::io::Result<()> {
         PORT
     );
 
+    // To configure req/res logging 
+    env_logger::init_from_env(Env::default().default_filter_or("info"));
+
     HttpServer::new(move || {
         let _bearer_middleware = HttpAuthentication::bearer(auth_middleware::token_validator);
 
         App::new()
+            .wrap(Logger::new("%r | %s | %t | %P | %T"))
             .wrap(
                 Cors::default()
                     .allowed_origin(FE_URL)

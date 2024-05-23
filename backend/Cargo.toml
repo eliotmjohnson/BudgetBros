@@ -14,6 +14,7 @@ argonautica = "0.2.0"
 chrono = { version = "0.4.38", features = ["serde"] }
 clippy = "0.0.302"
 dotenv = "0.15.0"
+env_logger = "0.11.3"
 hmac = "0.12.1"
 jwt = "0.16.0"
 serde = { version = "1.0.201", features = ["derive"] }

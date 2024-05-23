@@ -6,3 +6,6 @@ pub mod users_services;
 
 #[path = "users.models.rs"]
 pub mod users_models;
+
+#[path = "users.router.rs"]
+pub mod users_router;

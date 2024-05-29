@@ -1,11 +1,12 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'Sidebar',
     templateUrl: './sidebar.component.html',
     styleUrls: ['./sidebar.component.scss']
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
     currentTab = 'Budget';
     tabs = [
         { description: 'Budget', iconName: 'savings' },
@@ -14,4 +15,10 @@ export class SidebarComponent {
         { description: 'Accounts', iconName: 'group' },
         { description: 'Settings', iconName: 'settings' }
     ];
+
+    constructor(private router: Router) {}
+
+    ngOnInit(): void {
+        this.currentTab = this.router.url.split('/').at(-1) ?? '';
+    }
 }

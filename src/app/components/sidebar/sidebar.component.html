@@ -5,7 +5,9 @@
             [description]="tab.description"
             [iconName]="tab.iconName"
             variant="primary"
-            [isActive]="currentTab === tab.description"
+            [isActive]="
+                currentTab.toUpperCase() === tab.description.toUpperCase()
+            "
             (onClick)="currentTab = $event"
         />
     </div>

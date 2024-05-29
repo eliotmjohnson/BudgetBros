@@ -5,16 +5,26 @@
     </div>
     <span class="date-selection">
         <mat-icon fontIcon="calendar_month" />
-        <p>Some date</p>
+        <p>March</p>
     </span>
 </header>
 <section class="budget-dashboard-wrapper">
-    <div class="budgets">
+    <div class="budgets" cdkDropList (cdkDropListDropped)="handleDrop($event)">
         <BudgetCategoryCard
+            class="budget-card"
             *ngFor="let budgetCategory of budgetCategories"
             [budgetCategoryItems]="budgetCategory.budgetItems"
             [name]="budgetCategory.name"
-        />
+            cdkDrag
+            cdkDragLockAxis="y"
+            cdkDragBoundary=".budgets"
+        >
+            <mat-icon
+                class="drag-handle"
+                fontIcon="drag_indicator"
+                cdkDragHandle
+            />
+        </BudgetCategoryCard>
     </div>
     <Card class="details-card" width="40%" height="100%"></Card>
 </section>

@@ -27,18 +27,6 @@
     overflow: hidden;
 }
 
-.logo-overlay {
-    position: absolute;
-    top: 2rem;
-    right: 1rem;
-    rotate: 23deg;
-    font-size: 80rem;
-    height: 80rem;
-    width: 80rem;
-    opacity: 0.13;
-    z-index: -1;
-}
-
 @keyframes onLoad {
     0% {
         opacity: 0;

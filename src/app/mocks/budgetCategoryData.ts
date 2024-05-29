@@ -2,7 +2,7 @@ import { BudgetCategory } from '../models/budget';
 
 export const budgetCategoryData: BudgetCategory[] = [
     {
-        name: 'Savings',
+        name: 'Savings1',
         budgetItems: [
             {
                 itemTitle: 'Emergency Fund',
@@ -17,7 +17,7 @@ export const budgetCategoryData: BudgetCategory[] = [
         ]
     },
     {
-        name: 'Savings',
+        name: 'Savings2',
         budgetItems: [
             {
                 itemTitle: 'Emergency Fund',
@@ -32,7 +32,7 @@ export const budgetCategoryData: BudgetCategory[] = [
         ]
     },
     {
-        name: 'Savings',
+        name: 'Savings3',
         budgetItems: [
             {
                 itemTitle: 'Emergency Fund',
@@ -47,7 +47,7 @@ export const budgetCategoryData: BudgetCategory[] = [
         ]
     },
     {
-        name: 'Savings',
+        name: 'Savings4',
         budgetItems: [
             {
                 itemTitle: 'Emergency Fund',
@@ -62,7 +62,7 @@ export const budgetCategoryData: BudgetCategory[] = [
         ]
     },
     {
-        name: 'Savings',
+        name: 'Savings5',
         budgetItems: [
             {
                 itemTitle: 'Emergency Fund',

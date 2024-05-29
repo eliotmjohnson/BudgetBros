@@ -1,15 +1,38 @@
-<Card>
+<Card style="position: relative">
+    <ng-content></ng-content>
     <span class="header">
-        <h1>{{ name }}</h1>
+        <h1 *ngIf="!isEditingName" (click)="isEditingName = true">
+            {{ name }}
+        </h1>
+        <form
+            class="title-form"
+            (submit)="changeTitle($event)"
+            *ngIf="isEditingName"
+        >
+            <input
+                type="text"
+                (blur)="isEditingName = false"
+                [defaultValue]="name"
+                #titleInput
+            />
+        </form>
         <p>Planned</p>
         <p>Remaining</p>
     </span>
-    <section class="budget-items-wrapper">
+    <section
+        class="budget-items-wrapper"
+        cdkDropList
+        (cdkDropListDropped)="handleDrop($event)"
+    >
         <BudgetCategoryItem
+            class="budget-item"
             *ngFor="let item of budgetCategoryItems"
             [itemTitle]="item.itemTitle"
             [plannedAmount]="item.plannedAmount"
             [fund]="item.fund"
+            cdkDropListLockAxis="y"
+            cdkDragBoundary=".budget-items-wrapper"
+            cdkDrag
         />
         <span class="add-item-button">
             <button mat-button color="primary">Add Item</button>

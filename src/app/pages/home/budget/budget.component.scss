@@ -52,7 +52,7 @@
     padding-top: 0rem;
     padding-bottom: 0rem;
     min-height: 0rem;
-    gap: 1.5rem;
+    gap: 1.4rem;
 
     .budgets {
         display: flex;
@@ -62,7 +62,7 @@
         gap: 1rem;
         padding-top: 2rem;
         padding-bottom: 2rem;
-        padding-right: 0.5rem;
+        padding-right: 0.6rem;
         scrollbar-width: thin;
         overflow-y: scroll;
     }
@@ -71,4 +71,26 @@
         padding-top: 2rem;
         padding-bottom: 2rem;
     }
+}
+
+.drag-handle {
+    color: rgb(159, 159, 159);
+    cursor: grab;
+    position: absolute;
+    top: 0.4rem;
+    right: 0.5rem;
+    rotate: 90deg;
+    z-index: 1;
+}
+
+.cdk-drag-placeholder {
+    opacity: 0;
+}
+
+.cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.budgets.cdk-drop-list-dragging .budget-card:not(.cdk-drag-placeholder) {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }

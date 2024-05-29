@@ -12,6 +12,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { AppComponent } from './app.component';
 import { HomeHeaderComponent } from './components/home-header/home-header.component';
@@ -62,7 +63,8 @@ import { BudgetCategoryItemComponent } from './components/budget-category-item/b
         MatFormFieldModule,
         MatInputModule,
         ReactiveFormsModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        DragDropModule
     ],
     providers: [],
     bootstrap: [AppComponent]

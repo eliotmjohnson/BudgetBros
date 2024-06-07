@@ -3,9 +3,17 @@
         <h1 class="title">Budget</h1>
         <p>Today is {{ currentDate }}</p>
     </div>
-    <span class="date-selection">
+    <span class="date-selection" [matMenuTriggerFor]="menu">
         <mat-icon fontIcon="calendar_month" />
-        <p>March</p>
+        <p>{{ selectedMonth }}</p>
+        <mat-icon fontIcon="arrow_drop_down"></mat-icon>
+        <mat-menu #menu="matMenu" xPosition="before">
+            @for (month of months; track $index) {
+            <button (click)="selectedMonth = month" mat-menu-item>
+                <span>{{ month }}</span>
+            </button>
+            }
+        </mat-menu>
     </span>
 </header>
 <section class="budget-dashboard-wrapper">

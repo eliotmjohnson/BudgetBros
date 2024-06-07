@@ -18,11 +18,31 @@ const routes: Routes = [
         component: HomeComponent,
         canActivate: [authGuard],
         children: [
-            { path: 'budget', component: BudgetComponent },
-            { path: 'transactions', component: TransactionsComponent },
-            { path: 'goals', component: GoalsComponent },
-            { path: 'accounts', component: AccountsComponent },
-            { path: 'settings', component: SettingsComponent }
+            {
+                path: 'budget',
+                component: BudgetComponent,
+                data: { routeName: 'budget' }
+            },
+            {
+                path: 'transactions',
+                component: TransactionsComponent,
+                data: { routeName: 'transactions' }
+            },
+            {
+                path: 'goals',
+                component: GoalsComponent,
+                data: { routeName: 'goals' }
+            },
+            {
+                path: 'accounts',
+                component: AccountsComponent,
+                data: { routeName: 'accounts' }
+            },
+            {
+                path: 'settings',
+                component: SettingsComponent,
+                data: { routeName: 'settings' }
+            }
         ]
     },
     { path: 'login', component: LoginComponent, canActivate: [loginGuard] }

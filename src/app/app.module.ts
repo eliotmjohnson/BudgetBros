@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -32,8 +32,7 @@ import { CardComponent } from './components/card/card.component';
 import { BudgetCategoryCardComponent } from './components/budget-category-card/budget-category-card.component';
 import { BudgetCategoryItemComponent } from './components/budget-category-item/budget-category-item.component';
 
-@NgModule({
-    declarations: [
+@NgModule({ declarations: [
         AppComponent,
         HomeHeaderComponent,
         SidebarComponent,
@@ -51,11 +50,9 @@ import { BudgetCategoryItemComponent } from './components/budget-category-item/b
         BudgetCategoryCardComponent,
         BudgetCategoryItemComponent
     ],
-    imports: [
-        BrowserModule,
+    bootstrap: [AppComponent], imports: [BrowserModule,
         AppRoutingModule,
         BrowserAnimationsModule,
-        HttpClientModule,
         MatIconModule,
         MatButtonModule,
         MatCardModule,
@@ -64,9 +61,5 @@ import { BudgetCategoryItemComponent } from './components/budget-category-item/b
         MatInputModule,
         ReactiveFormsModule,
         MatProgressSpinnerModule,
-        DragDropModule
-    ],
-    providers: [],
-    bootstrap: [AppComponent]
-})
+        DragDropModule], providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule {}

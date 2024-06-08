@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, map, of } from 'rxjs';
 import { BASE_BE_URL } from '../constants/constants';
@@ -11,13 +11,13 @@ import { SessionRefreshResponse, User, UserLoginResponse } from '../models/user'
 export class AuthService {
     isLoggedIn = false;
     isSubmitting = false;
-    isLoading = false;
+    isLoading = signal<boolean>(false);
     loggedInUserName = 'User Name';
 
     constructor(private http: HttpClient, private router: Router) {}
 
     refreshSession(token: string) {
-        this.isLoading = true;
+        this.isLoading.set(true);
         const email = localStorage.getItem('userEmail');
 
         return this.http
@@ -27,7 +27,7 @@ export class AuthService {
             })
             .pipe(
                 map((res) => {
-                    this.isLoading = false;
+                    this.isLoading.set(false);
                     this.isLoggedIn = true;
                     this.loggedInUserName = res.email;
 
@@ -36,7 +36,7 @@ export class AuthService {
                     return true;
                 }),
                 catchError(() => {
-                    this.isLoading = false;
+                    this.isLoading.set(false);
                     this.isLoggedIn = false;
 
                     localStorage.removeItem('token');

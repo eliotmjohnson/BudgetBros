@@ -1,4 +1,5 @@
-<span class="budget-item-wrapper">
+<span class="budget-item-wrapper" (click)="setTransactionData()">
+    <ng-content></ng-content>
     <span class="title-wrapper">
         <mat-icon class="fund-logo" *ngIf="fund" fontIcon="savings" />
         <h1>{{ itemTitle }}</h1>

@@ -11,7 +11,7 @@ import { routerAnimations } from 'src/app/animations/router-animations';
 export class HomeComponent {
     constructor(private outletContext: ChildrenOutletContexts) {}
 
-    getRouteData() {
+    get routeData() {
         return this.outletContext.getContext('primary')?.route?.snapshot
             ?.data?.['routeName'];
     }

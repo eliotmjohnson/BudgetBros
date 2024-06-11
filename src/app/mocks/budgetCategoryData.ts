@@ -7,7 +7,13 @@ export const budgetCategoryData: BudgetCategory[] = [
             {
                 itemTitle: 'Emergency Fund',
                 plannedAmount: 1000,
-                fund: false
+                fund: false,
+                transactions: [
+                    {
+                        name: 'Test Transaction',
+                        amount: 300
+                    }
+                ]
             },
             {
                 itemTitle: 'House Fund',

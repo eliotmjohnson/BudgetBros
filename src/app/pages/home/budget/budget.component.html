@@ -3,13 +3,26 @@
         <h1 class="title">Budget</h1>
         <p>Today is {{ currentDate }}</p>
     </div>
-    <span class="date-selection" [matMenuTriggerFor]="menu">
-        <mat-icon fontIcon="calendar_month" />
+    <span
+        class="date-selection"
+        (menuOpened)="isCalMenuOpened = true"
+        (menuClosed)="isCalMenuOpened = false"
+        [matMenuTriggerFor]="menu"
+    >
+        <mat-icon class="cal-icon" fontIcon="calendar_month" />
         <p>{{ selectedMonth }}</p>
-        <mat-icon fontIcon="arrow_drop_down"></mat-icon>
-        <mat-menu #menu="matMenu" xPosition="before">
+        <mat-icon
+            class="arrow-icon"
+            [style.rotate]="isCalMenuOpened ? '180deg' : undefined"
+            fontIcon="arrow_drop_down"
+        ></mat-icon>
+        <mat-menu class="mat-calendar-menu" #menu="matMenu" xPosition="before">
             @for (month of months; track $index) {
-            <button (click)="selectedMonth = month" mat-menu-item>
+            <button
+                mat-menu-item
+                class="mat-calendar-menu-item"
+                (click)="selectedMonth = month"
+            >
                 <span>{{ month }}</span>
             </button>
             }
@@ -34,5 +47,7 @@
             />
         </BudgetCategoryCard>
     </div>
-    <Card class="details-card" width="40%" height="100%"></Card>
+    <Card class="details-card" width="50%" height="100%">
+        {{ transactionService.currentTransactionData }}
+    </Card>
 </section>

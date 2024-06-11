@@ -30,10 +30,17 @@
             [itemTitle]="item.itemTitle"
             [plannedAmount]="item.plannedAmount"
             [fund]="item.fund"
+            [transactions]="item.transactions"
             cdkDropListLockAxis="y"
             cdkDragBoundary=".budget-items-wrapper"
             cdkDrag
-        />
+        >
+            <mat-icon
+                class="drag-handle"
+                fontIcon="drag_indicator"
+                cdkDragHandle
+            />
+        </BudgetCategoryItem>
         <span class="add-item-button">
             <button mat-button color="primary">Add Item</button>
         </span>

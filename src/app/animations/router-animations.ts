@@ -18,15 +18,22 @@ const positionPages = animation([
 ]);
 
 export const routerAnimations = trigger('routerAnimations', [
+    transition('void => *', []),
     transition('* => budget', [
         useAnimation(positionPages),
-        query(':enter', style({ translate: '0 60rem' }), { optional: true }),
-        query(':leave', animate('.3s', style({ translate: '0 -60rem' })), {
+        query(':enter', style({ translate: '0 20rem', opacity: 0 }), {
             optional: true
         }),
-        query(':enter', animate('.5s', style({ translate: '0 0' })), {
+        query(':leave', animate('.2s', style({ opacity: 0 })), {
             optional: true
-        })
+        }),
+        query(
+            ':enter',
+            animate('.4s', style({ translate: '0 0', opacity: 1 })),
+            {
+                optional: true
+            }
+        )
     ]),
     transition('* <=> *', [
         useAnimation(positionPages),

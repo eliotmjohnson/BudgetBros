@@ -10,6 +10,7 @@ use crate::users::users_router::users_router;
 use crate::auth::auth_middleware;
 mod users;
 mod auth;
+mod transactions;
 
 pub struct AppState {
     db: Pool<Postgres>,

@@ -51,7 +51,7 @@ pub async fn update_transaction(state: Data<AppState>, new_transaction: Transact
 
 pub async fn delete_transaction(state: Data<AppState>, id: i64) -> Result<i64, sqlx::Error> {
     let _ = sqlx::query_as::<_, Transaction>(
-            "DELETE  FROM transactions
+            "DELETE FROM transactions
                 WHERE id = $1"
         )
             .bind(id)   

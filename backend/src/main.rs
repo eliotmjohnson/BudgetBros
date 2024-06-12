@@ -1,15 +1,19 @@
 use actix_cors::Cors;
-use actix_web::{web::Data, main, App, HttpServer, middleware::Logger};
+use actix_web::middleware;
+use actix_web::{main, middleware::Logger, web::Data, App, HttpServer};
 use actix_web_httpauth::middleware::HttpAuthentication;
+
 use dotenv::dotenv;
 use env_logger::Env;
 use sqlx::{postgres::PgPoolOptions, Pool, Postgres};
 
-use crate::auth::auth_router::auth_router;
-use crate::users::users_router::users_router;
 use crate::auth::auth_middleware;
-mod users;
+use crate::auth::auth_router::auth_router;
+use crate::budget_categories::budget_categories_router::budget_categories_router;
+use crate::users::users_router::users_router;
 mod auth;
+mod budget_categories;
+mod users;
 
 pub struct AppState {
     db: Pool<Postgres>,
@@ -42,7 +46,7 @@ async fn main() -> std::io::Result<()> {
         PORT
     );
 
-    // To configure req/res logging 
+    // To configure req/res logging
     env_logger::init_from_env(Env::default().default_filter_or("info"));
 
     HttpServer::new(move || {
@@ -58,9 +62,11 @@ async fn main() -> std::io::Result<()> {
                     .allow_any_header()
                     .supports_credentials(),
             )
+            .wrap(middleware::NormalizePath::trim())
             .app_data(Data::new(AppState { db: pool.clone() }))
-            .configure(auth_router)
             .configure(users_router)
+            .configure(budget_categories_router)
+            .configure(auth_router)
     })
     .bind(("127.0.0.1", PORT))?
     .run()

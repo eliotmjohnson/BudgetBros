@@ -13,7 +13,6 @@ async fn get_all_budget_categories_handler(
     state: Data<AppState>,
     params: Path<i64>,
 ) -> impl Responder {
-    println!("sup!!");
     let user_id = params.into_inner();
     let budget_categories_result = get_budget_categories(state, user_id).await;
 

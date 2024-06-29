@@ -12,6 +12,7 @@ use crate::auth::auth_router::auth_router;
 use crate::budget_categories::budget_categories_router::budget_categories_router;
 use crate::users::users_router::users_router;
 mod auth;
+mod transactions;
 mod budget_categories;
 mod users;
 

@@ -1,21 +1,21 @@
-use actix_web::{get, post, web::{Data, Json}, HttpResponse, Responder};
+use actix_web::{
+    get, post,
+    web::{Data, Json},
+    HttpResponse, Responder,
+};
 use actix_web_httpauth::extractors::basic::BasicAuth;
 use argonautica::{Hasher, Verifier};
 use hmac::{Hmac, Mac};
+use jwt::{SignWithKey, VerifyWithKey};
 use sha2::Sha256;
-use jwt::{VerifyWithKey, SignWithKey};
 
 use crate::{
-    auth::auth_models::{LoginResponse, SessionData, TokenClaims}, 
+    auth::auth_models::{LoginResponse, SessionData, TokenClaims},
     users::{
-        users_models::NewUser, 
-        users_services::{
-            create_user, 
-            get_auth_user_by_email, 
-            get_user_by_id
-        }
-    }, 
-    AppState
+        users_models::NewUser,
+        users_services::{create_user, get_auth_user_by_email, get_user_by_id},
+    },
+    AppState,
 };
 
 #[post("/session-refresh")]
@@ -27,36 +27,33 @@ async fn session_refresh(state: Data<AppState>, body: Json<SessionData>) -> impl
     let email = req_body.email;
     let token_str = req_body.token;
 
-    let claims: Result<TokenClaims, &str> = token_str
-        .verify_with_key(&key)
-        .map_err(|_| "Invalid token");
+    let claims: Result<TokenClaims, &str> =
+        token_str.verify_with_key(&key).map_err(|_| "Invalid token");
 
     match claims {
         Ok(claims) => {
             let user_id = claims.id;
 
             match email {
-                Some(email) => {
-                    HttpResponse::Ok().json(LoginResponse {
-                        id: user_id,
-                        email,
-                        token: token_str,
-                    })
-                }
+                Some(email) => HttpResponse::Ok().json(LoginResponse {
+                    id: user_id,
+                    email,
+                    token: token_str,
+                }),
                 None => {
                     let found_user = get_user_by_id(state, user_id).await;
-    
-                match found_user {
-                    Ok(user) => HttpResponse::Ok().json(LoginResponse {
-                        id: user.id,
-                        email: user.email,
-                        token: token_str,
-                    }),
-                    Err(_) => HttpResponse::Unauthorized().json("User could not be found"),
+
+                    match found_user {
+                        Ok(user) => HttpResponse::Ok().json(LoginResponse {
+                            id: user.id,
+                            email: user.email,
+                            token: token_str,
+                        }),
+                        Err(_) => HttpResponse::Unauthorized().json("User could not be found"),
+                    }
                 }
             }
         }
-    }
         Err(_) => HttpResponse::Unauthorized().json("Token is not valid"),
     }
 }

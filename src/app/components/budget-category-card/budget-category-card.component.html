@@ -42,8 +42,25 @@
                 cdkDragHandle
             />
         </BudgetCategoryItem>
+        @if (isAddingLineItem) {
         <span class="add-item-button">
-            <button mat-button color="primary">Add Item</button>
+            <form>
+                <mat-form-field class="name-input" appearance="fill">
+                    <mat-label>Name</mat-label>
+                    <input matInput />
+                </mat-form-field>
+            </form>
         </span>
+        } @else {
+        <span class="add-item-button">
+            <button
+                mat-button
+                color="primary"
+                (click)="isAddingLineItem = true"
+            >
+                Add Item
+            </button>
+        </span>
+        }
     </section>
 </Card>

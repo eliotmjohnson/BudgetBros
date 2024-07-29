@@ -10,10 +10,14 @@ use sqlx::{postgres::PgPoolOptions, Pool, Postgres};
 use crate::auth::auth_middleware;
 use crate::auth::auth_router::auth_router;
 use crate::budget_categories::budget_categories_router::budget_categories_router;
+use crate::budgets::budgets_router::budgets_router;
 use crate::users::users_router::users_router;
+
 mod auth;
-mod transactions;
 mod budget_categories;
+mod budgets;
+mod line_items;
+mod transactions;
 mod users;
 
 pub struct AppState {
@@ -65,6 +69,7 @@ async fn main() -> std::io::Result<()> {
             )
             .wrap(middleware::NormalizePath::trim())
             .app_data(Data::new(AppState { db: pool.clone() }))
+            .configure(budgets_router)
             .configure(users_router)
             .configure(budget_categories_router)
             .configure(auth_router)

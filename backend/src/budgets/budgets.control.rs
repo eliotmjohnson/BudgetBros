@@ -1,17 +1,17 @@
+use crate::{
+    budgets::{
+        budgets_models::BudgetResponseData,
+        budgets_services::get_budget,
+        budgets_helper::get_compiled_budget_data
+    },
+    AppState,
+};
 use actix_web::{
     get,
     web::{Data, Path, Query},
     HttpResponse, Responder,
 };
 use serde::Deserialize;
-
-use crate::{
-    budget_categories::{
-        budget_categories_models::BudgetCategory, budget_categories_services::get_budget_categories,
-    },
-    budgets::budgets_services::get_budget,
-    AppState,
-};
 
 #[derive(Deserialize)]
 pub struct QueryParams {
@@ -36,24 +36,12 @@ async fn get_budget_data_handler(
     .await;
 
     match get_budget_result {
-        Ok(budget) => {
-            let budget_categories_result = get_budget_categories(state.clone(), budget.id)
-                .await
-                .unwrap_or_default();
-            let mut budget_category_ids: Vec<i64> = [].to_vec();
-            for budget_category in &budget_categories_result {
-                budget_category_ids.push(budget_category.id);
-            }
-            println!(
-                "Budget: {:?}, Budget Categories: {:?}",
-                budget, budget_categories_result
-            );
-
-            HttpResponse::Ok().json("Yup")
-        }
-        Err(e) => {
-            println!("{}", e);
-            HttpResponse::InternalServerError().finish()
-        }
+        Ok(rows) => HttpResponse::Ok().json(BudgetResponseData {
+            budget_id: rows[0].budget_id,
+            month_number: rows[0].month_number,
+            year: rows[0].year,
+            budget_categories: get_compiled_budget_data(rows),
+        }),
+        Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
     }
 }

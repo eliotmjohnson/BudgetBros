@@ -1,41 +1,80 @@
-use serde::Serialize;
+use std::collections::HashMap;
+
+use chrono::{DateTime, Local};
+use serde::{Deserialize, Serialize};
 use sqlx::{self, FromRow};
 
-#[derive(Serialize, FromRow, Debug)]
+#[derive(Serialize, FromRow)]
 pub struct Budget {
-    pub id: i64,
+    pub budget_id: i64,
     pub user_id: i64,
     pub month_number: i64,
     pub year: i64,
 }
 
+#[derive(Serialize, FromRow)]
+#[serde(rename_all = "camelCase")]
+pub struct BudgetRowData {
+    pub budget_id: i64,
+    pub user_id: i64,
+    pub month_number: i64,
+    pub year: i64,
+    pub budget_category_id: i64,
+    pub budget_category_name: String,
+    pub line_item_id: i64,
+    pub line_item_name: String,
+    pub is_fund: bool,
+    pub planned_amount: f64,
+    pub starting_balance: f64,
+    pub transaction_id: i64,
+    pub title: String,
+    pub merchant: String,
+    pub amount: f64,
+    pub notes: String,
+    pub date: DateTime<Local>,
+}
+
+#[derive(Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
 pub struct TransactionData {
-    id: i64,
-    title: String,
-    merchant: String,
-    amount: f64,
-    notes: String,
-    date: String,
+    pub transaction_id: i64,
+    pub title: String,
+    pub merchant: String,
+    pub amount: f64,
+    pub notes: String,
+    pub date: DateTime<Local>,
 }
 
+#[derive(Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
 pub struct LineItemData {
-    id: i64,
-    name: String,
-    is_fund: bool,
-    planned_amount: f64,
-    starting_balance: f64,
-    transactions: Vec<TransactionData>,
+    pub line_item_id: i64,
+    pub name: String,
+    pub is_fund: bool,
+    pub planned_amount: f64,
+    pub starting_balance: f64,
+    pub transactions: Vec<TransactionData>,
 }
 
-pub struct BudgetCategoryData {
-    id: i64,
-    name: String,
-    budget_line_items: Vec<LineItemData>,
+pub struct BudgetCategoryDataMap {
+    pub budget_category_id: i64,
+    pub name: String,
+    pub budget_line_items: HashMap<i64, LineItemData>,
 }
 
+#[derive(Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct BudgetCategoryDataConverted {
+    pub budget_category_id: i64,
+    pub name: String,
+    pub line_items: Vec<LineItemData>,
+}
+
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct BudgetResponseData {
-    budget_id: i64,
-    month_number: i32,
-    year: i64,
-    budget_categories: Vec<BudgetCategoryData>,
+    pub budget_id: i64,
+    pub month_number: i64,
+    pub year: i64,
+    pub budget_categories: Vec<BudgetCategoryDataConverted>,
 }

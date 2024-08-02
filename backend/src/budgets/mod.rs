@@ -9,3 +9,5 @@ pub mod budgets_models;
 
 #[path = "budgets.router.rs"]
 pub mod budgets_router;
+#[path = "budgets.helper.rs"]
+pub mod budgets_helper;

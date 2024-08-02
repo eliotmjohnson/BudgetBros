@@ -2,6 +2,10 @@ use std::collections::HashMap;
 
 use chrono::{DateTime, Local};
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
+
+use chrono::{DateTime, Local};
+use serde::{Deserialize, Serialize};
 use sqlx::{self, FromRow};
 
 #[derive(Serialize, FromRow)]
@@ -12,8 +16,7 @@ pub struct Budget {
     pub year: i64,
 }
 
-#[derive(Serialize, FromRow)]
-#[serde(rename_all = "camelCase")]
+#[derive(Serialize, FromRow, Debug)]
 pub struct BudgetRowData {
     pub budget_id: i64,
     pub user_id: i64,
@@ -47,6 +50,8 @@ pub struct TransactionData {
 
 #[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
+#[derive(Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
 pub struct LineItemData {
     pub line_item_id: i64,
     pub name: String,
@@ -56,6 +61,7 @@ pub struct LineItemData {
     pub transactions: Vec<TransactionData>,
 }
 
+#[derive(Serialize, Deserialize, Clone)]
 pub struct BudgetCategoryDataMap {
     pub budget_category_id: i64,
     pub name: String,
@@ -67,14 +73,14 @@ pub struct BudgetCategoryDataMap {
 pub struct BudgetCategoryDataConverted {
     pub budget_category_id: i64,
     pub name: String,
-    pub line_items: Vec<LineItemData>,
+    pub budget_line_items: Vec<LineItemData>,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct BudgetResponseData {
-    pub budget_id: i64,
-    pub month_number: i64,
-    pub year: i64,
-    pub budget_categories: Vec<BudgetCategoryDataConverted>,
+    budget_id: i64,
+    month_number: i32,
+    year: i64,
+    budget_categories: Vec<BudgetCategoryDataConverted>,
 }

@@ -44,7 +44,7 @@ pub fn get_compiled_budget_data(rows: Vec<BudgetRowData>) -> Vec<BudgetCategoryD
         .map(|category| BudgetCategoryDataConverted {
             budget_category_id: category.budget_category_id,
             name: category.name,
-            line_items: category.budget_line_items.into_values().collect(),
+            budget_line_items: category.budget_line_items.into_values().collect(),
         })
         .collect()
 }

@@ -2,13 +2,9 @@ use std::collections::HashMap;
 
 use chrono::{DateTime, Local};
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
-
-use chrono::{DateTime, Local};
-use serde::{Deserialize, Serialize};
 use sqlx::{self, FromRow};
 
-#[derive(Serialize, FromRow)]
+#[derive(Serialize, FromRow, Debug)]
 pub struct Budget {
     pub budget_id: i64,
     pub user_id: i64,
@@ -50,8 +46,6 @@ pub struct TransactionData {
 
 #[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
-#[derive(Serialize, Deserialize, Clone)]
-#[serde(rename_all = "camelCase")]
 pub struct LineItemData {
     pub line_item_id: i64,
     pub name: String,
@@ -79,8 +73,8 @@ pub struct BudgetCategoryDataConverted {
 #[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct BudgetResponseData {
-    budget_id: i64,
-    month_number: i32,
-    year: i64,
-    budget_categories: Vec<BudgetCategoryDataConverted>,
+    pub budget_id: i64,
+    pub month_number: i64,
+    pub year: i64,
+    pub budget_categories: Vec<BudgetCategoryDataConverted>,
 }

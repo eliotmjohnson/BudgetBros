@@ -1,7 +1,8 @@
 use crate::{
     budgets::{
         budgets_models::BudgetResponseData,
-        budgets_services::{get_budget, get_compiled_budget_data},
+        budgets_services::get_budget,
+        budgets_helper::get_compiled_budget_data
     },
     AppState,
 };

@@ -17,7 +17,6 @@ export class BudgetCategoryCardComponent implements AfterViewChecked {
     @ViewChild('titleInput') titleInput!: ElementRef<HTMLInputElement>;
     @Input() lineItems: LineItem[] = [];
     @Input() name = '';
-    isAddingLineItem = false;
     isEditingName = false;
 
     ngAfterViewChecked(): void {

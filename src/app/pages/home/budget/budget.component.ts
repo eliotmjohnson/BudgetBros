@@ -20,12 +20,10 @@ export class BudgetComponent {
     budgetCategories: BudgetCategory[] = budgetCategoryData;
     isCalMenuOpened = false;
 
-    budget: Signal<Budget | undefined> = signal(undefined);
+    budget = this.budgetService.getBudget(7, 2024);
 
 
-    constructor(public transactionService: TransactionService) {
-        this.budget = this.budgetService.getBudget(7, 2024);
-    }
+    constructor(public transactionService: TransactionService) {}
 
     handleDrop(event: CdkDragDrop<BudgetCategory[]>) {
         moveItemInArray(

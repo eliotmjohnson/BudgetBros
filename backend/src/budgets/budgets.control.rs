@@ -12,6 +12,7 @@ use actix_web::{
     HttpResponse, Responder,
 };
 use serde::Deserialize;
+use serde_json::json;
 
 #[derive(Deserialize)]
 pub struct QueryParams {
@@ -36,12 +37,18 @@ async fn get_budget_data_handler(
     .await;
 
     match get_budget_result {
-        Ok(rows) => HttpResponse::Ok().json(BudgetResponseData {
-            budget_id: rows[0].budget_id,
-            month_number: rows[0].month_number,
-            year: rows[0].year,
-            budget_categories: get_compiled_budget_data(rows),
-        }),
+        Ok(rows) => 
+            // Need to decide what we send back if no budget or rows exist
+            match rows.len() {
+                0 => HttpResponse::Ok().json(json!({})),
+                _ => HttpResponse::Ok().json(BudgetResponseData {
+                    budget_id: rows[0].budget_id,
+                    month_number: query_params.month_number,
+                    year: query_params.year,
+                    budget_categories: get_compiled_budget_data(rows),
+                })
+            }
+        ,
         Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
     }
 }

@@ -33,8 +33,8 @@
     <div class="budgets" cdkDropList (cdkDropListDropped)="handleDrop($event)">
         <BudgetCategoryCard
             class="budget-card"
-            *ngFor="let budgetCategory of budgetCategories"
-            [budgetCategoryItems]="budgetCategory.budgetItems"
+            *ngFor="let budgetCategory of budget()?.budgetCategories"
+            [lineItems]="budgetCategory.lineItems"
             [name]="budgetCategory.name"
             cdkDrag
             cdkDragLockAxis="y"

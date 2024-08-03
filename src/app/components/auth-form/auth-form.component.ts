@@ -90,8 +90,11 @@ export class AuthFormComponent {
         this.authService.isSubmitting = false;
         this.authService.loggedInUserName = loginRes.email;
 
-        localStorage.setItem('token', loginRes.token);
-        localStorage.setItem('userEmail', loginRes.email);
+        this.authService.setLocalStorageData(
+            loginRes.email, 
+            loginRes.id, 
+            loginRes.token
+        )
 
         this.router.navigateByUrl('/home');
     }

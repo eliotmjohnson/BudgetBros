@@ -9,6 +9,7 @@ import { TransactionService } from 'src/app/services/transaction.service';
 })
 export class BudgetCategoryItemComponent {
     @Input() itemTitle = '';
+    @Input() startingBalance = 0;
     @Input() plannedAmount = 0;
     @Input() fund = false;
     @Input() transactions?: Transaction[];
@@ -17,7 +18,7 @@ export class BudgetCategoryItemComponent {
     constructor(private transactionService: TransactionService) {}
 
     get remainingAmount() {
-        return 20000 - this.plannedAmount;
+        return this.startingBalance - this.plannedAmount;
     }
 
     setTransactionData() {

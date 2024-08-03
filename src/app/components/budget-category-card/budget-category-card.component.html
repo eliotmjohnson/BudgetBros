@@ -26,10 +26,11 @@
     >
         <BudgetCategoryItem
             class="budget-item"
-            *ngFor="let item of budgetCategoryItems"
-            [itemTitle]="item.itemTitle"
+            *ngFor="let item of lineItems"
+            [itemTitle]="item.name"
+            [startingBalance]="item.startingBalance"
             [plannedAmount]="item.plannedAmount"
-            [fund]="item.fund"
+            [fund]="item.isFund"
             [transactions]="item.transactions"
             cdkDropListLockAxis="y"
             cdkDragBoundary=".budget-items-wrapper"

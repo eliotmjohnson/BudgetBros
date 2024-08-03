@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from './services/auth.service';
 import { loaderOverlayAnimation } from './animations/loader-overlay-animation';
+import { BudgetService } from './services/budget.service';
 
 @Component({
     selector: 'app-root',
@@ -9,5 +10,8 @@ import { loaderOverlayAnimation } from './animations/loader-overlay-animation';
     animations: [loaderOverlayAnimation]
 })
 export class AppComponent {
-    constructor(public authService: AuthService) {}
+    constructor(
+        public authService: AuthService,
+        public budgetService: BudgetService
+    ) {}
 }

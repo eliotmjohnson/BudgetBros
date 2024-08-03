@@ -25,7 +25,9 @@ export class BudgetComponent {
     ) {}
 
     ngOnInit(): void {
-        this.budgetService.getBudget();
+        if (!this.budgetService.isBudgetLoaded()) {
+            this.budgetService.getBudget();
+        }
     }
 
     handleDrop(event: CdkDragDrop<BudgetCategory[]>) {

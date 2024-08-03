@@ -3,12 +3,7 @@ import { Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, map, of } from 'rxjs';
 import { BASE_BE_URL } from '../constants/constants';
-import {
-    SessionRefreshResponse,
-    User,
-    UserLoginResponse
-} from '../models/user';
-import { BudgetService } from './budget.service';
+import { SessionRefreshResponse, User, UserLoginResponse } from '../models/user';
 
 @Injectable({
     providedIn: 'root'
@@ -22,14 +17,7 @@ export class AuthService {
     userId: string | null = null;
     email: string | null = null;
 
-    userId: string | null = null;
-    email: string | null = null;
-
-    constructor(
-        private http: HttpClient,
-        private router: Router,
-        private budgetService: BudgetService
-    ) {}
+    constructor(private http: HttpClient, private router: Router) {}
 
     refreshSession(token: string) {
         this.isLoading.set(true);
@@ -37,7 +25,7 @@ export class AuthService {
         const userId = localStorage.getItem('userId');
 
         return this.http
-            .post<SessionRefreshResponse>(`${BASE_BE_URL}/session-refresh`, {
+            .post<SessionRefreshResponse>(`${BASE_BE_URL}/session-refresh`, { 
                 token,
                 email
             })
@@ -47,8 +35,7 @@ export class AuthService {
                     this.isLoggedIn = true;
                     this.loggedInUserName = res.email;
 
-                    if (!email && !userId)
-                        this.setLocalStorageData(res.email, res.id);
+                    if (!email && !userId) this.setLocalStorageData(res.email, res.id);
 
                     this.userId = res.id;
                     this.email = res.email;
@@ -61,7 +48,7 @@ export class AuthService {
 
                     localStorage.removeItem('token');
                     localStorage.removeItem('userEmail');
-
+                    
                     return of(false);
                 })
             );
@@ -93,8 +80,8 @@ export class AuthService {
     }
 
     setLocalStorageData(email: string, id: string, token?: string) {
-        localStorage.setItem('userEmail', email);
-        localStorage.setItem('userId', String(id));
+        localStorage.setItem('userEmail', email)
+        localStorage.setItem('userId', String(id))
         token && localStorage.setItem('token', token);
     }
 }

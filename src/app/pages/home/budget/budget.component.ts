@@ -19,16 +19,7 @@ export class BudgetComponent {
     budget = this.budgetService.getBudget(7, 2024);
     isCalMenuOpened = false;
 
-    constructor(
-        public transactionService: TransactionService,
-        public budgetService: BudgetService
-    ) {}
-
-    ngOnInit(): void {
-        if (!this.budgetService.isBudgetLoaded()) {
-            this.budgetService.getBudget();
-        }
-    }
+    constructor(public transactionService: TransactionService) {}
 
     handleDrop(event: CdkDragDrop<BudgetCategory[]>) {
         moveItemInArray(

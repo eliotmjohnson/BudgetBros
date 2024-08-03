@@ -7,7 +7,7 @@ pub struct TokenClaims {
 
 #[derive(Serialize)]
 pub struct LoginResponse {
-    pub id: i64,
+    pub id: String,
     pub email: String,
     pub token: String,
 }

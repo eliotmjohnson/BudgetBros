@@ -14,11 +14,15 @@ export class AuthService {
     isLoading = signal<boolean>(false);
     loggedInUserName = 'User Name';
 
+    userId: string | null = null;
+    email: string | null = null;
+
     constructor(private http: HttpClient, private router: Router) {}
 
     refreshSession(token: string) {
         this.isLoading.set(true);
         const email = localStorage.getItem('userEmail');
+        const userId = localStorage.getItem('userId');
 
         return this.http
             .post<SessionRefreshResponse>(`${BASE_BE_URL}/session-refresh`, { 
@@ -31,7 +35,10 @@ export class AuthService {
                     this.isLoggedIn = true;
                     this.loggedInUserName = res.email;
 
-                    if (!email) localStorage.setItem('userEmail', res.email)
+                    if (!email && !userId) this.setLocalStorageData(res.email, res.id);
+
+                    this.userId = res.id;
+                    this.email = res.email;
 
                     return true;
                 }),
@@ -68,6 +75,13 @@ export class AuthService {
         this.isLoggedIn = false;
         localStorage.removeItem('token');
         localStorage.removeItem('userEmail');
+        localStorage.removeItem('userId');
         this.router.navigateByUrl('/login');
+    }
+
+    setLocalStorageData(email: string, id: string, token?: string) {
+        localStorage.setItem('userEmail', email)
+        localStorage.setItem('userId', String(id))
+        token && localStorage.setItem('token', token);
     }
 }

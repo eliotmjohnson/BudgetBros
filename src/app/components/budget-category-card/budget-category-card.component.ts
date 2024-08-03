@@ -6,7 +6,7 @@ import {
     Input,
     ViewChild
 } from '@angular/core';
-import { BudgetItem, LineItem } from 'src/app/models/budget';
+import { LineItem } from 'src/app/models/budget';
 
 @Component({
     selector: 'BudgetCategoryCard',
@@ -32,7 +32,7 @@ export class BudgetCategoryCardComponent implements AfterViewChecked {
         this.isEditingName = false;
     }
 
-    handleDrop(event: CdkDragDrop<BudgetItem[]>) {
+    handleDrop(event: CdkDragDrop<LineItem[]>) {
         moveItemInArray(
             this.lineItems,
             event.previousIndex,

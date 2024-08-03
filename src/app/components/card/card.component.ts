@@ -11,4 +11,7 @@ import { Component, Input } from '@angular/core';
 export class CardComponent {
     @Input() width = '';
     @Input() height = '';
+    @Input() padding = '1.5rem';
+    @Input() paddingBottom = '';
+    @Input() paddingLeft = '';
 }

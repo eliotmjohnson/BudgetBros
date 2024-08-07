@@ -1,13 +1,11 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { throwError } from 'rxjs';
+import { unprotectedRoutes } from '../constants/constants';
 
 export const httpInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
-  
   const token = localStorage.getItem('token');
-  const unprotectedRoutes = ['login', 'session-refresh', 'register']
 
   const isUnprotectedRoute = unprotectedRoutes.some(route => req.url.includes(route));
 

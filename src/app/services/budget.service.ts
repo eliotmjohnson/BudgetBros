@@ -1,11 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
-import { BASE_BE_URL } from '../constants/constants';
+import { BE_API_URL } from '../constants/constants';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Budget } from '../models/budget';
 import { AuthService } from './auth.service';
 
-const baseUrl = `${BASE_BE_URL}/api/budgets`
+const baseUrl = `${BE_API_URL}/budgets`
 
 @Injectable({
     providedIn: 'root'

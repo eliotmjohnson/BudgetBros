@@ -1,6 +1,11 @@
 import { HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { throwError } from 'rxjs';
 
 export const httpInterceptor: HttpInterceptorFn = (req, next) => {
+  const router = inject(Router);
+  
   const token = localStorage.getItem('token');
   const unprotectedRoutes = ['login', 'session-refresh', 'register']
 
@@ -14,6 +19,9 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
     });
 
     return next(authReq);
+  } else{
+    // TODO: need to handle some sort of notification to the user as to why this occured
+    router.navigate(['/login']);
   }
 
   return next(req);

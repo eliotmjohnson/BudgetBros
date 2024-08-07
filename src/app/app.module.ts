@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
     provideHttpClient,
-    withInterceptorsFromDi
+    withInterceptors
 } from '@angular/common/http';
 
 import { MatIconModule } from '@angular/material/icon';
@@ -34,6 +34,7 @@ import { SettingsComponent } from './pages/home/settings/settings.component';
 import { CardComponent } from './components/card/card.component';
 import { BudgetCategoryCardComponent } from './components/budget-category-card/budget-category-card.component';
 import { BudgetCategoryItemComponent } from './components/budget-category-item/budget-category-item.component';
+import { httpInterceptor } from './interceptors/http.interceptor';
 
 @NgModule({
     declarations: [
@@ -69,6 +70,6 @@ import { BudgetCategoryItemComponent } from './components/budget-category-item/b
         MatProgressSpinnerModule,
         DragDropModule
     ],
-    providers: [provideHttpClient(withInterceptorsFromDi())]
+    providers: [provideHttpClient(withInterceptors([httpInterceptor]))]
 })
 export class AppModule {}

@@ -5,7 +5,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { Budget } from '../models/budget';
 import { AuthService } from './auth.service';
 
-const baseUrl = `${BASE_BE_URL}/budgets`;
+const baseUrl = `${BASE_BE_URL}/api/budgets`
 
 @Injectable({
     providedIn: 'root'

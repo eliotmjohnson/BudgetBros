@@ -34,6 +34,7 @@ import { SettingsComponent } from './pages/home/settings/settings.component';
 import { CardComponent } from './components/card/card.component';
 import { BudgetCategoryCardComponent } from './components/budget-category-card/budget-category-card.component';
 import { BudgetCategoryItemComponent } from './components/budget-category-item/budget-category-item.component';
+import { TransactionCardComponent } from './components/transaction-card/transaction-card.component';
 
 @NgModule({
     declarations: [
@@ -52,7 +53,8 @@ import { BudgetCategoryItemComponent } from './components/budget-category-item/b
         SettingsComponent,
         CardComponent,
         BudgetCategoryCardComponent,
-        BudgetCategoryItemComponent
+        BudgetCategoryItemComponent,
+        TransactionCardComponent
     ],
     bootstrap: [AppComponent],
     imports: [

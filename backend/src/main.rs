@@ -1,5 +1,5 @@
 use actix_cors::Cors;
-use actix_web::middleware;
+use actix_web::{middleware, web};
 use actix_web::{main, middleware::Logger, web::Data, App, HttpServer};
 use actix_web_httpauth::middleware::HttpAuthentication;
 
@@ -55,7 +55,7 @@ async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(Env::default().default_filter_or("info"));
 
     HttpServer::new(move || {
-        let _bearer_middleware = HttpAuthentication::bearer(auth_middleware::token_validator);
+        let bearer_middleware = HttpAuthentication::bearer(auth_middleware::token_validator);
 
         App::new()
             .wrap(Logger::new("%r | %s | %t | %P | %T"))
@@ -69,10 +69,15 @@ async fn main() -> std::io::Result<()> {
             )
             .wrap(middleware::NormalizePath::trim())
             .app_data(Data::new(AppState { db: pool.clone() }))
-            .configure(budgets_router)
-            .configure(users_router)
-            .configure(budget_categories_router)
+            .service(
+                web::scope("/api")
+                .wrap(bearer_middleware)
+                .configure(budgets_router)
+                .configure(users_router)
+                .configure(budget_categories_router)
+            )
             .configure(auth_router)
+
     })
     .bind(("127.0.0.1", PORT))?
     .run()

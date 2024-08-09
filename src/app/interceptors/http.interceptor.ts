@@ -1,10 +1,10 @@
 import { HttpInterceptorFn } from '@angular/common/http';
-import { unprotectedRoutes } from '../constants/constants';
+import { UNPROTECTED_ROUTES } from '../constants/constants';
 
 export const httpInterceptor: HttpInterceptorFn = (req, next) => {
     const token = localStorage.getItem('token');
 
-    const isUnprotectedRoute = unprotectedRoutes.some((route) =>
+    const isUnprotectedRoute = UNPROTECTED_ROUTES.some((route) =>
         req.url.includes(route)
     );
 

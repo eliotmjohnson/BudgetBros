@@ -17,7 +17,6 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
 
         return next(authReq);
     } else {
-        // TODO: need to handle some sort of notification to the user as to why this occured
         return next(req);
     }
 };

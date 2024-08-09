@@ -45,7 +45,8 @@ const routes: Routes = [
             }
         ]
     },
-    { path: 'login', component: LoginComponent, canActivate: [loginGuard] }
+    { path: 'login', component: LoginComponent, canActivate: [loginGuard] },
+    { path: '**', redirectTo: 'home/budget' }
 ];
 
 @NgModule({

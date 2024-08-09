@@ -49,10 +49,7 @@ export class AuthService {
                 }),
                 catchError(() => {
                     this.isLoading.set(false);
-                    this.isLoggedIn = false;
-
-                    localStorage.removeItem('token');
-                    localStorage.removeItem('userEmail');
+                    this.logout(true);
 
                     return of(false);
                 })
@@ -76,7 +73,7 @@ export class AuthService {
         return this.http.post<User>(`${BASE_BE_URL}/register`, newUser);
     }
 
-    logout() {
+    logout(isTokenRefresh = false) {
         this.isLoggedIn = false;
         this.userId = null;
         this.email = null;
@@ -84,7 +81,7 @@ export class AuthService {
         localStorage.removeItem('token');
         localStorage.removeItem('userEmail');
         localStorage.removeItem('userId');
-        this.router.navigateByUrl('/login');
+        if (!isTokenRefresh) this.router.navigateByUrl('/login');
     }
 
     setLocalStorageData(email: string, id: string, token?: string) {

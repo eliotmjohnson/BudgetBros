@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 
+import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -62,6 +63,7 @@ import { httpInterceptor } from './interceptors/http.interceptor';
         MatIconModule,
         MatButtonModule,
         MatCardModule,
+        MatChipsModule,
         MatMenuModule,
         MatFormFieldModule,
         MatInputModule,

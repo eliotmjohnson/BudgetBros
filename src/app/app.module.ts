@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 
+import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -31,6 +32,7 @@ import { SettingsComponent } from './pages/home/settings/settings.component';
 import { CardComponent } from './components/card/card.component';
 import { BudgetCategoryCardComponent } from './components/budget-category-card/budget-category-card.component';
 import { BudgetCategoryItemComponent } from './components/budget-category-item/budget-category-item.component';
+import { TransactionCardComponent } from './components/transaction-card/transaction-card.component';
 import { httpInterceptor } from './interceptors/http.interceptor';
 
 @NgModule({
@@ -50,7 +52,8 @@ import { httpInterceptor } from './interceptors/http.interceptor';
         SettingsComponent,
         CardComponent,
         BudgetCategoryCardComponent,
-        BudgetCategoryItemComponent
+        BudgetCategoryItemComponent,
+        TransactionCardComponent
     ],
     bootstrap: [AppComponent],
     imports: [
@@ -60,6 +63,7 @@ import { httpInterceptor } from './interceptors/http.interceptor';
         MatIconModule,
         MatButtonModule,
         MatCardModule,
+        MatChipsModule,
         MatMenuModule,
         MatFormFieldModule,
         MatInputModule,

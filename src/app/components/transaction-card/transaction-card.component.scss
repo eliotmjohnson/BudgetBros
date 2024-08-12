@@ -1,0 +1,22 @@
+.actions-wrapper {
+    display: flex; 
+    gap: 1rem; 
+    justify-content: space-between; 
+    align-items: center;
+}
+
+.actions-buttons-container {
+    display: flex; 
+    gap: .5rem; 
+    align-items: center; 
+    margin-bottom: .75rem; 
+    margin-right: .75rem;
+}
+
+.date {
+    margin: 0 1rem;
+}
+
+.mat-mdc-card-actions {
+    gap: 1rem; 
+}

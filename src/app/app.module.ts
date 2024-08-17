@@ -40,7 +40,7 @@ import { CardComponent } from './components/card/card.component';
 import { BudgetCategoryCardComponent } from './components/budget-category-card/budget-category-card.component';
 import { BudgetCategoryItemComponent } from './components/budget-category-item/budget-category-item.component';
 import { TransactionCardComponent } from './components/transaction-card/transaction-card.component';
-import { TransactionsCardComponent } from './components/transactions-card/transactions-card.component';
+import { BudgetTransactionsCardComponent } from './components/budget-transactions-card/budget-transactions-card.component';
 import { httpInterceptor } from './interceptors/http.interceptor';
 import { TransactionsDatePickerComponent } from './components/transactions-date-picker/transactions-date-picker.component';
 
@@ -63,7 +63,7 @@ import { TransactionsDatePickerComponent } from './components/transactions-date-
         BudgetCategoryCardComponent,
         BudgetCategoryItemComponent,
         TransactionCardComponent,
-        TransactionsCardComponent,
+        BudgetTransactionsCardComponent,
         TransactionsDatePickerComponent
     ],
     bootstrap: [AppComponent],

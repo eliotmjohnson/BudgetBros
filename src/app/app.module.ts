@@ -36,7 +36,6 @@ import { BudgetCategoryItemComponent } from './components/budget-category-item/b
 import { TransactionCardComponent } from './components/transaction-card/transaction-card.component';
 import { httpInterceptor } from './interceptors/http.interceptor';
 import { TransactionsDatePickerComponent } from "./components/transactions-date-picker/transactions-date-picker.component";
-import { DateFnsModule } from '@angular/material-date-fns-adapter';
 
 @NgModule({
     declarations: [
@@ -77,8 +76,7 @@ import { DateFnsModule } from '@angular/material-date-fns-adapter';
         MatDateRangeInput,
         MatDateRangePicker,
         MatDatepickerToggle,
-        MatDatepickerModule,
-        DateFnsModule
+        MatDatepickerModule
     ],
     providers: [provideHttpClient(withInterceptors([httpInterceptor]))]
 })

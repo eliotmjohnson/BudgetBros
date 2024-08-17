@@ -14,6 +14,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatDateRangeInput, MatDateRangePicker, MatDatepickerToggle } from '@angular/material/datepicker';
 
 import { AppComponent } from './app.component';
 import { HomeHeaderComponent } from './components/home-header/home-header.component';
@@ -34,6 +35,8 @@ import { BudgetCategoryCardComponent } from './components/budget-category-card/b
 import { BudgetCategoryItemComponent } from './components/budget-category-item/budget-category-item.component';
 import { TransactionCardComponent } from './components/transaction-card/transaction-card.component';
 import { httpInterceptor } from './interceptors/http.interceptor';
+import { TransactionsDatePickerComponent } from "./components/transactions-date-picker/transactions-date-picker.component";
+import { MatDateFnsModule } from '@angular/material-date-fns-adapter';
 
 @NgModule({
     declarations: [
@@ -53,7 +56,8 @@ import { httpInterceptor } from './interceptors/http.interceptor';
         CardComponent,
         BudgetCategoryCardComponent,
         BudgetCategoryItemComponent,
-        TransactionCardComponent
+        TransactionCardComponent,
+        TransactionsDatePickerComponent
     ],
     bootstrap: [AppComponent],
     imports: [
@@ -69,7 +73,11 @@ import { httpInterceptor } from './interceptors/http.interceptor';
         MatInputModule,
         ReactiveFormsModule,
         MatProgressSpinnerModule,
-        DragDropModule
+        DragDropModule,
+        MatDateRangeInput,
+        MatDateRangePicker,
+        MatDatepickerToggle,
+        MatDateFnsModule
     ],
     providers: [provideHttpClient(withInterceptors([httpInterceptor]))]
 })

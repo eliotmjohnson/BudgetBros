@@ -14,7 +14,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { MatDateRangeInput, MatDateRangePicker, MatDatepickerToggle } from '@angular/material/datepicker';
+import { MatDateRangeInput, MatDateRangePicker, MatDatepickerModule, MatDatepickerToggle } from '@angular/material/datepicker';
 
 import { AppComponent } from './app.component';
 import { HomeHeaderComponent } from './components/home-header/home-header.component';
@@ -36,7 +36,7 @@ import { BudgetCategoryItemComponent } from './components/budget-category-item/b
 import { TransactionCardComponent } from './components/transaction-card/transaction-card.component';
 import { httpInterceptor } from './interceptors/http.interceptor';
 import { TransactionsDatePickerComponent } from "./components/transactions-date-picker/transactions-date-picker.component";
-import { MatDateFnsModule } from '@angular/material-date-fns-adapter';
+import { DateFnsModule } from '@angular/material-date-fns-adapter';
 
 @NgModule({
     declarations: [
@@ -77,7 +77,8 @@ import { MatDateFnsModule } from '@angular/material-date-fns-adapter';
         MatDateRangeInput,
         MatDateRangePicker,
         MatDatepickerToggle,
-        MatDateFnsModule
+        MatDatepickerModule,
+        DateFnsModule
     ],
     providers: [provideHttpClient(withInterceptors([httpInterceptor]))]
 })

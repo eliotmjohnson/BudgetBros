@@ -14,8 +14,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { MatDateRangeInput, MatDateRangePicker, MatDatepickerModule, MatDatepickerToggle } from '@angular/material/datepicker';
-import {MatDividerModule} from '@angular/material/divider';
+import {
+    MatDateRangeInput,
+    MatDateRangePicker,
+    MatDatepickerModule,
+    MatDatepickerToggle
+} from '@angular/material/datepicker';
+import { MatDividerModule } from '@angular/material/divider';
 
 import { AppComponent } from './app.component';
 import { HomeHeaderComponent } from './components/home-header/home-header.component';
@@ -35,8 +40,9 @@ import { CardComponent } from './components/card/card.component';
 import { BudgetCategoryCardComponent } from './components/budget-category-card/budget-category-card.component';
 import { BudgetCategoryItemComponent } from './components/budget-category-item/budget-category-item.component';
 import { TransactionCardComponent } from './components/transaction-card/transaction-card.component';
+import { BudgetTransactionsCardComponent } from './components/budget-transactions-card/budget-transactions-card.component';
 import { httpInterceptor } from './interceptors/http.interceptor';
-import { TransactionsDatePickerComponent } from "./components/transactions-date-picker/transactions-date-picker.component";
+import { TransactionsDatePickerComponent } from './components/transactions-date-picker/transactions-date-picker.component';
 
 @NgModule({
     declarations: [
@@ -57,6 +63,7 @@ import { TransactionsDatePickerComponent } from "./components/transactions-date-
         BudgetCategoryCardComponent,
         BudgetCategoryItemComponent,
         TransactionCardComponent,
+        BudgetTransactionsCardComponent,
         TransactionsDatePickerComponent
     ],
     bootstrap: [AppComponent],

@@ -1,10 +1,10 @@
 import { HttpInterceptorFn } from '@angular/common/http';
-import { unprotectedRoutes } from '../constants/constants';
+import { UNPROTECTED_ROUTES } from '../constants/constants';
 
 export const httpInterceptor: HttpInterceptorFn = (req, next) => {
     const token = localStorage.getItem('token');
 
-    const isUnprotectedRoute = unprotectedRoutes.some((route) =>
+    const isUnprotectedRoute = UNPROTECTED_ROUTES.some((route) =>
         req.url.includes(route)
     );
 
@@ -17,7 +17,6 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
 
         return next(authReq);
     } else {
-        // TODO: need to handle some sort of notification to the user as to why this occured
         return next(req);
     }
 };

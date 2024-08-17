@@ -15,6 +15,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatDateRangeInput, MatDateRangePicker, MatDatepickerModule, MatDatepickerToggle } from '@angular/material/datepicker';
+import {MatDividerModule} from '@angular/material/divider';
 
 import { AppComponent } from './app.component';
 import { HomeHeaderComponent } from './components/home-header/home-header.component';
@@ -76,7 +77,8 @@ import { TransactionsDatePickerComponent } from "./components/transactions-date-
         MatDateRangeInput,
         MatDateRangePicker,
         MatDatepickerToggle,
-        MatDatepickerModule
+        MatDatepickerModule,
+        MatDividerModule
     ],
     providers: [provideHttpClient(withInterceptors([httpInterceptor]))]
 })

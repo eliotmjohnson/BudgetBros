@@ -35,7 +35,7 @@ pub struct QueryParams {
 }
 
 #[get("/{user_id}")]
-pub async fn get_all_line_item_transactions_between_dates_handler(
+pub async fn get_all_transactions_between_dates_handler(
     state: Data<AppState>,
     params: Path<i64>,
     query: Query<QueryParams>

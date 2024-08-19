@@ -6,6 +6,7 @@ use actix_web_httpauth::middleware::HttpAuthentication;
 use dotenv::dotenv;
 use env_logger::Env;
 use sqlx::{postgres::PgPoolOptions, Pool, Postgres};
+use transactions::transactions_router::transactions_router;
 
 use crate::auth::auth_middleware;
 use crate::auth::auth_router::auth_router;
@@ -75,6 +76,7 @@ async fn main() -> std::io::Result<()> {
                 .configure(budgets_router)
                 .configure(users_router)
                 .configure(budget_categories_router)
+                .configure(transactions_router)
             )
             .configure(auth_router)
 

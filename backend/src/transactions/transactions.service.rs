@@ -24,11 +24,20 @@ pub async fn get_all_transactions_between_dates(
     end_date: String
 ) -> Result<Vec<Transaction>, sqlx::Error> {
     let query = 
-        "SELECT * 
-        FROM transactions 
-        WHERE user_id = $1
-        AND date 
-        BETWEEN $2 AND $3";
+        "SELECT 
+            t.* 
+        FROM 
+            transactions t
+        JOIN 
+            line_items li ON t.line_item_id = li.id
+        JOIN 
+            budget_categories bc ON li.budget_category_id = bc.id
+        JOIN 
+            budgets b ON bc.budget_id = b.id
+W       WHERE 
+            b.user_id = $1 
+            AND t.date 
+            BETWEEN $2 AND $3";
 
     sqlx::query_as::<_, Transaction>(query)
         .bind(user_id)

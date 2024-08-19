@@ -1,5 +1,5 @@
 use actix_web::{ web::Data, Result};
-use sqlx::PgPool;
+
 
 use crate::AppState;
 
@@ -12,27 +12,30 @@ pub async fn get_line_item_transactions(state: Data<AppState>, line_item_id: i64
         WHERE line_item_id = $1";
 
     sqlx::query_as::<_, Transaction>(query)
-            .bind(line_item_id)   
-            .fetch_all(&state.db)
-            .await
+        .bind(line_item_id)   
+        .fetch_all(&state.db)
+        .await
 }
 
-async fn get_all_transactions_between_dates(
-    pool: &PgPool,
-    start_date: &str,
-    end_date: &str
+pub async fn get_all_transactions_between_dates(
+    state: Data<AppState>,
+    user_id: i64,
+    start_date: String,
+    end_date: String
 ) -> Result<Vec<Transaction>, sqlx::Error> {
     let query = 
         "SELECT * 
         FROM transactions 
-        WHERE date 
-        BETWEEN $1 AND $2";
+        WHERE user_id = $1
+        AND date 
+        BETWEEN $2 AND $3";
 
     sqlx::query_as::<_, Transaction>(query)
-            .bind(start_date)
-            .bind(end_date)
-            .fetch_all(pool)
-            .await
+        .bind(user_id)
+        .bind(start_date)
+        .bind(end_date)
+        .fetch_all(&state.db)
+        .await
 }
 
 pub async fn add_transaction(state: Data<AppState>, new_transaction: NewTransaction) -> Result<Transaction, sqlx::Error> {
@@ -42,14 +45,14 @@ pub async fn add_transaction(state: Data<AppState>, new_transaction: NewTransact
         VALUES ($1, $2, $3, $4, $5, $6)";
 
     sqlx::query_as::<_, Transaction>(query)
-            .bind(new_transaction.title)   
-            .bind(new_transaction.merchant)   
-            .bind(new_transaction.amount)   
-            .bind(new_transaction.notes)   
-            .bind(new_transaction.date)   
-            .bind(new_transaction.line_item_id)   
-            .fetch_one(&state.db)
-            .await
+        .bind(new_transaction.title)   
+        .bind(new_transaction.merchant)   
+        .bind(new_transaction.amount)   
+        .bind(new_transaction.notes)   
+        .bind(new_transaction.date)   
+        .bind(new_transaction.line_item_id)   
+        .fetch_one(&state.db)
+        .await
 }
 
 pub async fn update_transaction(state: Data<AppState>, new_transaction: Transaction) -> Result<Transaction, sqlx::Error> {
@@ -65,14 +68,14 @@ pub async fn update_transaction(state: Data<AppState>, new_transaction: Transact
         WHERE id = $6";
 
     sqlx::query_as::<_, Transaction>(query)
-            .bind(new_transaction.title)   
-            .bind(new_transaction.merchant)   
-            .bind(new_transaction.amount)   
-            .bind(new_transaction.notes)   
-            .bind(new_transaction.date)   
-            .bind(new_transaction.id)   
-            .fetch_one(&state.db)
-            .await
+        .bind(new_transaction.title)   
+        .bind(new_transaction.merchant)   
+        .bind(new_transaction.amount)   
+        .bind(new_transaction.notes)   
+        .bind(new_transaction.date)   
+        .bind(new_transaction.id)   
+        .fetch_one(&state.db)
+        .await
 }
 
 pub async fn delete_transaction(state: Data<AppState>, id: i64) -> Result<i64, sqlx::Error> {
@@ -81,9 +84,9 @@ pub async fn delete_transaction(state: Data<AppState>, id: i64) -> Result<i64, s
         WHERE id = $1";
 
     let _ = sqlx::query_as::<_, Transaction>(query)
-            .bind(id)   
-            .fetch_one(&state.db)
-            .await;
+                .bind(id)   
+                .fetch_one(&state.db)
+                .await;
 
     Ok(id)
 }

@@ -1,7 +1,27 @@
-use actix_web::{delete, get, post, put, web::{Data, Json, Path, Query}, HttpResponse, Responder};
+use actix_web::{
+    delete, 
+    get, 
+    post, 
+    put, 
+    web::{
+        Data, 
+        Json, 
+        Path, 
+        Query
+    }, 
+    HttpResponse, 
+    Responder
+};
+
 use serde::Deserialize;
 
-use crate::{transactions::transactions_models::{NewTransaction, Transaction}, AppState};
+use crate::{
+    transactions::transactions_models::{
+        NewTransaction, 
+        Transaction
+    }, 
+    AppState
+};
 
 use super::transactions_services::{
     add_transaction, 

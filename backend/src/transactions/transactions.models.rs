@@ -1,7 +1,7 @@
-use serde::{Serialize};
+use serde::{Deserialize, Serialize};
 use sqlx::{self, FromRow};
 
-#[derive(Serialize, FromRow, Debug)]
+#[derive(Serialize, Deserialize, FromRow, Debug)]
 pub struct Transaction {
     pub id: i64,
     pub title: String,
@@ -12,7 +12,7 @@ pub struct Transaction {
     pub line_item_id: i64
 }
 
-#[derive(Serialize, FromRow, Debug)]
+#[derive(Serialize, Deserialize, FromRow, Debug)]
 pub struct NewTransaction {
     pub title: String,
     pub merchant: String,

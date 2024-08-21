@@ -22,8 +22,8 @@ export class BudgetCategoryItemComponent {
     }
 
     setTransactionData() {
-        this.transactionService.currentTransactionData = this.transactions
-            ? this.transactions
-            : [];
+        // this.transactionService.currentTransactionData = this.transactions
+        //     ? this.transactions
+        //     : [];
     }
 }

@@ -34,7 +34,7 @@ pub async fn get_all_transactions_between_dates(
             budget_categories bc ON li.budget_category_id = bc.id
         JOIN 
             budgets b ON bc.budget_id = b.id
-W       WHERE 
+        WHERE 
             b.user_id = $1 
             AND t.date 
             BETWEEN $2 AND $3";

@@ -3,7 +3,7 @@ use actix_web::{ web::Data, Result};
 
 use crate::AppState;
 
-use super::transactions_models::{NewTransaction, Transaction};
+use super::transactions_models::{IsolatedTransaction, NewTransaction, Transaction};
 
 pub async fn get_line_item_transactions(state: Data<AppState>, line_item_id: i64) -> Result<Vec<Transaction>, sqlx::Error> {
     let query = 
@@ -22,10 +22,11 @@ pub async fn get_all_transactions_between_dates(
     user_id: i64,
     start_date: String,
     end_date: String
-) -> Result<Vec<Transaction>, sqlx::Error> {
+) -> Result<Vec<IsolatedTransaction>, sqlx::Error> {
     let query = 
         "SELECT 
-            t.* 
+            t.*
+            , bc.name as budget_category_name 
         FROM 
             transactions t
         JOIN 
@@ -39,7 +40,7 @@ pub async fn get_all_transactions_between_dates(
             AND t.date
             BETWEEN $2::timestamptz AND $3::timestamptz";
 
-    sqlx::query_as::<_, Transaction>(query)
+    sqlx::query_as::<_, IsolatedTransaction>(query)
         .bind(user_id)
         .bind(start_date)
         .bind(end_date)

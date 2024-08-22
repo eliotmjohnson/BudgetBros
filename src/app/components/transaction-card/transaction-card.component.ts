@@ -1,5 +1,4 @@
-import { Component } from '@angular/core';
-import { MatCard, MatCardContent } from '@angular/material/card';
+import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'TransactionCard',
@@ -7,5 +6,10 @@ import { MatCard, MatCardContent } from '@angular/material/card';
   styleUrl: './transaction-card.component.scss'
 })
 export class TransactionCardComponent {
+  title = input.required<string>();
+  merchant = input.required<string>();
+  budgetCategoryName = input.required<string>();
+  date = input.required<string>();
+  amount = input.required<number>();
 
 }

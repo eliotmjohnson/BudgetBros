@@ -20,7 +20,7 @@ export class TransactionService {
         this.isLoading.set(true);
         this.http
             .get<Transaction[]>(`
-                ${baseUrl}/${this.authService.userId}?start_date=${date1}&end_date=${date2}
+                ${baseUrl}/${this.authService.userId}?start_date=${date1.toISOString()}&end_date=${date2.toISOString()}
             `)
             .subscribe({
                 next: (transactions) => {

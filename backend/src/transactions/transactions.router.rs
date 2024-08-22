@@ -11,8 +11,8 @@ use super::transactions_controllers::{
 pub fn transactions_router(cfg: &mut ServiceConfig) {
     cfg.service(
         scope("/transactions")
-            .service(get_all_line_item_transactions_handler)
             .service(get_all_transactions_between_dates_handler)
+            .service(get_all_line_item_transactions_handler)
             .service(add_transaction_handler)
             .service(update_transaction_handler)
             .service(delete_transaction_handler)

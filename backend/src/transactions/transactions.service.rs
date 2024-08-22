@@ -36,8 +36,8 @@ pub async fn get_all_transactions_between_dates(
             budgets b ON bc.budget_id = b.id
         WHERE 
             b.user_id = $1 
-            AND t.date 
-            BETWEEN $2 AND $3";
+            AND t.date
+            BETWEEN $2::timestamptz AND $3::timestamptz";
 
     sqlx::query_as::<_, Transaction>(query)
         .bind(user_id)

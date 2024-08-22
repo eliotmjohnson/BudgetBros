@@ -1,3 +1,4 @@
+use chrono::{DateTime, Local};
 use serde::{Deserialize, Serialize};
 use sqlx::{self, FromRow};
 
@@ -8,7 +9,7 @@ pub struct Transaction {
     pub merchant: String,
     pub amount: f64,
     pub notes: String,
-    pub date: String,
+    pub date: DateTime<Local>,
     pub line_item_id: i64
 }
 

@@ -70,3 +70,18 @@ body {
         }
     }
 }
+
+.note-field {
+    .mat-mdc-text-field-wrapper {
+        max-height: 2.5rem;
+    }
+
+    .mat-mdc-form-field {
+        max-height: 2.5rem;
+    }
+
+    .mat-mdc-form-field-infix {
+        padding: 0.5rem !important;
+        padding-left: 0rem !important;
+    }
+}

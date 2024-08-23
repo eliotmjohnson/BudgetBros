@@ -8,6 +8,7 @@ import { TransactionService } from 'src/app/services/transaction.service';
     styleUrls: ['./budget-category-item.component.scss']
 })
 export class BudgetCategoryItemComponent {
+    @Input() itemId = 0;
     @Input() itemTitle = '';
     @Input() startingBalance = 0;
     @Input() plannedAmount = 0;
@@ -18,10 +19,20 @@ export class BudgetCategoryItemComponent {
     constructor(private transactionService: TransactionService) {}
 
     get remainingAmount() {
-        return this.startingBalance - this.plannedAmount;
+        return this.startingBalance + this.plannedAmount;
+    }
+
+    get isLineItemSelected() {
+        return (
+            this.itemId === this.transactionService.currentSelectedLineItemId
+        );
     }
 
     setTransactionData() {
+        this.transactionService.currentSelectedLineItemBalance =
+            this.remainingAmount;
+        this.transactionService.currentSelectedLineItem = this.itemTitle;
+        this.transactionService.currentSelectedLineItemId = this.itemId;
         this.transactionService.currentTransactionData = this.transactions
             ? this.transactions
             : [];

@@ -24,6 +24,7 @@ export class BudgetComponent implements OnInit {
 
     ngOnInit(): void {
         this.budgetService.getBudget(7, 2024);
+        this.transactionService.clearTransactionData();
     }
 
     handleDrop(event: CdkDragDrop<BudgetCategory[]>) {

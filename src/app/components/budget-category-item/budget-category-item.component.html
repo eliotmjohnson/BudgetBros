@@ -1,4 +1,7 @@
-<span class="budget-item-wrapper" (click)="setTransactionData()">
+<span
+    class="budget-item-wrapper {{ isLineItemSelected && 'line-item-selected' }}"
+    (click)="setTransactionData()"
+>
     <ng-content></ng-content>
     <span class="title-wrapper">
         <mat-icon class="fund-logo" *ngIf="fund" fontIcon="savings" />

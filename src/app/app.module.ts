@@ -43,6 +43,7 @@ import { TransactionCardComponent } from './components/transaction-card/transact
 import { BudgetTransactionsCardComponent } from './components/budget-transactions-card/budget-transactions-card.component';
 import { httpInterceptor } from './interceptors/http.interceptor';
 import { TransactionsDatePickerComponent } from './components/transactions-date-picker/transactions-date-picker.component';
+import { InlineTransactionComponent } from './components/inline-transaction/inline-transaction.component';
 
 @NgModule({
     declarations: [
@@ -64,7 +65,8 @@ import { TransactionsDatePickerComponent } from './components/transactions-date-
         BudgetCategoryItemComponent,
         TransactionCardComponent,
         BudgetTransactionsCardComponent,
-        TransactionsDatePickerComponent
+        TransactionsDatePickerComponent,
+        InlineTransactionComponent
     ],
     bootstrap: [AppComponent],
     imports: [

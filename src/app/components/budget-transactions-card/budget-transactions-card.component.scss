@@ -1,7 +1,8 @@
 @import "bb-core";
 
 :host {
-    width: 40%;
+    min-width: 35%;
+    max-width: 35%;
     height: 100%;
     padding-top: 2rem;
     padding-bottom: 2rem;
@@ -10,15 +11,23 @@
 .banner {
     position: relative;
     width: 100%;
-    height: 10rem;
+    min-height: 10rem;
     border-top-left-radius: 1rem;
     border-top-right-radius: 1rem;
     background-color: rgb(109, 206, 109);
     margin-bottom: 0.5rem;
 }
 
+.main-content-container {
+    display: flex;
+    flex-direction: column;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
 .title-section {
-    padding: 1.5rem;
+    padding-top: 1.5rem;
+    padding-bottom: 2rem;
     width: 100%;
 
     .available {
@@ -57,8 +66,27 @@
 }
 
 .note-field {
-    height: 0.2rem;
-    width: 0.2rem;
+    letter-spacing: 0rem;
+}
+
+.transactions-banner {
+    padding-top: 1rem;
+    padding-bottom: 0.5rem;
+
+    h1 {
+        font-weight: 500;
+        font-size: 1.3rem;
+        letter-spacing: 0.05rem;
+        margin: 0;
+        color: $bb-secondary-title-color;
+    }
+}
+
+.transactions-container {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid rgb(229, 229, 229);
+    padding-bottom: 5rem;
 }
 
 .icon-wrapper {
@@ -84,4 +112,12 @@
         border-radius: 100%;
         border: 5px solid rgb(220, 220, 220);
     }
+}
+
+.show-logo {
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    translate: 1rem;
 }

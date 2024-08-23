@@ -10,6 +10,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    height: 15%;
     padding: 2rem;
     box-shadow: 0 0.1rem 1rem 0 rgb(205, 205, 205);
     z-index: 1;
@@ -67,13 +68,13 @@
     padding: 2rem;
     padding-top: 0rem;
     padding-bottom: 0rem;
-    min-height: 0rem;
+    height: 85%;
     gap: 1.4rem;
 
     .budgets {
         display: flex;
         flex-direction: column;
-        width: 60%;
+        width: 65%;
         height: 100%;
         gap: 1rem;
         padding-top: 2rem;

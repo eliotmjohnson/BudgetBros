@@ -27,6 +27,7 @@
         <BudgetCategoryItem
             class="budget-item"
             *ngFor="let item of lineItems"
+            [itemId]="item.lineItemId"
             [itemTitle]="item.name"
             [startingBalance]="item.startingBalance"
             [plannedAmount]="item.plannedAmount"

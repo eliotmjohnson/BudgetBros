@@ -7,6 +7,7 @@ import {
     ViewChild
 } from '@angular/core';
 import { LineItem } from 'src/app/models/budget';
+import { TransactionService } from 'src/app/services/transaction.service';
 
 @Component({
     selector: 'BudgetCategoryCard',

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Transaction } from 'src/app/models/budget';
+import { Transaction } from 'src/app/models/transaction';
 import { TransactionService } from 'src/app/services/transaction.service';
 
 @Component({

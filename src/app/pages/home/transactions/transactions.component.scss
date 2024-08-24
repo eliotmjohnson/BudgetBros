@@ -1,8 +1,27 @@
+@import "bb-core";
+
 .transactions-container {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
     padding: 1.5rem;  
+
+    .title-wrapper {
+        display: flex;
+        gap: .5rem;
+
+        .title {
+            margin: 0;
+        }
+
+        .plus-button {
+            margin-top: -.5rem;
+        }
+
+        .icon {
+            color: $bb-primary-green-text;
+        }
+    }
 
     .header-container {
         display: flex; 

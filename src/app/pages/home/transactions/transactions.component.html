@@ -1,23 +1,32 @@
 <div class="transactions-container">
     <div class="header-container">
-        <h1>
-            Transactions
-        </h1>
-        <TransactionsDatePicker />
+        <div class="title-wrapper">
+            <h1 class="title">
+                Transactions
+            </h1>
+            <button 
+                mat-icon-button
+                matTooltip="Add transaction"
+                class="plus-button"
+                (click)="openAddTransactionDialog()"
+            >
+                <mat-icon 
+                    fontIcon="add" 
+                    class="icon" 
+                />
+            </button>
+        </div>
+        <TransactionsDatePicker 
+            [form]="form" 
+            (submitForm)="submitForm()" 
+        />
     </div>
     <mat-divider></mat-divider>
     <div class="transactions-inner-container">
-        <TransactionCard />
-        <TransactionCard />
-        <TransactionCard />
-        <TransactionCard />
-        <TransactionCard />
-        <TransactionCard />
-        <TransactionCard />
-        <TransactionCard />
-        <TransactionCard />
-        <TransactionCard />
-        <TransactionCard />
-        <TransactionCard />
+        @for (transaction of transactions(); track transaction.id;) {
+            <TransactionCard [transaction]="transaction" />
+        } @empty {
+            No Transactions Found
+        }
     </div>
 </div>

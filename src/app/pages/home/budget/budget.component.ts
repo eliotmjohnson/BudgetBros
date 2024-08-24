@@ -50,4 +50,14 @@ export class BudgetComponent implements OnInit {
             this.isCalMenuOpened = false;
         }
     }
+
+    closeCalendar(event: MouseEvent) {
+        if (
+            (event.target as HTMLDivElement).className.includes(
+                'calendar-selector-overlay'
+            )
+        ) {
+            this.isCalMenuOpened = false;
+        }
+    }
 }

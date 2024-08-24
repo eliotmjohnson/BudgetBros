@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { AuthService } from './services/auth.service';
 import { loaderOverlayAnimation } from './animations/loader-overlay-animation';
+import { AuthService } from './services/auth.service';
 
 @Component({
     selector: 'app-root',

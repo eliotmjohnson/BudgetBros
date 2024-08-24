@@ -13,17 +13,16 @@
 
 .sidebar-budget-wrapper {
     display: flex;
-    flex: 1;
-    height: 92%;
+    height: calc(100% - 4rem);
     width: 100%;
 }
 
 .main-window {
     display: flex;
-    flex: 1;
     flex-direction: column;
     position: relative;
     height: 100%;
+    width: calc(100% - 15rem);
     overflow: hidden;
 }
 

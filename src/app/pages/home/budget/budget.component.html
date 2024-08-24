@@ -3,26 +3,48 @@
         <h1 class="title">Budget</h1>
         <p>Today is {{ currentDateString }}</p>
     </div>
-    <span (click)="isCalMenuOpened = !isCalMenuOpened" class="date-selection">
-        <mat-icon class="cal-icon" fontIcon="calendar_month" />
+    <span class="date-selection">
+        <mat-icon
+            (click)="isCalMenuOpened = true"
+            class="cal-icon"
+            fontIcon="calendar_month"
+        />
         <p>{{ selectedMonth() }}</p>
         <mat-icon
             class="arrow-icon"
+            (click)="isCalMenuOpened = true"
             [style.rotate]="isCalMenuOpened ? '180deg' : undefined"
             fontIcon="arrow_drop_down"
         ></mat-icon>
+        @if (isCalMenuOpened) {
+        <Card
+            (document:click)="closeCalendar($event)"
+            class="calendar-selector"
+            padding="0rem"
+            height="23rem"
+            width="20rem"
+        >
+            <mat-calendar
+                (monthSelected)="getNewBudget($event)"
+                startView="multi-year"
+            ></mat-calendar>
+        </Card>
+        <main class="calendar-selector-overlay"></main>
+        }
     </span>
-    @if (isCalMenuOpened) {
-    <Card class="calendar-selector" padding="0rem" height="23rem" width="20rem">
-        <mat-calendar
-            (monthSelected)="getNewBudget($event)"
-            startView="multi-year"
-        ></mat-calendar>
-    </Card>
-    }
 </header>
 <section class="budget-dashboard-wrapper">
     <div class="budgets" cdkDropList (cdkDropListDropped)="handleDrop($event)">
+        @if (budgetService.isLoading()) {
+        <main class="budget-loader-container">
+            <mat-spinner diameter="70" color="primary" />
+        </main>
+        } @else if (!budgetService.budget()?.budgetId){
+        <main class="no-budget-notice">
+            <h1>No Budget Available For This Month</h1>
+            <p>Get Bugeting!</p>
+        </main>
+        } @else {
         <BudgetCategoryCard
             class="budget-card"
             *ngFor="let budgetCategory of budget()?.budgetCategories"
@@ -38,6 +60,7 @@
                 cdkDragHandle
             />
         </BudgetCategoryCard>
+        }
     </div>
     <BudgetTransactionsCard />
 </section>

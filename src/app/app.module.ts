@@ -21,6 +21,7 @@ import {
     MatDatepickerToggle
 } from '@angular/material/datepicker';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatDialogModule } from '@angular/material/dialog';
 
 import { AppComponent } from './app.component';
 import { HomeHeaderComponent } from './components/home-header/home-header.component';
@@ -44,6 +45,7 @@ import { BudgetTransactionsCardComponent } from './components/budget-transaction
 import { httpInterceptor } from './interceptors/http.interceptor';
 import { TransactionsDatePickerComponent } from './components/transactions-date-picker/transactions-date-picker.component';
 import { InlineTransactionComponent } from './components/inline-transaction/inline-transaction.component';
+import { AddTransactionModalComponent } from './components/add-transaction-modal/add-transaction-modal.component';
 
 @NgModule({
     declarations: [
@@ -66,7 +68,8 @@ import { InlineTransactionComponent } from './components/inline-transaction/inli
         TransactionCardComponent,
         BudgetTransactionsCardComponent,
         TransactionsDatePickerComponent,
-        InlineTransactionComponent
+        InlineTransactionComponent,
+        AddTransactionModalComponent
     ],
     bootstrap: [AppComponent],
     imports: [
@@ -87,7 +90,8 @@ import { InlineTransactionComponent } from './components/inline-transaction/inli
         MatDateRangePicker,
         MatDatepickerToggle,
         MatDatepickerModule,
-        MatDividerModule
+        MatDividerModule,
+        MatDialogModule
     ],
     providers: [provideHttpClient(withInterceptors([httpInterceptor]))]
 })

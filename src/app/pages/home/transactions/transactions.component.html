@@ -1,8 +1,19 @@
 <div class="transactions-container">
     <div class="header-container">
-        <h1>
-            Transactions
-        </h1>
+        <div class="title-wrapper">
+            <h1>
+                Transactions
+            </h1>
+            <button 
+                mat-icon-button 
+                (click)="openAddTransactionDialog()"
+            >
+                <mat-icon 
+                    fontIcon="add" 
+                    class="icon" 
+                />
+            </button>
+        </div>
         <TransactionsDatePicker />
     </div>
     <mat-divider></mat-divider>

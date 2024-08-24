@@ -3,13 +3,16 @@ use actix_web::{ web::Data, Result};
 
 use crate::AppState;
 
-use super::transactions_models::{NewTransaction, Transaction};
+use super::transactions_models::{IsolatedTransaction, NewTransaction, Transaction};
 
 pub async fn get_line_item_transactions(state: Data<AppState>, line_item_id: i64) -> Result<Vec<Transaction>, sqlx::Error> {
     let query = 
         "SELECT * 
-        FROM transactions 
-        WHERE line_item_id = $1";
+        FROM 
+            transactions 
+        WHERE 
+            line_item_id = $1
+            AND deleted = false";
 
     sqlx::query_as::<_, Transaction>(query)
         .bind(line_item_id)   
@@ -22,10 +25,11 @@ pub async fn get_all_transactions_between_dates(
     user_id: i64,
     start_date: String,
     end_date: String
-) -> Result<Vec<Transaction>, sqlx::Error> {
+) -> Result<Vec<IsolatedTransaction>, sqlx::Error> {
     let query = 
         "SELECT 
-            t.* 
+            t.*
+            , bc.name as budget_category_name 
         FROM 
             transactions t
         JOIN 
@@ -34,12 +38,13 @@ pub async fn get_all_transactions_between_dates(
             budget_categories bc ON li.budget_category_id = bc.id
         JOIN 
             budgets b ON bc.budget_id = b.id
-W       WHERE 
+        WHERE 
             b.user_id = $1 
-            AND t.date 
-            BETWEEN $2 AND $3";
+            AND t.deleted = false
+            AND t.date
+            BETWEEN $2::timestamptz AND $3::timestamptz";
 
-    sqlx::query_as::<_, Transaction>(query)
+    sqlx::query_as::<_, IsolatedTransaction>(query)
         .bind(user_id)
         .bind(start_date)
         .bind(end_date)
@@ -85,6 +90,23 @@ pub async fn update_transaction(state: Data<AppState>, new_transaction: Transact
         .bind(new_transaction.id)   
         .fetch_one(&state.db)
         .await
+}
+
+pub async fn soft_delete_transaction(state: Data<AppState>, id: i64) -> Result<i64, sqlx::Error> {
+    let query = 
+        "UPDATE 
+            transactions 
+        SET 
+            deleted = true       
+        WHERE 
+            id = $1";
+
+    let _ = sqlx::query_as::<_, Transaction>(query)
+                .bind(id)   
+                .fetch_one(&state.db)
+                .await;
+
+    Ok(id)
 }
 
 pub async fn delete_transaction(state: Data<AppState>, id: i64) -> Result<i64, sqlx::Error> {

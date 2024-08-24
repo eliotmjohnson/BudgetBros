@@ -1,3 +1,5 @@
+@import "bb-core";
+
 .actions-wrapper {
     display: flex; 
     gap: 1rem; 
@@ -19,4 +21,8 @@
 
 .mat-mdc-card-actions {
     gap: 1rem; 
+}
+
+.error {
+    color: $bb-error-main;
 }

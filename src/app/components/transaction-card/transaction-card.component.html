@@ -1,22 +1,25 @@
 <mat-card>
     <mat-card-header>
         <mat-card-title>
-            Sonic
+            {{ transaction().merchant }}
         </mat-card-title>
     </mat-card-header>
     <mat-card-content>
-        Some Budget Category
+        {{ transaction().budgetCategoryName }}
     </mat-card-content>
     <div class="actions-wrapper">
         <h3 class="date">
-            Aug 10
+            {{ transaction().date | date }}
         </h3>
         <div class="actions-buttons-container">
             <mat-chip [disableRipple]="true">
-                $20
+                ${{ transaction().amount }}
             </mat-chip>
-            <button mat-icon-button>
-                <mat-icon fontIcon="delete" style="color: #e55b66" />
+            <button 
+                mat-icon-button 
+                (click)="deleteTransaction(transaction().id)"
+            >
+                <mat-icon fontIcon="delete" class="error" />
             </button>
         </div>
     </div>

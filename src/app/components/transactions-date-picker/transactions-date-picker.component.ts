@@ -20,7 +20,7 @@ export class TransactionsDatePickerComponent implements OnInit {
     this.originalEndValue = this.form().get('end')?.value;
   }
 
-  onClose() {
+  submit() {
     if (this.form().invalid) return;
 
     const currentStartValue = this.form().get('start')?.value;

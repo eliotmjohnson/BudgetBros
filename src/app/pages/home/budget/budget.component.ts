@@ -28,7 +28,7 @@ export class BudgetComponent implements OnInit {
     ngOnInit(): void {
         if (!this.budgetService.budget()) {
             this.budgetService.getBudget(
-                this.today.getMonth(),
+                this.today.getMonth() + 1,
                 this.today.getFullYear()
             );
         }
@@ -51,7 +51,7 @@ export class BudgetComponent implements OnInit {
         }
     }
 
-    closeCalendar(event: MouseEvent) {
+    closeCalendarSelector(event: MouseEvent) {
         if (
             (event.target as HTMLDivElement).className.includes(
                 'calendar-selector-overlay'
@@ -59,5 +59,9 @@ export class BudgetComponent implements OnInit {
         ) {
             this.isCalMenuOpened = false;
         }
+    }
+
+    openCalendarSelector() {
+        this.isCalMenuOpened = true;
     }
 }

@@ -12,7 +12,7 @@
     align-items: center;
     height: 7rem;
     padding: 2rem;
-    box-shadow: 0 0.1rem 1rem 0 rgb(205, 205, 205);
+    box-shadow: 0 0.1rem 1rem 0 rgb(0, 0, 0, 0.15);
     z-index: 1;
 
     .title-wrapper {
@@ -36,29 +36,32 @@
         }
     }
 
-    .date-selection {
+    .date-selection-container {
         display: flex;
-        align-items: center;
-        gap: 0.5rem;
         position: relative;
 
-        p {
-            font-weight: 400;
-            margin: 0;
-            width: 3.7rem;
-            text-align: center;
-            color: rgb(101, 101, 101);
-        }
-
-        .cal-icon {
-            color: rgb(48, 48, 48);
+        .date-selector {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
             cursor: pointer;
-        }
 
-        .arrow-icon {
-            color: rgb(113, 113, 113);
-            transition: rotate 0.2s;
-            cursor: pointer;
+            p {
+                font-weight: 400;
+                margin: 0;
+                width: 3.7rem;
+                text-align: center;
+                color: rgb(101, 101, 101);
+            }
+
+            .cal-icon {
+                color: rgb(48, 48, 48);
+            }
+
+            .arrow-icon {
+                color: rgb(113, 113, 113);
+                transition: rotate 0.2s;
+            }
         }
     }
 }

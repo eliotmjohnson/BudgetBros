@@ -3,22 +3,19 @@
         <h1 class="title">Budget</h1>
         <p>Today is {{ currentDateString }}</p>
     </div>
-    <span class="date-selection">
-        <mat-icon
-            (click)="isCalMenuOpened = true"
-            class="cal-icon"
-            fontIcon="calendar_month"
-        />
-        <p>{{ selectedMonth() }}</p>
-        <mat-icon
-            class="arrow-icon"
-            (click)="isCalMenuOpened = true"
-            [style.rotate]="isCalMenuOpened ? '180deg' : undefined"
-            fontIcon="arrow_drop_down"
-        ></mat-icon>
+    <span class="date-selection-container">
+        <span class="date-selector" (click)="openCalendarSelector()">
+            <mat-icon class="cal-icon" fontIcon="calendar_month" />
+            <p>{{ selectedMonth() }}</p>
+            <mat-icon
+                class="arrow-icon"
+                [style.rotate]="isCalMenuOpened ? '180deg' : undefined"
+                fontIcon="arrow_drop_down"
+            ></mat-icon>
+        </span>
         @if (isCalMenuOpened) {
         <Card
-            (document:click)="closeCalendar($event)"
+            (document:click)="closeCalendarSelector($event)"
             class="calendar-selector"
             padding="0rem"
             height="23rem"
@@ -42,7 +39,7 @@
         } @else if (!budgetService.budget()?.budgetId){
         <main class="no-budget-notice">
             <h1>No Budget Available For This Month</h1>
-            <p>Get Bugeting!</p>
+            <p>Get Budgeting!</p>
         </main>
         } @else {
         <BudgetCategoryCard

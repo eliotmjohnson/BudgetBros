@@ -47,6 +47,7 @@ export class BudgetComponent implements OnInit {
     }
 
     getNewBudget(calendarSelection: Date | null) {
+        // Very temporary until I can figure out how to fix issue with mat-calendar....
         setTimeout(() => (this.calendarSelector.currentView = 'year'));
 
         if (calendarSelection) {

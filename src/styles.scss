@@ -84,5 +84,10 @@ body {
     .mat-mdc-form-field-infix {
         padding: 0.5rem !important;
         padding-left: 0rem !important;
+        height: 2.5rem;
+    }
+
+    .mat-mdc-form-field-subscript-wrapper {
+        height: 0.5rem;
     }
 }

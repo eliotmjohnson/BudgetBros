@@ -10,6 +10,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
     height: 15%;
     padding: 2rem;
     box-shadow: 0 0.1rem 1rem 0 rgb(205, 205, 205);
@@ -107,6 +108,27 @@
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
-.mat-calendar-menu-item {
-    border-bottom: 1px solid rgb(231, 231, 231);
+.calendar-selector {
+    position: absolute;
+    top: 5rem;
+    right: 1rem;
+    border-radius: 1rem;
+    box-shadow: 0rem 2rem 2rem 0 rgb(0, 0, 0, 0.3);
+    transform-origin: top right;
+    animation: openCalendar 0.5s forwards;
+}
+
+@keyframes openCalendar {
+    0% {
+        scale: 0;
+    }
+    50% {
+        scale: 1.03;
+    }
+    80% {
+        scale: 0.99;
+    }
+    100% {
+        scale: 1;
+    }
 }

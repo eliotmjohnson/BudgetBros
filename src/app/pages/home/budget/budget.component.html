@@ -1,33 +1,25 @@
 <header class="header">
     <div class="title-wrapper">
         <h1 class="title">Budget</h1>
-        <p>Today is {{ currentDate }}</p>
+        <p>Today is {{ currentDateString }}</p>
     </div>
-    <span
-        class="date-selection"
-        (menuOpened)="isCalMenuOpened = true"
-        (menuClosed)="isCalMenuOpened = false"
-        [matMenuTriggerFor]="menu"
-    >
+    <span (click)="isCalMenuOpened = !isCalMenuOpened" class="date-selection">
         <mat-icon class="cal-icon" fontIcon="calendar_month" />
-        <p>{{ selectedMonth }}</p>
+        <p>{{ selectedMonth() }}</p>
         <mat-icon
             class="arrow-icon"
             [style.rotate]="isCalMenuOpened ? '180deg' : undefined"
             fontIcon="arrow_drop_down"
         ></mat-icon>
-        <mat-menu class="mat-calendar-menu" #menu="matMenu" xPosition="before">
-            @for (month of months; track $index) {
-            <button
-                mat-menu-item
-                class="mat-calendar-menu-item"
-                (click)="selectedMonth = month"
-            >
-                <span>{{ month }}</span>
-            </button>
-            }
-        </mat-menu>
     </span>
+    @if (isCalMenuOpened) {
+    <Card class="calendar-selector" padding="0rem" height="23rem" width="20rem">
+        <mat-calendar
+            (monthSelected)="getNewBudget($event)"
+            startView="multi-year"
+        ></mat-calendar>
+    </Card>
+    }
 </header>
 <section class="budget-dashboard-wrapper">
     <div class="budgets" cdkDropList (cdkDropListDropped)="handleDrop($event)">

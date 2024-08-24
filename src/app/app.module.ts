@@ -44,6 +44,7 @@ import { BudgetTransactionsCardComponent } from './components/budget-transaction
 import { httpInterceptor } from './interceptors/http.interceptor';
 import { TransactionsDatePickerComponent } from './components/transactions-date-picker/transactions-date-picker.component';
 import { InlineTransactionComponent } from './components/inline-transaction/inline-transaction.component';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 @NgModule({
     declarations: [
@@ -89,6 +90,9 @@ import { InlineTransactionComponent } from './components/inline-transaction/inli
         MatDatepickerModule,
         MatDividerModule
     ],
-    providers: [provideHttpClient(withInterceptors([httpInterceptor]))]
+    providers: [
+        provideHttpClient(withInterceptors([httpInterceptor])),
+        provideNativeDateAdapter()
+    ]
 })
 export class AppModule {}

@@ -8,8 +8,11 @@ use super::transactions_models::{IsolatedTransaction, NewTransaction, Transactio
 pub async fn get_line_item_transactions(state: Data<AppState>, line_item_id: i64) -> Result<Vec<Transaction>, sqlx::Error> {
     let query = 
         "SELECT * 
-        FROM transactions 
-        WHERE line_item_id = $1";
+        FROM 
+            transactions 
+        WHERE 
+            line_item_id = $1
+            AND deleted = false";
 
     sqlx::query_as::<_, Transaction>(query)
         .bind(line_item_id)   
@@ -37,6 +40,7 @@ pub async fn get_all_transactions_between_dates(
             budgets b ON bc.budget_id = b.id
         WHERE 
             b.user_id = $1 
+            AND t.deleted = false
             AND t.date
             BETWEEN $2::timestamptz AND $3::timestamptz";
 

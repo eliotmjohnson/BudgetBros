@@ -99,7 +99,7 @@ pub async fn soft_delete_transaction(state: Data<AppState>, id: i64) -> Result<i
         SET 
             deleted = true       
         WHERE 
-            id = $2";
+            id = $1";
 
     let _ = sqlx::query_as::<_, Transaction>(query)
                 .bind(id)   

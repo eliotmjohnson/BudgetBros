@@ -28,6 +28,7 @@ use super::transactions_services::{
     get_all_transactions_between_dates, 
     get_line_item_transactions, 
     update_transaction,
+    soft_delete_transaction,
     delete_transaction
 };
 
@@ -116,7 +117,7 @@ pub async fn soft_delete_transaction_handler(
 ) -> impl Responder {
     let transaction_id = params.into_inner();
 
-    let delete_transaction_result = delete_transaction(state, transaction_id).await;
+    let delete_transaction_result = soft_delete_transaction(state, transaction_id).await;
 
     match delete_transaction_result {
         Ok(_) => HttpResponse::Ok().json("Transaction deleted successfully"),

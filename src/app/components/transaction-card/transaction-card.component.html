@@ -15,7 +15,10 @@
             <mat-chip [disableRipple]="true">
                 ${{ transaction().amount }}
             </mat-chip>
-            <button mat-icon-button (click)="deleteTransaction(transaction().id)">
+            <button 
+                mat-icon-button 
+                (click)="deleteTransaction(transaction().id)"
+            >
                 <mat-icon fontIcon="delete" class="error" />
             </button>
         </div>

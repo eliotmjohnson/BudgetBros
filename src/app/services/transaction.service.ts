@@ -34,6 +34,23 @@ export class TransactionService {
             });
     }
 
+    softDeleteTransaction(transactionId: number) {
+        const currentTransactions = this.transactions();
+
+        this.transactions.update((transactions) =>
+            transactions.filter((t) => t.id !== transactionId)
+        );
+
+        this.http
+            .delete(`${baseUrl}/soft/${transactionId}`)
+            .subscribe({
+                error: (error) => {
+                    console.error(error);
+                    this.transactions.set(currentTransactions);
+                }
+            });
+    }
+
     currentSelectedLineItem = '';
     currentSelectedLineItemId = 0;
     currentSelectedLineItemBalance = 0;

@@ -9,54 +9,59 @@
             <p>{{ selectedMonth() }}</p>
             <mat-icon
                 class="arrow-icon"
-                [style.rotate]="isCalMenuOpened ? '180deg' : undefined"
+                [style.rotate]="
+                    isCalMenuOpened && !isCalendarClosing ? '180deg' : undefined
+                "
                 fontIcon="arrow_drop_down"
             ></mat-icon>
         </span>
         @if (isCalMenuOpened) {
-        <Card
-            (document:click)="closeCalendarSelector($event)"
-            class="calendar-selector"
-            padding="0rem"
-            height="23rem"
-            width="20rem"
-        >
-            <mat-calendar
-                (monthSelected)="getNewBudget($event)"
-                startView="multi-year"
-            ></mat-calendar>
-        </Card>
-        <main class="calendar-selector-overlay"></main>
+            <Card
+                (document:click)="closeCalendarSelector($event)"
+                class="calendar-selector {{
+                    isCalendarClosing && 'close-calendar'
+                }}"
+                padding="0rem"
+                height="23rem"
+                width="20rem"
+            >
+                <mat-calendar
+                    #calendarSelector
+                    (monthSelected)="getNewBudget($event)"
+                    startView="multi-year"
+                ></mat-calendar>
+            </Card>
+            <main class="calendar-selector-overlay"></main>
         }
     </span>
 </header>
 <section class="budget-dashboard-wrapper">
     <div class="budgets" cdkDropList (cdkDropListDropped)="handleDrop($event)">
         @if (budgetService.isLoading()) {
-        <main class="budget-loader-container">
-            <mat-spinner diameter="70" color="primary" />
-        </main>
-        } @else if (!budgetService.budget()?.budgetId){
-        <main class="no-budget-notice">
-            <h1>No Budget Available For This Month</h1>
-            <p>Get Budgeting!</p>
-        </main>
+            <main class="budget-loader-container">
+                <mat-spinner diameter="70" color="primary" />
+            </main>
+        } @else if (!budgetService.budget()?.budgetId) {
+            <main class="no-budget-notice">
+                <h1>No Budget Available For This Month</h1>
+                <p>Get Budgeting!</p>
+            </main>
         } @else {
-        <BudgetCategoryCard
-            class="budget-card"
-            *ngFor="let budgetCategory of budget()?.budgetCategories"
-            [lineItems]="budgetCategory.lineItems"
-            [name]="budgetCategory.name"
-            cdkDrag
-            cdkDragLockAxis="y"
-            cdkDragBoundary=".budgets"
-        >
-            <mat-icon
-                class="drag-handle"
-                fontIcon="drag_indicator"
-                cdkDragHandle
-            />
-        </BudgetCategoryCard>
+            <BudgetCategoryCard
+                class="budget-card"
+                *ngFor="let budgetCategory of budget()?.budgetCategories"
+                [lineItems]="budgetCategory.lineItems"
+                [name]="budgetCategory.name"
+                cdkDrag
+                cdkDragLockAxis="y"
+                cdkDragBoundary=".budgets"
+            >
+                <mat-icon
+                    class="drag-handle"
+                    fontIcon="drag_indicator"
+                    cdkDragHandle
+                />
+            </BudgetCategoryCard>
         }
     </div>
     <BudgetTransactionsCard />

@@ -1,8 +1,8 @@
 @if (authService.isLoading()) {
-<main @loaderOverlayAnimation class="bb-main-overlay">
-    <BBLogo fontSize="4rem" height="4rem" color="white" />
-    <mat-spinner color="accent" />
-</main>
+    <main @loaderOverlayAnimation class="bb-main-overlay">
+        <BBLogo fontSize="4rem" height="4rem" color="white" />
+        <mat-spinner color="accent" />
+    </main>
 } @else {
-<router-outlet></router-outlet>
+    <router-outlet></router-outlet>
 }

@@ -130,6 +130,10 @@
     width: 100vw;
 }
 
+.close-calendar {
+    animation: closeCalendar 0.3s forwards;
+}
+
 @keyframes openCalendar {
     0% {
         scale: 0;
@@ -142,6 +146,21 @@
     }
     100% {
         scale: 1;
+    }
+}
+
+@keyframes closeCalendar {
+    0% {
+        scale: 1;
+    }
+    20% {
+        scale: 0.99;
+    }
+    50% {
+        scale: 1.03;
+    }
+    100% {
+        scale: 0;
     }
 }
 

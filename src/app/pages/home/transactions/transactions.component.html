@@ -16,7 +16,10 @@
                 />
             </button>
         </div>
-        <TransactionsDatePicker />
+        <TransactionsDatePicker 
+            [form]="form" 
+            (submitForm)="submitForm()" 
+        />
     </div>
     <mat-divider></mat-divider>
     <div class="transactions-inner-container">

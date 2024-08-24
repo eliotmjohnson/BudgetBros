@@ -22,6 +22,7 @@ import {
 } from '@angular/material/datepicker';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatDialogModule } from '@angular/material/dialog';
+import {MatTooltipModule } from '@angular/material/tooltip';
 
 import { AppComponent } from './app.component';
 import { HomeHeaderComponent } from './components/home-header/home-header.component';
@@ -91,7 +92,8 @@ import { AddTransactionModalComponent } from './components/add-transaction-modal
         MatDatepickerToggle,
         MatDatepickerModule,
         MatDividerModule,
-        MatDialogModule
+        MatDialogModule,
+        MatTooltipModule
     ],
     providers: [provideHttpClient(withInterceptors([httpInterceptor]))]
 })

@@ -1,11 +1,13 @@
 <div class="transactions-container">
     <div class="header-container">
         <div class="title-wrapper">
-            <h1>
+            <h1 class="title">
                 Transactions
             </h1>
             <button 
-                mat-icon-button 
+                mat-icon-button
+                matTooltip="Add transaction"
+                class="plus-button"
                 (click)="openAddTransactionDialog()"
             >
                 <mat-icon 

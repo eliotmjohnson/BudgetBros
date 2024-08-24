@@ -8,7 +8,15 @@
 
     .title-wrapper {
         display: flex;
-        flex-direction: column;
+        gap: .5rem;
+
+        .title {
+            margin: 0;
+        }
+
+        .plus-button {
+            margin-top: -.5rem;
+        }
 
         .icon {
             color: $bb-primary-green-text;

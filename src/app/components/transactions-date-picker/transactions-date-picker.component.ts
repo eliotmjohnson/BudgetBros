@@ -8,5 +8,5 @@ import { provideNativeDateAdapter } from '@angular/material/core';
   providers: [provideNativeDateAdapter()]
 })
 export class TransactionsDatePickerComponent {
-
+  
 }

@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 use sqlx::{self, FromRow};
 
 #[derive(Serialize, Deserialize, FromRow, Debug)]
+#[serde(rename_all = "camelCase")]
 pub struct Transaction {
     pub id: i64,
     pub title: String,
@@ -10,10 +11,12 @@ pub struct Transaction {
     pub amount: f64,
     pub notes: String,
     pub date: DateTime<Local>,
-    pub line_item_id: i64
+    pub line_item_id: i64,
+    pub deleted: bool
 }
 
 #[derive(Serialize, Deserialize, FromRow, Debug)]
+#[serde(rename_all = "camelCase")]
 pub struct IsolatedTransaction {
     pub id: i64,
     pub title: String,
@@ -26,6 +29,7 @@ pub struct IsolatedTransaction {
 }
 
 #[derive(Serialize, Deserialize, FromRow, Debug)]
+#[serde(rename_all = "camelCase")]
 pub struct NewTransaction {
     pub title: String,
     pub merchant: String,

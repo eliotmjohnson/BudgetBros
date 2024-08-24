@@ -1,8 +1,8 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { Transaction } from '../models/budget';
 import { HttpClient } from '@angular/common/http';
 import { BE_API_URL } from '../constants/constants';
 import { AuthService } from './auth.service';
+import { IsolatedTransaction, Transaction } from '../models/transaction';
 
 const baseUrl = `${BE_API_URL}/transactions`;
 
@@ -13,13 +13,13 @@ export class TransactionService {
     http = inject(HttpClient);
     authService = inject(AuthService);
 
-    transactions = signal<Transaction[]>([]);  
+    transactions = signal<IsolatedTransaction[]>([]);  
     isLoading = signal(false);
     
     getTransactionsBetweenDates(date1: Date, date2: Date) {
         this.isLoading.set(true);
         this.http
-            .get<Transaction[]>(`
+            .get<IsolatedTransaction[]>(`
                 ${baseUrl}/${this.authService.userId}?start_date=${date1.toISOString()}&end_date=${date2.toISOString()}
             `)
             .subscribe({

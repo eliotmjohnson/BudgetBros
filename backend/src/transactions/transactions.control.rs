@@ -109,6 +109,21 @@ pub async fn update_transaction_handler(
     }
 }
 
+#[delete("/soft/{transaction_id}")]
+pub async fn soft_delete_transaction_handler(
+    state: Data<AppState>,
+    params: Path<i64>,
+) -> impl Responder {
+    let transaction_id = params.into_inner();
+
+    let delete_transaction_result = delete_transaction(state, transaction_id).await;
+
+    match delete_transaction_result {
+        Ok(_) => HttpResponse::Ok().json("Transaction deleted successfully"),
+        Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
+    }
+}
+
 #[delete("/{transaction_id}")]
 pub async fn delete_transaction_handler(
     state: Data<AppState>,

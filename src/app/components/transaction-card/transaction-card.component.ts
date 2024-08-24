@@ -1,4 +1,5 @@
 import { Component, input } from '@angular/core';
+import { IsolatedTransaction } from 'src/app/models/transaction';
 
 @Component({
   selector: 'TransactionCard',
@@ -6,10 +7,5 @@ import { Component, input } from '@angular/core';
   styleUrl: './transaction-card.component.scss'
 })
 export class TransactionCardComponent {
-  title = input.required<string>();
-  merchant = input.required<string>();
-  budgetCategoryName = input.required<string>();
-  date = input.required<string>();
-  amount = input.required<number>();
-
+  transaction = input.required<IsolatedTransaction>();
 }

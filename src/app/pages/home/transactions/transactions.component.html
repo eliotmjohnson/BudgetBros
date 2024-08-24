@@ -7,17 +7,8 @@
     </div>
     <mat-divider></mat-divider>
     <div class="transactions-inner-container">
-        <TransactionCard />
-        <TransactionCard />
-        <TransactionCard />
-        <TransactionCard />
-        <TransactionCard />
-        <TransactionCard />
-        <TransactionCard />
-        <TransactionCard />
-        <TransactionCard />
-        <TransactionCard />
-        <TransactionCard />
-        <TransactionCard />
+        @for (transaction of transactions(); track transaction.transactionId;) {
+            <TransactionCard [transaction]="transaction" />
+        }
     </div>
 </div>

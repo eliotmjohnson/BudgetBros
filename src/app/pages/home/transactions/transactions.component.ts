@@ -12,7 +12,8 @@ export class TransactionsComponent implements OnInit {
   transactions = this.transactionService.transactions;
 
   ngOnInit(): void {
-    this.transactionService.getTransactionsBetweenDates((new Date(2024, 7, 19)), new Date(2024, 7, 22))
+    this.transactionService
+      .getTransactionsBetweenDates((new Date(2024, 7, 19)), new Date(2024, 7, 22))
   }
 
 }

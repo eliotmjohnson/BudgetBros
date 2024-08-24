@@ -88,6 +88,23 @@ pub async fn update_transaction(state: Data<AppState>, new_transaction: Transact
         .await
 }
 
+pub async fn soft_delete_transaction(state: Data<AppState>, id: i64) -> Result<i64, sqlx::Error> {
+    let query = 
+        "UPDATE 
+            transactions 
+        SET 
+            deleted = true       
+        WHERE 
+            id = $2";
+
+    let _ = sqlx::query_as::<_, Transaction>(query)
+                .bind(id)   
+                .fetch_one(&state.db)
+                .await;
+
+    Ok(id)
+}
+
 pub async fn delete_transaction(state: Data<AppState>, id: i64) -> Result<i64, sqlx::Error> {
     let query = 
         "DELETE FROM transactions

@@ -1,0 +1,46 @@
+<h2 mat-dialog-title>
+    {{ modalData.mode === 'add' ? 'Add ' : 'Edit '}}
+    Transaction
+</h2>
+<mat-dialog-content style="display: flex; flex-direction: column; gap: 1rem;">
+    <mat-form-field>
+        <mat-label>
+            Choose a date
+        </mat-label>
+        <input 
+            matInput 
+            [matDatepicker]="picker"
+        >
+        <mat-hint>
+            MM/DD/YYYY
+        </mat-hint>
+        <mat-datepicker-toggle 
+            matIconSuffix 
+            [for]="picker"
+        />
+        <mat-datepicker #picker />
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>
+            Select Budget Item
+        </mat-label>
+        <mat-select>
+          
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>
+            Merchant
+        </mat-label>
+        <input matInput>
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button 
+        mat-button 
+        (click)="closeModal()"
+    >
+        cancel
+    </button>
+    <button mat-button cdkFocusInitial>Add</button>
+</mat-dialog-actions>

@@ -21,7 +21,7 @@
             (submitForm)="submitForm()" 
         />
     </div>
-    <mat-divider></mat-divider>
+    <mat-divider />
     <div class="transactions-inner-container">
         @for (transaction of transactions(); track transaction.id;) {
             <TransactionCard [transaction]="transaction" />

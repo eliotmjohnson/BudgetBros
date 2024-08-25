@@ -24,10 +24,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSelectModule } from '@angular/material/select';
 
 import { ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
-import { AddTransactionModalComponent } from './components/add-transaction-modal/add-transaction-modal.component';
+import { TransactionModalComponent } from './components/transaction-modal/transaction-modal.component';
 import { AuthFormComponent } from './components/auth-form/auth-form.component';
 import { BBLogoComponent } from './components/bb-logo/bb-logo.component';
 import { BudgetCategoryCardComponent } from './components/budget-category-card/budget-category-card.component';
@@ -71,7 +72,7 @@ import { LoginComponent } from './pages/login/login.component';
         BudgetTransactionsCardComponent,
         TransactionsDatePickerComponent,
         InlineTransactionComponent,
-        AddTransactionModalComponent
+        TransactionModalComponent
     ],
     bootstrap: [AppComponent],
     imports: [
@@ -94,7 +95,8 @@ import { LoginComponent } from './pages/login/login.component';
         MatDatepickerModule,
         MatDividerModule,
         MatDialogModule,
-        MatTooltipModule
+        MatTooltipModule,
+        MatSelectModule
     ],
     providers: [
         provideHttpClient(withInterceptors([httpInterceptor])),

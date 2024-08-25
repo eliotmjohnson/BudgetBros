@@ -4,8 +4,6 @@ import { BE_API_URL } from '../constants/constants';
 import { AuthService } from './auth.service';
 import { IsolatedTransaction, Transaction } from '../models/transaction';
 
-const baseUrl = `${BE_API_URL}/transactions`;
-
 @Injectable({
     providedIn: 'root'
 })
@@ -13,6 +11,7 @@ export class TransactionService {
     http = inject(HttpClient);
     authService = inject(AuthService);
 
+    baseUrl = `${BE_API_URL}/transactions`;
     currentSelectedLineItem = '';
     currentSelectedLineItemId = 0;
     currentSelectedLineItemBalance = 0;
@@ -25,7 +24,7 @@ export class TransactionService {
         this.http
             .get<IsolatedTransaction[]>(
                 `
-                ${baseUrl}/${this.authService.userId}?start_date=${date1.toISOString()}&end_date=${date2.toISOString()}
+                ${this.baseUrl}/${this.authService.userId}?start_date=${date1.toISOString()}&end_date=${date2.toISOString()}
             `
             )
             .subscribe({
@@ -47,7 +46,7 @@ export class TransactionService {
             transactions.filter((t) => t.id !== transactionId)
         );
 
-        this.http.delete(`${baseUrl}/soft/${transactionId}`).subscribe({
+        this.http.delete(`${this.baseUrl}/soft/${transactionId}`).subscribe({
             error: (error) => {
                 console.error(error);
                 this.transactions.set(currentTransactions);

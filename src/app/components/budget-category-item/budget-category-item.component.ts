@@ -33,7 +33,7 @@ export class BudgetCategoryItemComponent {
             this.remainingAmount;
         this.transactionService.currentSelectedLineItem = this.itemTitle;
         this.transactionService.currentSelectedLineItemId = this.itemId;
-        this.transactionService.currentTransactionData = this.transactions
+        this.transactionService.currentBudgetTransactionData = this.transactions
             ? this.transactions
             : [];
     }

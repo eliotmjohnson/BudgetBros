@@ -20,4 +20,4 @@ export const MONTHS = [
     'October',
     'November',
     'December'
-] as const;
+];

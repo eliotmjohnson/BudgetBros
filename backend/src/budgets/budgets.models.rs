@@ -73,7 +73,7 @@ pub struct BudgetCategoryDataConverted {
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct BudgetResponseData {
-    pub budget_id: i64,
+    pub budget_id: Option<i64>,
     pub month_number: i64,
     pub year: i64,
     pub budget_categories: Vec<BudgetCategoryDataConverted>,

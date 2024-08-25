@@ -1,51 +1,68 @@
 <header class="header">
     <div class="title-wrapper">
         <h1 class="title">Budget</h1>
-        <p>Today is {{ currentDate }}</p>
+        <p>Today is {{ currentDateString }}</p>
     </div>
-    <span
-        class="date-selection"
-        (menuOpened)="isCalMenuOpened = true"
-        (menuClosed)="isCalMenuOpened = false"
-        [matMenuTriggerFor]="menu"
-    >
-        <mat-icon class="cal-icon" fontIcon="calendar_month" />
-        <p>{{ selectedMonth }}</p>
-        <mat-icon
-            class="arrow-icon"
-            [style.rotate]="isCalMenuOpened ? '180deg' : undefined"
-            fontIcon="arrow_drop_down"
-        ></mat-icon>
-        <mat-menu class="mat-calendar-menu" #menu="matMenu" xPosition="before">
-            @for (month of months; track $index) {
-            <button
-                mat-menu-item
-                class="mat-calendar-menu-item"
-                (click)="selectedMonth = month"
+    <span class="date-selection-container">
+        <span class="date-selector" (click)="openCalendarSelector()">
+            <mat-icon class="cal-icon" fontIcon="calendar_month" />
+            <p>{{ selectedMonth() }}</p>
+            <mat-icon
+                class="arrow-icon"
+                [style.rotate]="
+                    isCalMenuOpened && !isCalendarClosing ? '180deg' : undefined
+                "
+                fontIcon="arrow_drop_down"
+            ></mat-icon>
+        </span>
+        @if (isCalMenuOpened) {
+            <Card
+                (document:click)="closeCalendarSelector($event)"
+                class="calendar-selector {{
+                    isCalendarClosing && 'close-calendar'
+                }}"
+                padding="0rem"
+                height="23rem"
+                width="20rem"
             >
-                <span>{{ month }}</span>
-            </button>
-            }
-        </mat-menu>
+                <mat-calendar
+                    #calendarSelector
+                    (monthSelected)="getNewBudget($event)"
+                    startView="multi-year"
+                ></mat-calendar>
+            </Card>
+            <main class="calendar-selector-overlay"></main>
+        }
     </span>
 </header>
 <section class="budget-dashboard-wrapper">
     <div class="budgets" cdkDropList (cdkDropListDropped)="handleDrop($event)">
-        <BudgetCategoryCard
-            class="budget-card"
-            *ngFor="let budgetCategory of budget()?.budgetCategories"
-            [lineItems]="budgetCategory.lineItems"
-            [name]="budgetCategory.name"
-            cdkDrag
-            cdkDragLockAxis="y"
-            cdkDragBoundary=".budgets"
-        >
-            <mat-icon
-                class="drag-handle"
-                fontIcon="drag_indicator"
-                cdkDragHandle
-            />
-        </BudgetCategoryCard>
+        @if (budgetService.isLoading()) {
+            <main class="budget-loader-container">
+                <mat-spinner diameter="70" color="primary" />
+            </main>
+        } @else if (!budgetService.budget()?.budgetId) {
+            <main class="no-budget-notice">
+                <h1>No Budget Available For This Month</h1>
+                <p>Get Budgeting!</p>
+            </main>
+        } @else {
+            <BudgetCategoryCard
+                class="budget-card"
+                *ngFor="let budgetCategory of budget()?.budgetCategories"
+                [lineItems]="budgetCategory.lineItems"
+                [name]="budgetCategory.name"
+                cdkDrag
+                cdkDragLockAxis="y"
+                cdkDragBoundary=".budgets"
+            >
+                <mat-icon
+                    class="drag-handle"
+                    fontIcon="drag_indicator"
+                    cdkDragHandle
+                />
+            </BudgetCategoryCard>
+        }
     </div>
     <BudgetTransactionsCard />
 </section>

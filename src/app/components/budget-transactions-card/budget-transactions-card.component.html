@@ -1,43 +1,45 @@
 <Card width="100%" height="100%" padding="0rem">
     @if (!transactionService.isTransactionDataEmpty()) {
-    <section class="banner">
-        <div class="icon-wrapper">
-            <mat-icon class="icon" fontIcon="savings" />
-        </div>
-    </section>
-    <main class="main-content-container">
-        <section class="title-section">
-            <span class="available">Available</span>
-            <span class="top">
-                <h1>{{ transactionService.currentSelectedLineItem }}</h1>
-                <h2>
-                    <h3 class="dollar-sign">$</h3>
-                    {{
-                        transactionService.currentSelectedLineItemBalance
-                            | number : "1.2-2"
-                    }}
-                </h2>
-            </span>
+        <section class="banner">
+            <div class="icon-wrapper">
+                <mat-icon class="icon" fontIcon="savings" />
+            </div>
         </section>
-        <mat-form-field class="note-field" appearance="outline">
-            <input matInput placeholder="Add a Note" />
-        </mat-form-field>
-        <span class="transactions-banner">
-            <h1>Transactions</h1>
-        </span>
-    </main>
-    <section class="transactions-container">
-        @for (transaction of transactionService.currentTransactionData; track
-        $index) {
-        <InlineTransaction
-            [title]="transaction.title"
-            [amount]="transaction.amount"
-        />
-        }
-    </section>
+        <main class="main-content-container">
+            <section class="title-section">
+                <span class="available">Available</span>
+                <span class="top">
+                    <h1>{{ transactionService.currentSelectedLineItem }}</h1>
+                    <h2>
+                        <h3 class="dollar-sign">$</h3>
+                        {{
+                            transactionService.currentSelectedLineItemBalance
+                                | number: "1.2-2"
+                        }}
+                    </h2>
+                </span>
+            </section>
+            <mat-form-field class="note-field" appearance="outline">
+                <input matInput placeholder="Add a Note" />
+            </mat-form-field>
+            <span class="transactions-banner">
+                <h1>Transactions</h1>
+            </span>
+        </main>
+        <section class="transactions-container">
+            @for (
+                transaction of transactionService.currentBudgetTransactionData;
+                track $index
+            ) {
+                <InlineTransaction
+                    [title]="transaction.title"
+                    [amount]="transaction.amount"
+                />
+            }
+        </section>
     } @else {
-    <div class="show-logo">
-        <BBLogo fontSize="4rem" height="4rem" />
-    </div>
+        <div class="show-logo">
+            <BBLogo fontSize="4rem" height="4rem" />
+        </div>
     }
 </Card>

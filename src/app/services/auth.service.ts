@@ -21,7 +21,10 @@ export class AuthService {
     userId: string | null = null;
     email: string | null = null;
 
-    constructor(private http: HttpClient, private router: Router) {}
+    constructor(
+        private http: HttpClient,
+        private router: Router
+    ) {}
 
     refreshSession(token: string) {
         this.isLoading.set(true);
@@ -87,6 +90,6 @@ export class AuthService {
     setLocalStorageData(email: string, id: string, token?: string) {
         localStorage.setItem('userEmail', email);
         localStorage.setItem('userId', String(id));
-        token && localStorage.setItem('token', token);
+        if (token) localStorage.setItem('token', token);
     }
 }

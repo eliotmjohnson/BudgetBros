@@ -40,7 +40,7 @@ export class BudgetComponent implements OnInit {
 
     handleDrop(event: CdkDragDrop<BudgetCategory[]>) {
         moveItemInArray(
-            this.budget()?.budgetCategories!,
+            this.budget()!.budgetCategories,
             event.previousIndex,
             event.currentIndex
         );

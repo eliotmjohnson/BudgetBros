@@ -2,28 +2,36 @@ use actix_web::web::Data;
 
 use crate::AppState;
 
-use super::budget_categories_models::BudgetCategory;
+use super::budget_categories_models::BudgetCategoryWithLineItemsRow;
 
 pub async fn get_budget_categories_with_line_items(
     state: Data<AppState>,
-    budget_id: i64,
-    date: String
-) -> Result<Vec<BudgetCategory>, sqlx::Error> {
+    user_id: i64,
+    month_number: i64,
+    year: i64
+) -> Result<Vec<BudgetCategoryWithLineItemsRow>, sqlx::Error> {
     let query = "
-        SELECT *
+        SELECT 
+            bc.id AS budget_category_id,
+            bc.name AS budget_category_name,
+            li.id AS line_item_id,
+            li.name AS line_item_name
         FROM 
-            budget_categories
+            budgets b
         JOIN 
-            line_items ON budget_categories.line_item_id = line_items.id
+            budget_categories bc ON b.id = bc.budget_id
+        JOIN 
+            line_items li ON bc.id = li.budget_category_id
         WHERE 
-            budget_id = $1
-        AND 
-            date = $2
+            b.user_id = $1 AND b.month_number = $2 AND b.year = $3
+        ORDER BY
+            bc.id, li.id;
     ";
 
-    sqlx::query_as::<_, BudgetCategory>(query)
-        .bind(budget_id)
-        .bind(date)
+    sqlx::query_as::<_, BudgetCategoryWithLineItemsRow>(query)
+        .bind(user_id)
+        .bind(month_number)
+        .bind(year)
         .fetch_all(&state.db)
         .await
 }

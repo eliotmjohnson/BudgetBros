@@ -61,7 +61,6 @@ async fn get_all_budget_categories_with_line_items_handler(
                     });
             }
 
-            // Collect the values from the HashMap into a Vec<BudgetCategory>
             let result: Vec<BudgetCategoryWithLineItems> = categories_map.into_values().collect();
 
             HttpResponse::Ok().json(result)

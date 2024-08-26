@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { TransactionModalComponent, TransactionModalData } from 'src/app/components/transaction-modal/transaction-modal.component';
+import { BudgetCategoryService } from 'src/app/services/budget-category.service';
 import { TransactionService } from 'src/app/services/transaction.service';
 
 @Component({
@@ -11,6 +12,7 @@ import { TransactionService } from 'src/app/services/transaction.service';
 })
 export class TransactionsComponent implements OnInit {
   transactionService = inject(TransactionService);
+  budgetCategoryService = inject(BudgetCategoryService);
   dialog = inject(MatDialog);
 
   form = new FormGroup({
@@ -23,6 +25,8 @@ export class TransactionsComponent implements OnInit {
   ngOnInit(): void {
     this.transactionService
       .getTransactionsBetweenDates(new Date(), new Date())
+
+    this.budgetCategoryService.getBudgetCategoriesWithLineItems(8, 2024);
   }
 
   openAddTransactionDialog() {

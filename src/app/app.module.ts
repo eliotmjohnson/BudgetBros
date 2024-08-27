@@ -49,6 +49,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { SettingsComponent } from './pages/home/settings/settings.component';
 import { TransactionsComponent } from './pages/home/transactions/transactions.component';
 import { LoginComponent } from './pages/login/login.component';
+import { FieldErrorComponent } from './components/field-error/field-error.component';
 
 @NgModule({
     declarations: [
@@ -72,7 +73,8 @@ import { LoginComponent } from './pages/login/login.component';
         BudgetTransactionsCardComponent,
         TransactionsDatePickerComponent,
         InlineTransactionComponent,
-        TransactionModalComponent
+        TransactionModalComponent,
+        FieldErrorComponent
     ],
     bootstrap: [AppComponent],
     imports: [

@@ -1,0 +1,5 @@
+<ng-container>
+    @if (form().get(fieldName())?.hasError && form().get(fieldName())?.touched) {
+        {{ fieldName() + '' + errorMsg() ? errorMsg() :'is required' }}
+    }
+</ng-container>

@@ -12,7 +12,6 @@ import { TransactionService } from 'src/app/services/transaction.service';
 })
 export class TransactionsComponent implements OnInit {
   transactionService = inject(TransactionService);
-  budgetCategoryService = inject(BudgetCategoryService);
   dialog = inject(MatDialog);
 
   form = new FormGroup({
@@ -25,8 +24,6 @@ export class TransactionsComponent implements OnInit {
   ngOnInit(): void {
     this.transactionService
       .getTransactionsBetweenDates(new Date(), new Date())
-
-    this.budgetCategoryService.getBudgetCategoriesWithLineItems(8, 2024);
   }
 
   openAddTransactionDialog() {

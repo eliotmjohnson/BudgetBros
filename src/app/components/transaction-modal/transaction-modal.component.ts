@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject} from '@angular/core';
+import { Component, computed, inject, signal} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -15,40 +15,42 @@ export type TransactionModalData = {
   templateUrl: './transaction-modal.component.html',
   styleUrl: './transaction-modal.component.scss'
 })
-export class TransactionModalComponent implements OnInit {
+export class TransactionModalComponent {
   readonly dialogRef = inject(MatDialogRef<TransactionModalComponent>);
   modalData = inject<TransactionModalData>(MAT_DIALOG_DATA);
   transactionService = inject(TransactionService);
   budgetCategoryService = inject(BudgetCategoryService);
 
+  prevSelectedDate = signal<Date | null>(null)
+
   form = new FormGroup({
-    amount: new FormControl(0, [Validators.required]),
+    amount: new FormControl(0.00, [Validators.required]),
     category: new FormControl<number | null>(null, [Validators.required]),
     date: new FormControl<Date | null>(null, [Validators.required]),
     merchant: new FormControl<string>('', [Validators.required])
   })
 
-  dropdownCategories = computed<BudgetCategoryWithLineItems[]>(() => this.budgetCategoryService.budgetCategoriesWithLineItems())
-
-  ngOnInit(): void {
-    this.form.valueChanges.subscribe(value => {
-      if (value.date) {
-        this.budgetCategoryService.getBudgetCategoriesWithLineItems(
-          value.date.getMonth() + 1, 
-          value.date.getFullYear()
-        )
-      }
-    }) 
-  }
+  dropdownCategories = computed<BudgetCategoryWithLineItems[]>(
+    () => this.budgetCategoryService.budgetCategoriesWithLineItems()
+  )
 
   getCategories(e: MatDatepickerInputEvent<Date>) {
     const date = e.value;
 
-    if (date && date.getDate() !== this.form.value.date?.getDate()) {
+    const newMonth = date?.getMonth()
+    const newYear = date?.getFullYear()
+    const prevMonth = this.prevSelectedDate()?.getMonth()
+    const prevYear = this.prevSelectedDate()?.getFullYear()
+
+    const shouldFetchCategories = (newMonth !== prevMonth) || (newYear !== prevYear);
+
+    if (date && shouldFetchCategories) {
       this.budgetCategoryService.getBudgetCategoriesWithLineItems(
         date.getMonth() + 1, 
         date.getFullYear()
       )
+
+      this.prevSelectedDate.set(date)
     }
   }
 

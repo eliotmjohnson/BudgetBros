@@ -3,7 +3,7 @@
     Transaction
 </h2>
 <form [formGroup]="form">
-    <mat-dialog-content style="display: flex; flex-direction: column; gap: 1rem;">
+    <mat-dialog-content class="content">
         <mat-form-field>
             <mat-label>
                 Amount
@@ -17,25 +17,36 @@
                 error
             </mat-error>
         </mat-form-field>
-        <mat-form-field>
-            <mat-label>
-                Choose a date
-            </mat-label>
-            <input 
-                matInput 
-                [matDatepicker]="picker"
-                formControlName="date"
-                (dateChange)="getCategories($event)"
-            >
-            <mat-hint>
-                MM/DD/YYYY
-            </mat-hint>
-            <mat-datepicker-toggle 
-                matIconSuffix 
-                [for]="picker"
-            />
-            <mat-datepicker #picker />
-        </mat-form-field>
+        <div class="inner-fields-wrapper">
+            <mat-form-field class="fullwidth">
+                <mat-label>
+                    Choose a date
+                </mat-label>
+                <input 
+                    matInput 
+                    [matDatepicker]="picker"
+                    formControlName="date"
+                    (dateChange)="getCategories($event)"
+                >
+                <mat-hint>
+                    MM/DD/YYYY
+                </mat-hint>
+                <mat-datepicker-toggle 
+                    matIconSuffix 
+                    [for]="picker"
+                />
+                <mat-datepicker #picker />
+            </mat-form-field>
+            <mat-form-field class="fullwidth">
+                <mat-label>
+                    Merchant
+                </mat-label>
+                <input 
+                    matInput
+                    formControlName="merchant"
+                >
+            </mat-form-field>
+        </div>
         <mat-form-field>
             <mat-label>
                 Select Budget Item
@@ -43,8 +54,8 @@
             <mat-select [disabled]="!dropdownCategories().length">
                 @if (dropdownCategories().length) {
                     @for (category of dropdownCategories(); track category.budgetCategoryId) {
-                        <mat-optgroup [label]="category.budgetCategoryName">
-                            @for( lineItem of category.lineItems; track lineItem.lineItemId){
+                        <mat-optgroup [label]="category.budgetCategoryName" style="font-weight: bold;">
+                            @for(lineItem of category.lineItems; track lineItem.lineItemId){
                                 <mat-option [value]="lineItem.lineItemId">
                                     {{ lineItem.lineItemName }}
                                 </mat-option>
@@ -54,26 +65,16 @@
                 }
             </mat-select>
         </mat-form-field>
-        <mat-form-field>
-            <mat-label>
-                Merchant
-            </mat-label>
-            <input 
-                matInput
-                formControlName="merchant"
-            >
-        </mat-form-field>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
         <button 
-            mat-button 
+            mat-flat-button
             (click)="closeModal()"
         >
             cancel
         </button>
         <button 
             mat-flat-button 
-            cdkFocusInitial
             color="primary"
             style="color: white;"
         >

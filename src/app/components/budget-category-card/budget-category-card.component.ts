@@ -7,7 +7,7 @@ import {
     ViewChild
 } from '@angular/core';
 
-import { LineItem, SaveLineItemPayload } from 'src/app/models/line-item';
+import { LineItem, SaveLineItemPayload } from 'src/app/models/lineItem';
 import { LineItemService } from 'src/app/services/line-item.service';
 import { TransactionService } from 'src/app/services/transaction.service';
 

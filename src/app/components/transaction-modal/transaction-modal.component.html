@@ -2,7 +2,10 @@
     {{ modalData.mode === "add" ? "Add " : "Update" }}
     Transaction
 </h2>
-<form [formGroup]="form" (ngSubmit)="submitForm()">
+<form
+    [formGroup]="form"
+    (ngSubmit)="submitForm()"
+>
     <mat-dialog-content class="content">
         <mat-form-field>
             <mat-label> Amount </mat-label>
@@ -26,12 +29,18 @@
                     (dateChange)="getCategories($event)"
                 />
                 <mat-hint> MM/DD/YYYY </mat-hint>
-                <mat-datepicker-toggle matIconSuffix [for]="picker" />
+                <mat-datepicker-toggle
+                    matIconSuffix
+                    [for]="picker"
+                />
                 <mat-datepicker #picker />
             </mat-form-field>
             <mat-form-field class="fullwidth">
                 <mat-label> Merchant </mat-label>
-                <input matInput formControlName="merchant" />
+                <input
+                    matInput
+                    formControlName="merchant"
+                />
             </mat-form-field>
         </div>
         <mat-form-field>
@@ -64,7 +73,12 @@
         </mat-form-field>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
-        <button mat-flat-button (click)="closeModal()">cancel</button>
+        <button
+            mat-flat-button
+            (click)="closeModal()"
+        >
+            cancel
+        </button>
         <button
             mat-flat-button
             color="primary"

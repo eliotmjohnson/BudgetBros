@@ -54,6 +54,11 @@ export class TransactionService {
         });
     }
 
+    // addTransaction(transaction: Transaction) {
+    //     const newTransaction: IsolatedTransaction = { ...transaction, userId: this.authService.userId };
+    //     this.transactions.update((transactions) => [...transactions, transaction]);
+    // }
+
     clearTransactionData() {
         this.currentSelectedLineItem = '';
         this.currentSelectedLineItemId = 0;

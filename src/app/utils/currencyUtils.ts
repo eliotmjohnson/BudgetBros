@@ -4,6 +4,19 @@ import { FormGroup } from '@angular/forms';
  * Checks key inputs to only allow
  * valid keystrokes when typing into
  * currency inputs
+ *
+ * @example
+ * ```html
+ *<!-- In Template -->
+ * <input (keydown)="checkKeyValid($event)" />
+ *
+ * ```
+ * ```ts
+ * // In component
+ * checkKeyValid(e: KeyboardEvent) {
+ *     return checkCurrencyInputKeyValid(e, someValueHere);
+ * }
+ * ```
  */
 export const checkCurrencyInputKeyValid = (
     e: KeyboardEvent,

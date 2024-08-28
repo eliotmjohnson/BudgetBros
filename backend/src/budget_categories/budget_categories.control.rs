@@ -56,7 +56,7 @@ async fn get_all_budget_categories_with_line_items_handler(
                     })
                     .line_items
                     .push(LineItemReduced {
-                        line_item_id: row.line_item_id,
+                        line_item_id: row.line_item_id.to_string(),
                         line_item_name: row.line_item_name,
                     });
             }

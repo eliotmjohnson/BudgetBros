@@ -13,7 +13,7 @@ export class TransactionService {
 
     baseUrl = `${BE_API_URL}/transactions`;
     currentSelectedLineItem = '';
-    currentSelectedLineItemId = 0;
+    currentSelectedLineItemId = '';
     currentSelectedLineItemBalance = 0;
     currentBudgetTransactionData: Transaction[] = [];
     transactions = signal<IsolatedTransaction[]>([]);
@@ -61,7 +61,7 @@ export class TransactionService {
 
     clearTransactionData() {
         this.currentSelectedLineItem = '';
-        this.currentSelectedLineItemId = 0;
+        this.currentSelectedLineItemId = '';
         this.currentSelectedLineItemBalance = 0;
         this.currentBudgetTransactionData = [];
     }

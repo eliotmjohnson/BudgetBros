@@ -9,8 +9,13 @@ import {
     ViewChild
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { SaveLineItemPayload } from 'src/app/models/lineItem';
+import { filter, take } from 'rxjs';
+import {
+    SaveLineItemPayload,
+    UpdateLineItemPayload
+} from 'src/app/models/lineItem';
 import { Transaction } from 'src/app/models/transaction';
+import { LineItemService } from 'src/app/services/line-item.service';
 import { TransactionService } from 'src/app/services/transaction.service';
 
 @Component({
@@ -20,7 +25,7 @@ import { TransactionService } from 'src/app/services/transaction.service';
 })
 export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     @ViewChild('lineItemTitleInput') lineItemTitleInput!: ElementRef;
-    @Input() itemId = 0;
+    @Input() itemId = '';
     @Input() itemTitle = '';
     @Input() startingBalance = 0;
     @Input() plannedAmount = 0;
@@ -36,7 +41,10 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     isEditModeEnabled = false;
     isNewLineItem = false;
 
-    constructor(private transactionService: TransactionService) {}
+    constructor(
+        private transactionService: TransactionService,
+        private lineItemService: LineItemService
+    ) {}
 
     get remainingAmount() {
         return this.startingBalance + this.plannedAmount;
@@ -51,8 +59,7 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     ngOnInit(): void {
         this.lineItemInputValue.setValue(this.itemTitle);
 
-        this.isNewLineItem =
-            this.itemTitle === 'Add Title' && this.itemId === 0;
+        this.isNewLineItem = this.itemTitle === 'Add Title' && !this.itemId;
 
         if (this.isNewLineItem) {
             this.enableEditMode();
@@ -69,7 +76,8 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     setTransactionData() {
         this.transactionService.currentSelectedLineItemBalance =
             this.remainingAmount;
-        this.transactionService.currentSelectedLineItem = this.itemTitle;
+        this.transactionService.currentSelectedLineItem =
+            this.lineItemInputValue.value ?? '';
         this.transactionService.currentSelectedLineItemId = this.itemId;
         this.transactionService.currentBudgetTransactionData = this.transactions
             ? this.transactions
@@ -99,14 +107,16 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     }
 
     enableEditMode(targetInput?: HTMLInputElement) {
-        if (!this.isEditModeEnabled) this.isEditModeEnabled = true;
         if (targetInput) targetInput.select();
-        this.initialLineItemTitle = this.itemTitle;
-        this.initialPlannedAmount = this.plannedAmount;
+        if (!this.isEditModeEnabled) {
+            this.isEditModeEnabled = true;
+            this.initialLineItemTitle = this.lineItemInputValue.value ?? '';
+            this.initialPlannedAmount = this.plannedAmount;
+        }
     }
 
     cancelEditing() {
-        if (this.itemId === 0) {
+        if (!this.itemId) {
             this.undoCreateNewLineItem.emit();
         } else {
             this.lineItemInputValue.setValue(this.initialLineItemTitle);
@@ -116,14 +126,36 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     }
 
     createOrUpdateLineItem() {
-        if (this.itemId === 0) {
+        if (!this.itemId) {
             const saveLineItemPayload: SaveLineItemPayload = {
                 name: this.lineItemInputValue.value ?? '',
                 isFund: false,
                 plannedAmount: this.plannedAmount,
                 startingBalance: 0
             };
+
             this.saveNewLineItem.emit(saveLineItemPayload);
+            this.lineItemService.newlyAddedLineItemId
+                .pipe(
+                    filter((id) => !!id),
+                    take(1)
+                )
+                .subscribe((id) => {
+                    this.itemId = id;
+                    this.isEditModeEnabled = false;
+                    this.setTransactionData();
+                });
+        } else {
+            const updateLineItemPayload: UpdateLineItemPayload = {
+                id: this.itemId,
+                name: this.lineItemInputValue.value ?? '',
+                isFund: false,
+                plannedAmount: this.plannedAmount,
+                startingBalance: 0
+            };
+
+            this.lineItemService.updateLineItem(updateLineItemPayload);
+            this.isEditModeEnabled = false;
         }
     }
 

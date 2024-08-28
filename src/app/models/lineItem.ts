@@ -1,7 +1,7 @@
 import { Transaction } from './transaction';
 
 export type LineItem = {
-    lineItemId: number;
+    lineItemId: string;
     name: string;
     isFund: boolean;
     plannedAmount: number;
@@ -17,7 +17,12 @@ export type SaveLineItemPayload = {
     budgetCategoryId?: number;
 };
 
+export type UpdateLineItemPayload = Omit<
+    SaveLineItemPayload,
+    'budgetCategoryId'
+> & { id: string };
+
 export type LineItemReduced = {
-    lineItemId: number;
+    lineItemId: string;
     lineItemName: string;
 };

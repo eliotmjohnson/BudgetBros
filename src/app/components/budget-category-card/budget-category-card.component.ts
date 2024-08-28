@@ -53,7 +53,7 @@ export class BudgetCategoryCardComponent implements AfterViewChecked {
     addNewLineItemPlaceholder(event: MouseEvent) {
         if (!this.isAddingLineItem) {
             const newLineItem: LineItem = {
-                lineItemId: 0,
+                lineItemId: '',
                 name: 'Add Title',
                 isFund: false,
                 plannedAmount: 0,
@@ -78,7 +78,7 @@ export class BudgetCategoryCardComponent implements AfterViewChecked {
 
     removeNewLineItem() {
         const foundIndex = this.lineItems.findIndex(
-            (lineItem) => lineItem.lineItemId === 0
+            (lineItem) => !lineItem.lineItemId
         );
 
         this.lineItems.splice(foundIndex, 1);

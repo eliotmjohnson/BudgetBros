@@ -48,7 +48,7 @@ pub struct TransactionData {
 #[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct LineItemData {
-    pub line_item_id: i64,
+    pub line_item_id: String,
     pub name: String,
     pub is_fund: bool,
     pub planned_amount: f64,

@@ -36,7 +36,10 @@
         </div>
         <mat-form-field>
             <mat-label> Select Budget Item </mat-label>
-            <mat-select [disabled]="!dropdownCategories().length">
+            <mat-select
+                [disabled]="!dropdownCategories().length"
+                formControlName="category"
+            >
                 @if (dropdownCategories().length) {
                     @for (
                         category of dropdownCategories();
@@ -50,7 +53,7 @@
                                 lineItem of category.lineItems;
                                 track lineItem.lineItemId
                             ) {
-                                <mat-option [value]="lineItem.lineItemId">
+                                <mat-option [value]="lineItem">
                                     {{ lineItem.lineItemName }}
                                 </mat-option>
                             }

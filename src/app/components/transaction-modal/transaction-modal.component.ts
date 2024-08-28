@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { BudgetCategoryWithLineItems } from 'src/app/models/budgetCategory';
+import { LineItemReduced } from 'src/app/models/lineItem';
 import { BudgetCategoryService } from 'src/app/services/budget-category.service';
 import { TransactionService } from 'src/app/services/transaction.service';
 import {
@@ -29,9 +30,11 @@ export class TransactionModalComponent {
 
     form = new FormGroup({
         amount: new FormControl(0, [Validators.required]),
-        category: new FormControl<number | null>(null, [Validators.required]),
+        lineItem: new FormControl<LineItemReduced | null>(null, [
+            Validators.required
+        ]),
         date: new FormControl<Date | null>(null, [Validators.required]),
-        merchant: new FormControl<string>('', [Validators.required])
+        merchant: new FormControl<string | null>(null, [Validators.required])
     });
 
     dropdownCategories = computed<BudgetCategoryWithLineItems[]>(() =>
@@ -72,6 +75,9 @@ export class TransactionModalComponent {
     }
 
     submitForm() {
+        console.log(this.form);
+        if (this.form.invalid) return;
+
         console.log(this.form.value);
     }
 }

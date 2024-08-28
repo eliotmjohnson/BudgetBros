@@ -1,7 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { AddTransactionModalComponent } from 'src/app/components/add-transaction-modal/add-transaction-modal.component';
+import { TransactionModalComponent, TransactionModalData } from 'src/app/components/transaction-modal/transaction-modal.component';
+import { BudgetCategoryService } from 'src/app/services/budget-category.service';
 import { TransactionService } from 'src/app/services/transaction.service';
 
 @Component({
@@ -26,8 +27,14 @@ export class TransactionsComponent implements OnInit {
   }
 
   openAddTransactionDialog() {
-    const dialogRef = this.dialog.open(AddTransactionModalComponent, {
-      data: 'hi'
+    const dialogRef = this.dialog
+      .open<
+        TransactionModalComponent, 
+        TransactionModalData
+      >(TransactionModalComponent, {
+        data: {
+          mode: 'add'
+        }
     })
   }
 

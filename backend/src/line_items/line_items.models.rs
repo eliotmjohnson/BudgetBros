@@ -19,3 +19,10 @@ pub struct NewLineItem {
     pub starting_balance: f64,
     pub budget_category_id: i64,
 }
+
+#[derive(Serialize, FromRow, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct LineItemReduced {
+    pub line_item_id: i64,
+    pub line_item_name: String,
+}

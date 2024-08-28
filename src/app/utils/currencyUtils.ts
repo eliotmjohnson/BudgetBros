@@ -50,8 +50,7 @@ export function addValueToCurrencyInput(
 
     if (form) {
         return form.patchValue({
-            [controlName || 'amount']:
-                reConvertedValue !== 0 ? reConvertedValue : 0
+            [controlName || 'amount']: reConvertedValue ?? 0
         });
     }
 

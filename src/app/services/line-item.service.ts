@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { SaveLineItemPayload } from '../models/line-item';
+import { SaveLineItemPayload } from '../models/lineItem';
 import { BE_API_URL } from '../constants/constants';
 import { BudgetService } from './budget.service';
 

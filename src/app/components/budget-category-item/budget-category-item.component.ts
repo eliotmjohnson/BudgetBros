@@ -9,7 +9,7 @@ import {
     ViewChild
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { SaveLineItemPayload } from 'src/app/models/line-item';
+import { SaveLineItemPayload } from 'src/app/models/lineItem';
 import { Transaction } from 'src/app/models/transaction';
 import { TransactionService } from 'src/app/services/transaction.service';
 

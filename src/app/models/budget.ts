@@ -1,4 +1,4 @@
-import { LineItem } from './line-item';
+import { LineItem } from './lineItem';
 
 export type Budget = {
     budgetId: number;

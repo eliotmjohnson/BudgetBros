@@ -17,6 +17,10 @@ import {
 import { Transaction } from 'src/app/models/transaction';
 import { LineItemService } from 'src/app/services/line-item.service';
 import { TransactionService } from 'src/app/services/transaction.service';
+import {
+    addValueToCurrencyInput,
+    checkCurrencyInputKeyValid
+} from 'src/app/utils/currencyUtils';
 
 @Component({
     selector: 'BudgetCategoryItem',
@@ -85,25 +89,11 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     }
 
     checkIfValidKey(e: KeyboardEvent): boolean {
-        return (
-            !!(
-                (e.key === 'Backspace' && this.plannedAmount) ||
-                e.key.includes('Arrow')
-            ) ||
-            !(
-                isNaN(Number(e.key)) ||
-                e.key === ' ' ||
-                (e.key === '0' && !this.plannedAmount)
-            )
-        );
+        return checkCurrencyInputKeyValid(e, this.plannedAmount);
     }
 
     addValue(e: Event) {
-        const reConvertedValue =
-            Number((e.target as HTMLInputElement).value.replace(/[^\d]/g, '')) /
-            100;
-
-        this.plannedAmount = reConvertedValue !== 0 ? reConvertedValue : 0;
+        this.plannedAmount = addValueToCurrencyInput(e);
     }
 
     enableEditMode(targetInput?: HTMLInputElement) {

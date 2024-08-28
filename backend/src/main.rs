@@ -1,6 +1,6 @@
 use actix_cors::Cors;
-use actix_web::{middleware, web};
 use actix_web::{main, middleware::Logger, web::Data, App, HttpServer};
+use actix_web::{middleware, web};
 use actix_web_httpauth::middleware::HttpAuthentication;
 
 use dotenv::dotenv;
@@ -12,6 +12,7 @@ use crate::auth::auth_middleware;
 use crate::auth::auth_router::auth_router;
 use crate::budget_categories::budget_categories_router::budget_categories_router;
 use crate::budgets::budgets_router::budgets_router;
+use crate::line_items::line_items_router::line_items_router;
 use crate::users::users_router::users_router;
 
 mod auth;
@@ -72,14 +73,14 @@ async fn main() -> std::io::Result<()> {
             .app_data(Data::new(AppState { db: pool.clone() }))
             .service(
                 web::scope("/api")
-                .wrap(bearer_middleware)
-                .configure(budgets_router)
-                .configure(users_router)
-                .configure(budget_categories_router)
-                .configure(transactions_router)
+                    .wrap(bearer_middleware)
+                    .configure(budgets_router)
+                    .configure(users_router)
+                    .configure(budget_categories_router)
+                    .configure(transactions_router)
+                    .configure(line_items_router),
             )
             .configure(auth_router)
-
     })
     .bind(("127.0.0.1", PORT))?
     .run()

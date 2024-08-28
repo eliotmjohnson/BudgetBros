@@ -12,7 +12,7 @@ pub struct Budget {
     pub year: i64,
 }
 
-#[derive(Serialize, FromRow)]
+#[derive(Serialize, FromRow, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct BudgetRowData {
     pub budget_id: i64,
@@ -26,12 +26,12 @@ pub struct BudgetRowData {
     pub is_fund: bool,
     pub planned_amount: f64,
     pub starting_balance: f64,
-    pub transaction_id: i64,
-    pub title: String,
-    pub merchant: String,
-    pub amount: f64,
-    pub notes: String,
-    pub date: DateTime<Local>,
+    pub transaction_id: Option<i64>,
+    pub title: Option<String>,
+    pub merchant: Option<String>,
+    pub amount: Option<f64>,
+    pub notes: Option<String>,
+    pub date: Option<DateTime<Local>>,
 }
 
 #[derive(Serialize, Deserialize, Clone)]

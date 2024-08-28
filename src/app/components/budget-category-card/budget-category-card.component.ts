@@ -6,7 +6,10 @@ import {
     Input,
     ViewChild
 } from '@angular/core';
-import { LineItem } from 'src/app/models/budget';
+
+import { LineItem, SaveLineItemPayload } from 'src/app/models/line-item';
+import { LineItemService } from 'src/app/services/line-item.service';
+import { TransactionService } from 'src/app/services/transaction.service';
 
 @Component({
     selector: 'BudgetCategoryCard',
@@ -15,9 +18,16 @@ import { LineItem } from 'src/app/models/budget';
 })
 export class BudgetCategoryCardComponent implements AfterViewChecked {
     @ViewChild('titleInput') titleInput!: ElementRef<HTMLInputElement>;
+    @Input() budgetCategoryId = 0;
     @Input() lineItems: LineItem[] = [];
     @Input() name = '';
     isEditingName = false;
+    isAddingLineItem = false;
+
+    constructor(
+        private transactionService: TransactionService,
+        private lineItemService: LineItemService
+    ) {}
 
     ngAfterViewChecked(): void {
         if (this.titleInput && this.isEditingName) {
@@ -38,5 +48,40 @@ export class BudgetCategoryCardComponent implements AfterViewChecked {
             event.previousIndex,
             event.currentIndex
         );
+    }
+
+    addNewLineItemPlaceholder(event: MouseEvent) {
+        if (!this.isAddingLineItem) {
+            const newLineItem: LineItem = {
+                lineItemId: 0,
+                name: 'Add Title',
+                isFund: false,
+                plannedAmount: 0,
+                startingBalance: 0,
+                transactions: []
+            };
+
+            this.lineItems.push(newLineItem);
+            this.transactionService.clearTransactionData();
+            this.isAddingLineItem = true;
+        } else {
+            event.stopPropagation();
+        }
+    }
+
+    saveNewLineItem(saveLineItemPayload: SaveLineItemPayload) {
+        saveLineItemPayload.budgetCategoryId = this.budgetCategoryId;
+
+        this.lineItemService.saveNewLineItem(saveLineItemPayload);
+        this.isAddingLineItem = false;
+    }
+
+    removeNewLineItem() {
+        const foundIndex = this.lineItems.findIndex(
+            (lineItem) => lineItem.lineItemId === 0
+        );
+
+        this.lineItems.splice(foundIndex, 1);
+        this.isAddingLineItem = false;
     }
 }

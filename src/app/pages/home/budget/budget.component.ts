@@ -32,7 +32,8 @@ export class BudgetComponent implements OnInit {
     ngOnInit(): void {
         if (!this.budgetService.budget()) {
             this.budgetService.getBudget(
-                this.today.getMonth() + 1,
+                // this.today.getMonth() + 1,
+                7,
                 this.today.getFullYear()
             );
         }

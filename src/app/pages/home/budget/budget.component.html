@@ -50,6 +50,7 @@
             <BudgetCategoryCard
                 class="budget-card"
                 *ngFor="let budgetCategory of budget()?.budgetCategories"
+                [budgetCategoryId]="budgetCategory.budgetCategoryId"
                 [lineItems]="budgetCategory.lineItems"
                 [name]="budgetCategory.name"
                 cdkDrag

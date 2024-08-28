@@ -35,7 +35,7 @@ pub async fn get_budget(
             budget_categories bc ON b.id = bc.budget_id
         JOIN 
             line_items li ON bc.id = li.budget_category_id
-        JOIN
+        LEFT JOIN
             transactions tr ON li.id = tr.line_item_id 
         WHERE 
             b.user_id = $1 AND b.month_number = $2 AND b.year = $3

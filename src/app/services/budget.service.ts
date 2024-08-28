@@ -29,9 +29,7 @@ export class BudgetService {
                     next: (budget) => {
                         this.isLoading.set(false);
                         this.budget.set(budget);
-                        if (!this.transactionService.isTransactionDataEmpty()) {
-                            this.transactionService.clearTransactionData();
-                        }
+                        this.transactionService.clearTransactionData();
                     },
                     error: (error) => {
                         this.isLoading.set(false);

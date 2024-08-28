@@ -1,4 +1,4 @@
-import { Transaction } from "./transaction";
+import { LineItem } from './line-item';
 
 export type Budget = {
     budgetId: number;
@@ -11,13 +11,4 @@ export type BudgetCategory = {
     budgetCategoryId: number;
     name: string;
     lineItems: LineItem[];
-};
-
-export type LineItem = {
-    lineItemId: number;
-    name: string;
-    isFund: boolean;
-    plannedAmount: number;
-    startingBalance: number;
-    transactions: Transaction[];
 };

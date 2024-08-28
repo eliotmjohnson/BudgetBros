@@ -33,6 +33,8 @@
             [plannedAmount]="item.plannedAmount"
             [fund]="item.isFund"
             [transactions]="item.transactions"
+            (undoCreateNewLineItem)="removeNewLineItem()"
+            (saveNewLineItem)="saveNewLineItem($event)"
             cdkDropListLockAxis="y"
             cdkDragBoundary=".budget-items-wrapper"
             cdkDrag
@@ -44,7 +46,13 @@
             />
         </BudgetCategoryItem>
         <span class="add-item-button">
-            <button mat-button color="primary">Add Item</button>
+            <button
+                (click)="addNewLineItemPlaceholder($event)"
+                mat-button
+                color="primary"
+            >
+                Add Item
+            </button>
         </span>
     </section>
 </Card>

@@ -1,5 +1,5 @@
 <Card width="100%" height="100%" padding="0rem">
-    @if (!transactionService.isTransactionDataEmpty()) {
+    @if (transactionService.currentSelectedLineItem) {
         <section class="banner">
             <div class="icon-wrapper">
                 <mat-icon class="icon" fontIcon="savings" />

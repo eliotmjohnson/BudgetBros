@@ -40,6 +40,12 @@
     }
 }
 
+.budget-items-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
 .add-item-button {
     display: flex;
     align-items: center;

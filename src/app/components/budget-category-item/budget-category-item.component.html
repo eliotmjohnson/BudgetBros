@@ -1,16 +1,51 @@
 <span
+    #lineItemContainer
     class="budget-item-wrapper {{ isLineItemSelected && 'line-item-selected' }}"
     (click)="setTransactionData()"
 >
     <ng-content></ng-content>
     <span class="title-wrapper">
         <mat-icon class="fund-logo" *ngIf="fund" fontIcon="savings" />
-        <h1>{{ itemTitle }}</h1>
+        <input
+            #lineItemTitleInput
+            class="line-item-title"
+            [formControl]="lineItemInputValue"
+            (focus)="enableEditMode(lineItemTitleInput)"
+            [value]="itemTitle"
+        />
     </span>
-    <p>{{ plannedAmount | currency }}</p>
+    <input
+        #plannedAmountInput
+        type="text"
+        class="planned-amount"
+        (keydown)="checkIfValidKey($event)"
+        (focus)="enableEditMode(plannedAmountInput)"
+        (input)="addValue($event)"
+        [value]="plannedAmount | currency"
+    />
     <p>{{ remainingAmount | currency }}</p>
+    @if (isEditModeEnabled) {
+        <span
+            (document:click)="checkIfOutsideParent($event, lineItemContainer)"
+            class="edit-menu-container"
+        >
+            <button
+                (click)="createOrUpdateLineItem()"
+                color="primary"
+                mat-button
+            >
+                Save
+            </button>
+            <button (click)="cancelEditing()" color="warn" mat-button>
+                Cancel
+            </button>
+        </span>
+    }
 </span>
-<div class="progress-indicator">
+<div
+    [style.visibility]="isLineItemSelected ? 'hidden' : 'visible'"
+    class="progress-indicator"
+>
     <span [style.width]="progressPercentage + '%'" class="progress"></span>
     <span
         [style.width]="100 - progressPercentage + '%'"

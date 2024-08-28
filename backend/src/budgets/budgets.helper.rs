@@ -29,14 +29,16 @@ pub fn get_compiled_budget_data(rows: Vec<BudgetRowData>) -> Vec<BudgetCategoryD
                 transactions: Vec::new(),
             });
 
-        line_item.transactions.push(TransactionData {
-            transaction_id: row.transaction_id,
-            title: row.title,
-            merchant: row.merchant,
-            amount: row.amount,
-            notes: row.notes,
-            date: row.date,
-        });
+        if row.transaction_id.is_some() {
+            line_item.transactions.push(TransactionData {
+                transaction_id: row.transaction_id.unwrap_or_default(),
+                title: row.title.unwrap_or_default(),
+                merchant: row.merchant.unwrap_or_default(),
+                amount: row.amount.unwrap_or_default(),
+                notes: row.notes.unwrap_or_default(),
+                date: row.date.unwrap_or_default(),
+            });
+        }
     }
 
     budget_categories_compiled

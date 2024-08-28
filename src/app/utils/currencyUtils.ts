@@ -25,7 +25,11 @@ export const checkCurrencyInputKeyValid = (
 /**
  * Converts inputted values into a currency input
  * to correct formatting to ensure currency is
- * being entered properly
+ * being entered properly.
+ *
+ * Can be used in conjunction with form groups
+ * to update form values programmatically or just return
+ * the converted number to assign to a property or variable.
  */
 export function addValueToCurrencyInput(e: Event): number;
 

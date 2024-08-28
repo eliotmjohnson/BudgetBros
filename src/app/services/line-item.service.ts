@@ -36,4 +36,15 @@ export class LineItemService {
             }
         });
     }
+
+    deleteLineItem(lineItemId: string) {
+        this.http.delete(`${this.baseUrl}/${lineItemId}`).subscribe({
+            next: (res) => {
+                console.log(res);
+            },
+            error: (error) => {
+                console.error(error);
+            }
+        });
+    }
 }

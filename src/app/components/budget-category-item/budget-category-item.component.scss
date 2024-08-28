@@ -80,6 +80,17 @@
     }
 }
 
+.delete-icon {
+    position: absolute;
+    right: 0.5rem;
+    top: 0;
+    translate: 0% 47%;
+    font-size: 1.5rem;
+    height: 1.5rem;
+    width: 1.5rem;
+    color: $bb-error-main;
+}
+
 .edit-menu-container {
     position: absolute;
     height: 2.5rem;

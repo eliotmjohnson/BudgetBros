@@ -1,5 +1,10 @@
 import { FormGroup } from '@angular/forms';
 
+/**
+ * Checks key inputs to only allow
+ * valid keystrokes when typing into
+ * currency inputs
+ */
 export const checkCurrencyInputKeyValid = (
     e: KeyboardEvent,
     valueToCheck: number
@@ -17,6 +22,11 @@ export const checkCurrencyInputKeyValid = (
     );
 };
 
+/**
+ * Converts inputted values into a currency input
+ * to correct formatting to ensure currency is
+ * being entered properly
+ */
 export function addValueToCurrencyInput(e: Event): number;
 
 export function addValueToCurrencyInput(

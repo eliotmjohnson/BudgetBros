@@ -1,11 +1,9 @@
 use actix_web::{
-    post,
-    web::{Data, Json},
-    HttpResponse, Responder,
+    post, put, web::{Data, Json}, HttpResponse, Responder
 };
 
 use crate::{
-    line_items::{line_items_models::NewLineItem, line_items_service::add_line_item},
+    line_items::{line_items_models::{LineItem, NewLineItem}, line_items_service::{add_line_item, update_line_item}},
     AppState,
 };
 
@@ -23,3 +21,19 @@ pub async fn add_line_item_handler(
         Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
     }
 }
+
+#[put("")]
+pub async fn update_line_item_handler(
+    state: Data<AppState>,
+    body: Json<LineItem>,
+) -> impl Responder {
+    let updated_line_item = body.into_inner();
+
+    let update_line_item_result = update_line_item(state, updated_line_item).await;
+
+    match update_line_item_result {
+        Ok(_) => HttpResponse::Ok().json("Line item updated successfully"),
+        Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
+    }
+    
+}   

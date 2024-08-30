@@ -1,9 +1,9 @@
 use actix_web::{
-    post, put, web::{Data, Json}, HttpResponse, Responder
+    delete, post, put, web::{Data, Json, Path}, HttpResponse, Responder
 };
 
 use crate::{
-    line_items::{line_items_models::{NewLineItem, UpdatedLineItem}, line_items_service::{add_line_item, update_line_item}},
+    line_items::{line_items_models::{NewLineItem, UpdatedLineItem}, line_items_service::{add_line_item, delete_line_item, update_line_item}},
     AppState,
 };
 
@@ -35,5 +35,19 @@ pub async fn update_line_item_handler(
         Ok(_) => HttpResponse::Ok().json("Line item updated successfully"),
         Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
     }
-    
-}   
+}
+
+#[delete("{line_item_id}")]
+pub async fn delete_line_item_handler(
+    state: Data<AppState>,
+    params: Path<String>,
+) -> impl Responder {
+    let line_item_id = params.into_inner();
+
+    let delete_line_item_result = delete_line_item(state, line_item_id).await;
+
+    match delete_line_item_result {
+        Ok(_) => HttpResponse::Ok().json("Line item deleted successfully"),
+        Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
+    }
+}  

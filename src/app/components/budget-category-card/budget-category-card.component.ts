@@ -6,6 +6,7 @@ import {
     Input,
     ViewChild
 } from '@angular/core';
+import { filter, take } from 'rxjs';
 
 import { LineItem, SaveLineItemPayload } from 'src/app/models/lineItem';
 import { LineItemService } from 'src/app/services/line-item.service';
@@ -73,7 +74,30 @@ export class BudgetCategoryCardComponent implements AfterViewChecked {
         saveLineItemPayload.budgetCategoryId = this.budgetCategoryId;
 
         this.lineItemService.saveNewLineItem(saveLineItemPayload);
-        this.isAddingLineItem = false;
+        this.lineItemService.newlyAddedLineItemId
+            .pipe(
+                filter((id) => !!id),
+                take(1)
+            )
+            .subscribe(() => {
+                this.isAddingLineItem = false;
+            });
+    }
+
+    updateNewLineItemId(lineItemId: string) {
+        const lineItemToUpdate = this.lineItems.find(
+            (lineItem) => !lineItem.lineItemId
+        );
+
+        if (lineItemToUpdate) lineItemToUpdate.lineItemId = lineItemId;
+    }
+
+    deleteSavedLineItem(lineItemId: string) {
+        const foundIndex = this.lineItems.findIndex(
+            (lineItem) => lineItem.lineItemId === lineItemId
+        );
+
+        this.lineItems.splice(foundIndex, 1);
     }
 
     removeNewLineItem() {

@@ -24,6 +24,13 @@
         [value]="plannedAmount | currency"
     />
     <p>{{ remainingAmount | currency }}</p>
+    @if (isLineItemSelected && itemId) {
+        <mat-icon
+            class="delete-icon"
+            (click)="deleteLineItem()"
+            fontIcon="delete"
+        ></mat-icon>
+    }
     @if (isEditModeEnabled) {
         <span
             (document:click)="checkIfOutsideParent($event, lineItemContainer)"

@@ -25,31 +25,17 @@ export class LineItemService {
             .subscribe({
                 next: (res) => {
                     this.newlyAddedLineItemId.next(res);
-                },
-                error: (error) => {
-                    console.error(error);
                 }
             });
     }
 
     updateLineItem(updateLineItemPayload: UpdateLineItemPayload) {
-        this.http.put(`${this.baseUrl}`, updateLineItemPayload).subscribe({
-            next: (res) => {
-                console.log(res);
-            },
-            error: (error) => {
-                console.error(error);
-            }
-        });
+        this.http.put(`${this.baseUrl}`, updateLineItemPayload).subscribe();
     }
 
     deleteLineItem(lineItemId: string) {
         this.http.delete(`${this.baseUrl}/${lineItemId}`).subscribe({
-            next: (res) => {
-                console.log(res);
-            },
             error: (error) => {
-                console.error(error);
                 this.snagDiaglogService.openSnagDialog(error);
                 const currentBudget = this.budgetService.budget();
                 if (currentBudget) {

@@ -1,6 +1,12 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { Component, computed, OnInit, ViewChild } from '@angular/core';
-import { MatCalendar } from '@angular/material/datepicker';
+import {
+    AfterViewChecked,
+    Component,
+    computed,
+    OnInit,
+    ViewChild
+} from '@angular/core';
+import { MatCalendar, MatCalendarView } from '@angular/material/datepicker';
 import { MONTHS } from 'src/app/constants/constants';
 import { BudgetCategory } from 'src/app/models/budget';
 import { BudgetService } from 'src/app/services/budget.service';
@@ -11,7 +17,7 @@ import { TransactionService } from 'src/app/services/transaction.service';
     templateUrl: './budget.component.html',
     styleUrls: ['./budget.component.scss']
 })
-export class BudgetComponent implements OnInit {
+export class BudgetComponent implements OnInit, AfterViewChecked {
     @ViewChild(MatCalendar) calendarSelector!: MatCalendar<Date>;
 
     months = MONTHS;
@@ -32,11 +38,14 @@ export class BudgetComponent implements OnInit {
     ngOnInit(): void {
         if (!this.budgetService.budget()) {
             this.budgetService.getBudget(
-                // this.today.getMonth() + 1,
-                7,
+                this.today.getMonth() + 1,
                 this.today.getFullYear()
             );
         }
+    }
+
+    ngAfterViewChecked(): void {
+        this.setCalendarViewConfig();
     }
 
     handleDrop(event: CdkDragDrop<BudgetCategory[]>) {
@@ -48,9 +57,6 @@ export class BudgetComponent implements OnInit {
     }
 
     getNewBudget(calendarSelection: Date | null) {
-        // Very temporary until I can figure out how to fix issue with mat-calendar....
-        setTimeout(() => (this.calendarSelector.currentView = 'year'));
-
         if (calendarSelection) {
             const monthSelection = calendarSelection.getMonth() + 1;
             const yearSelection = calendarSelection.getFullYear();
@@ -77,5 +83,18 @@ export class BudgetComponent implements OnInit {
 
     openCalendarSelector() {
         this.isCalMenuOpened = true;
+    }
+
+    setCalendarViewConfig() {
+        if (this.calendarSelector) {
+            this.calendarSelector._goToDateInView = (
+                _,
+                view: MatCalendarView
+            ) => {
+                if (view !== 'month') {
+                    this.calendarSelector.currentView = view;
+                }
+            };
+        }
     }
 }

@@ -23,23 +23,25 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
-import { TransactionModalComponent } from './components/transaction-modal/transaction-modal.component';
 import { AuthFormComponent } from './components/auth-form/auth-form.component';
 import { BBLogoComponent } from './components/bb-logo/bb-logo.component';
+import { BBSnagComponent } from './components/bb-snag/bb-snag.component';
 import { BudgetCategoryCardComponent } from './components/budget-category-card/budget-category-card.component';
 import { BudgetCategoryItemComponent } from './components/budget-category-item/budget-category-item.component';
 import { BudgetTransactionsCardComponent } from './components/budget-transactions-card/budget-transactions-card.component';
 import { CardComponent } from './components/card/card.component';
+import { FieldErrorComponent } from './components/field-error/field-error.component';
 import { HomeHeaderComponent } from './components/home-header/home-header.component';
 import { InlineTransactionComponent } from './components/inline-transaction/inline-transaction.component';
 import { LinkButtonComponent } from './components/link-button/link-button.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { TransactionCardComponent } from './components/transaction-card/transaction-card.component';
+import { TransactionModalComponent } from './components/transaction-modal/transaction-modal.component';
 import { TransactionsDatePickerComponent } from './components/transactions-date-picker/transactions-date-picker.component';
 import { httpInterceptor } from './interceptors/http.interceptor';
 import { AccountsComponent } from './pages/home/accounts/accounts.component';
@@ -49,8 +51,6 @@ import { HomeComponent } from './pages/home/home.component';
 import { SettingsComponent } from './pages/home/settings/settings.component';
 import { TransactionsComponent } from './pages/home/transactions/transactions.component';
 import { LoginComponent } from './pages/login/login.component';
-import { FieldErrorComponent } from './components/field-error/field-error.component';
-import { BBSnagComponent } from './components/bb-snag/bb-snag.component';
 
 @NgModule({
     declarations: [

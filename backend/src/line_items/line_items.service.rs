@@ -47,3 +47,20 @@ pub async fn update_line_item(
         .execute(&state.db)
         .await
 }
+
+pub async fn delete_line_item(
+    state: Data<AppState>,
+    line_item_id: String,
+) -> Result<PgQueryResult, sqlx::Error> {
+    let query = "
+        DELETE FROM 
+            line_items
+        WHERE 
+            id = $1::int
+        ";
+
+    sqlx::query(query)
+        .bind(line_item_id)
+        .execute(&state.db)
+        .await
+}

@@ -50,6 +50,7 @@ import { SettingsComponent } from './pages/home/settings/settings.component';
 import { TransactionsComponent } from './pages/home/transactions/transactions.component';
 import { LoginComponent } from './pages/login/login.component';
 import { FieldErrorComponent } from './components/field-error/field-error.component';
+import { BBSnagComponent } from './components/bb-snag/bb-snag.component';
 
 @NgModule({
     declarations: [
@@ -74,7 +75,8 @@ import { FieldErrorComponent } from './components/field-error/field-error.compon
         TransactionsDatePickerComponent,
         InlineTransactionComponent,
         TransactionModalComponent,
-        FieldErrorComponent
+        FieldErrorComponent,
+        BBSnagComponent
     ],
     bootstrap: [AppComponent],
     imports: [

@@ -36,7 +36,9 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     @Input() fund = false;
     @Input() transactions?: Transaction[];
     @Output() undoCreateNewLineItem = new EventEmitter();
+    @Output() updateNewLineItemId = new EventEmitter<string>();
     @Output() saveNewLineItem = new EventEmitter<SaveLineItemPayload>();
+    @Output() deleteSavedLineItem = new EventEmitter<string>();
 
     lineItemInputValue = new FormControl('');
     initialLineItemTitle = '';
@@ -131,6 +133,7 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
                     take(1)
                 )
                 .subscribe((id) => {
+                    this.updateNewLineItemId.emit(id);
                     this.itemId = id;
                     this.isEditModeEnabled = false;
                     this.setTransactionData();
@@ -147,6 +150,11 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
             this.lineItemService.updateLineItem(updateLineItemPayload);
             this.isEditModeEnabled = false;
         }
+    }
+
+    deleteLineItem() {
+        this.lineItemService.deleteLineItem(this.itemId);
+        this.deleteSavedLineItem.emit(this.itemId);
     }
 
     checkIfOutsideParent(e: MouseEvent, lineItemContainer: HTMLSpanElement) {

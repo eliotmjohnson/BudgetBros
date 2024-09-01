@@ -35,6 +35,8 @@
             [transactions]="item.transactions"
             (undoCreateNewLineItem)="removeNewLineItem()"
             (saveNewLineItem)="saveNewLineItem($event)"
+            (updateNewLineItemId)="updateNewLineItemId($event)"
+            (deleteSavedLineItem)="deleteSavedLineItem($event)"
             cdkDropListLockAxis="y"
             cdkDragBoundary=".budget-items-wrapper"
             cdkDrag

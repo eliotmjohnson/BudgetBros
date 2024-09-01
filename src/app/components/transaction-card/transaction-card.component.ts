@@ -6,6 +6,8 @@ import {
     TransactionModalComponent,
     TransactionModalData
 } from '../transaction-modal/transaction-modal.component';
+import { BudgetCategoryService } from 'src/app/services/budget-category.service';
+import { getMonth, getYear } from 'src/app/utils/timeUtils';
 
 @Component({
     selector: 'TransactionCard',
@@ -15,6 +17,7 @@ import {
 export class TransactionCardComponent {
     transactionService = inject(TransactionService);
     dialog = inject(MatDialog);
+    budgetCategoryService = inject(BudgetCategoryService);
 
     transaction = input.required<IsolatedTransaction>();
 
@@ -23,6 +26,14 @@ export class TransactionCardComponent {
     }
 
     openEditModal() {
+        const month = getMonth(this.transaction().date);
+        const year = getYear(this.transaction().date);
+
+        this.budgetCategoryService.getBudgetCategoriesWithLineItems(
+            month,
+            year
+        );
+
         this.dialog.open<TransactionModalComponent, TransactionModalData>(
             TransactionModalComponent,
             {

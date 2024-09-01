@@ -33,13 +33,39 @@ export class TransactionModalComponent {
 
     prevSelectedDate = signal<Date | null>(null);
 
+    dropdownCategories = computed<BudgetCategoryWithLineItems[]>(() =>
+        this.budgetCategoryService.budgetCategoriesWithLineItems()
+    );
+
+    selectedLineItem = computed<LineItemReduced | undefined>(() => {
+        const budgetCategories =
+            this.budgetCategoryService.budgetCategoriesWithLineItems();
+
+        const lineItem = budgetCategories
+            .find((category) => {
+                return category.lineItems.find(
+                    (lineItem) =>
+                        lineItem.lineItemId ===
+                        this.modalData.transaction?.lineItemId
+                );
+            })
+            ?.lineItems.find(
+                (lineItem) =>
+                    lineItem.lineItemId ===
+                    this.modalData.transaction?.lineItemId
+            );
+
+        return lineItem;
+    });
+
     form = new FormGroup({
         amount: new FormControl(this.modalData.transaction?.amount || 0, [
             Validators.required
         ]),
-        lineItem: new FormControl<LineItemReduced | null>(null, [
-            Validators.required
-        ]),
+        lineItem: new FormControl<LineItemReduced | null>(
+            this.selectedLineItem() || null,
+            [Validators.required]
+        ),
         date: new FormControl<Date | null>(
             this.modalData.transaction?.date
                 ? new Date(this.modalData.transaction?.date)
@@ -54,10 +80,6 @@ export class TransactionModalComponent {
             this.modalData.transaction?.notes || null
         )
     });
-
-    dropdownCategories = computed<BudgetCategoryWithLineItems[]>(() =>
-        this.budgetCategoryService.budgetCategoriesWithLineItems()
-    );
 
     getCategories(e: MatDatepickerInputEvent<Date>) {
         const date = e.value;

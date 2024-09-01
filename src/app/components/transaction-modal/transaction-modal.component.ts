@@ -1,4 +1,12 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    OnInit,
+    computed,
+    effect,
+    inject,
+    signal
+} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -37,7 +45,7 @@ export class TransactionModalComponent {
         this.budgetCategoryService.budgetCategoriesWithLineItems()
     );
 
-    selectedLineItem = computed<LineItemReduced | undefined>(() => {
+    preSelectedLineItem = computed<LineItemReduced | undefined>(() => {
         const budgetCategories =
             this.budgetCategoryService.budgetCategoriesWithLineItems();
 
@@ -62,10 +70,9 @@ export class TransactionModalComponent {
         amount: new FormControl(this.modalData.transaction?.amount || 0, [
             Validators.required
         ]),
-        lineItem: new FormControl<LineItemReduced | null>(
-            this.selectedLineItem() || null,
-            [Validators.required]
-        ),
+        lineItem: new FormControl<LineItemReduced | null>(null, [
+            Validators.required
+        ]),
         date: new FormControl<Date | null>(
             this.modalData.transaction?.date
                 ? new Date(this.modalData.transaction?.date)
@@ -80,6 +87,16 @@ export class TransactionModalComponent {
             this.modalData.transaction?.notes || null
         )
     });
+
+    constructor() {
+        effect(() => {
+            if (this.preSelectedLineItem()) {
+                this.form.patchValue({
+                    lineItem: this.preSelectedLineItem()
+                });
+            }
+        });
+    }
 
     getCategories(e: MatDatepickerInputEvent<Date>) {
         const date = e.value;

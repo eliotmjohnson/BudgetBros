@@ -93,5 +93,6 @@ export class TransactionModalComponent {
         };
 
         this.transactionService.addTransaction(newTransaction);
+        this.closeModal();
     }
 }

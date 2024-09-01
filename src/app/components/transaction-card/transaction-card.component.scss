@@ -1,18 +1,18 @@
 @import "bb-core";
 
 .actions-wrapper {
-    display: flex; 
-    gap: 1rem; 
-    justify-content: space-between; 
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
     align-items: center;
 }
 
 .actions-buttons-container {
-    display: flex; 
-    gap: .5rem; 
-    align-items: center; 
-    margin-bottom: .75rem; 
-    margin-right: .75rem;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    margin-right: 0.75rem;
 }
 
 .date {
@@ -20,9 +20,23 @@
 }
 
 .mat-mdc-card-actions {
-    gap: 1rem; 
+    gap: 1rem;
 }
 
 .error {
     color: $bb-error-main;
+}
+
+.edit {
+    color: $bb-secondary-title-color;
+}
+
+mat-card-header {
+    position: relative;
+
+    .edit-button {
+        position: absolute;
+        top: 0.2rem;
+        right: 0.2rem;
+    }
 }

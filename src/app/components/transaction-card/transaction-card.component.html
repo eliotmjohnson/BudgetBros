@@ -3,6 +3,15 @@
         <mat-card-title>
             {{ transaction().merchant }}
         </mat-card-title>
+        <button
+            mat-icon-button
+            class="edit-button"
+        >
+            <mat-icon
+                fontIcon="edit"
+                class="edit"
+            />
+        </button>
     </mat-card-header>
     <mat-card-content>
         {{ transaction().budgetCategoryName }}
@@ -15,11 +24,14 @@
             <mat-chip [disableRipple]="true">
                 ${{ transaction().amount }}
             </mat-chip>
-            <button 
-                mat-icon-button 
+            <button
+                mat-icon-button
                 (click)="deleteTransaction(transaction().id)"
             >
-                <mat-icon fontIcon="delete" class="error" />
+                <mat-icon
+                    fontIcon="delete"
+                    class="error"
+                />
             </button>
         </div>
     </div>

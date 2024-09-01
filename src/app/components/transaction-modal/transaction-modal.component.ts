@@ -4,7 +4,10 @@ import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { BudgetCategoryWithLineItems } from 'src/app/models/budgetCategory';
 import { LineItemReduced } from 'src/app/models/lineItem';
-import { NewTransaction } from 'src/app/models/transaction';
+import {
+    IsolatedTransaction,
+    NewTransaction
+} from 'src/app/models/transaction';
 import { BudgetCategoryService } from 'src/app/services/budget-category.service';
 import { TransactionService } from 'src/app/services/transaction.service';
 import {
@@ -14,6 +17,7 @@ import {
 
 export type TransactionModalData = {
     mode: 'add' | 'edit';
+    transaction?: IsolatedTransaction;
 };
 
 @Component({
@@ -30,13 +34,25 @@ export class TransactionModalComponent {
     prevSelectedDate = signal<Date | null>(null);
 
     form = new FormGroup({
-        amount: new FormControl(0, [Validators.required]),
+        amount: new FormControl(this.modalData.transaction?.amount || 0, [
+            Validators.required
+        ]),
         lineItem: new FormControl<LineItemReduced | null>(null, [
             Validators.required
         ]),
-        date: new FormControl<Date | null>(null, [Validators.required]),
-        merchant: new FormControl<string | null>(null, [Validators.required]),
-        notes: new FormControl<string | null>(null)
+        date: new FormControl<Date | null>(
+            this.modalData.transaction?.date
+                ? new Date(this.modalData.transaction?.date)
+                : null,
+            [Validators.required]
+        ),
+        merchant: new FormControl<string | null>(
+            this.modalData.transaction?.merchant || null,
+            [Validators.required]
+        ),
+        notes: new FormControl<string | null>(
+            this.modalData.transaction?.notes || null
+        )
     });
 
     dropdownCategories = computed<BudgetCategoryWithLineItems[]>(() =>
@@ -78,8 +94,6 @@ export class TransactionModalComponent {
 
     submitForm() {
         if (this.form.invalid) return;
-
-        console.log(this.form.value);
 
         const submittedTransaction = this.form.value;
         const newTransaction: NewTransaction = {

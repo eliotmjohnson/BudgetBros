@@ -1,4 +1,5 @@
 use actix_web::{ web::Data, Result};
+use sqlx::postgres::PgQueryResult;
 
 
 use crate::AppState;
@@ -52,20 +53,21 @@ pub async fn get_all_transactions_between_dates(
         .await
 }
 
-pub async fn add_transaction(state: Data<AppState>, new_transaction: NewTransaction) -> Result<Transaction, sqlx::Error> {
+pub async fn add_transaction(state: Data<AppState>, new_transaction: NewTransaction) -> Result<PgQueryResult, sqlx::Error> {
     let query = 
         "INSERT INTO transactions 
-        (title, merchant, amount, notes, date, line_item_id) 
-        VALUES ($1, $2, $3, $4, $5, $6)";
+        (title, merchant, amount, notes, date, line_item_id, deleted) 
+        VALUES ($1, $2, $3, $4, $5, $6, $7)";
 
-    sqlx::query_as::<_, Transaction>(query)
+    sqlx::query(query)
         .bind(new_transaction.title)   
         .bind(new_transaction.merchant)   
         .bind(new_transaction.amount)   
         .bind(new_transaction.notes)   
         .bind(new_transaction.date)   
         .bind(new_transaction.line_item_id)   
-        .fetch_one(&state.db)
+        .bind(new_transaction.deleted)
+        .execute(&state.db)
         .await
 }
 

@@ -17,8 +17,7 @@ use serde::Deserialize;
 
 use crate::{
     transactions::transactions_models::{
-        NewTransaction, 
-        Transaction
+        IsolatedTransactionResponse, NewTransaction, Transaction
     }, 
     AppState
 };
@@ -59,20 +58,38 @@ pub struct QueryParams {
 pub async fn get_all_transactions_between_dates_handler(
     state: Data<AppState>,
     params: Path<i64>,
-    query: Query<QueryParams>
+    query: Query<QueryParams>,
 ) -> impl Responder {
     let user_id = params.into_inner();
     let query_params = query.into_inner();
 
     let transactions_result = get_all_transactions_between_dates(
-        state, 
+        state,
         user_id,
         query_params.start_date,
         query_params.end_date,
-    ).await;
+    )
+    .await;
 
     match transactions_result {
-        Ok(transactions) => HttpResponse::Ok().json(transactions),
+        Ok(transactions) => {
+            let transactions_response: Vec<IsolatedTransactionResponse> = transactions
+                .into_iter()
+                .map(|transaction| IsolatedTransactionResponse {
+                    line_item_id: transaction.line_item_id.to_string(),
+                    id: transaction.id.to_string(),
+                    title: transaction.title,
+                    amount: transaction.amount,
+                    notes: transaction.notes,
+                    date: transaction.date,
+                    merchant: transaction.merchant,
+                    budget_category_name: transaction.budget_category_name,
+                    deleted: transaction.deleted
+                })
+                .collect();
+
+            HttpResponse::Ok().json(transactions_response)
+        }
         Err(e) => {
             println!("{}", e);
             HttpResponse::InternalServerError().finish()
@@ -80,12 +97,13 @@ pub async fn get_all_transactions_between_dates_handler(
     }
 }
 
-#[post("/")]
+#[post("")]
 pub async fn add_transaction_handler(
     state: Data<AppState>,
     body: Json<NewTransaction>
 ) -> impl Responder {
     let new_transaction = body.into_inner();
+    println!("{:?}", new_transaction);
 
     let add_transaction_result = add_transaction(state, new_transaction).await;
 
@@ -95,7 +113,7 @@ pub async fn add_transaction_handler(
     }
 }
 
-#[put("/")]
+#[put("")]
 pub async fn update_transaction_handler(
     state: Data<AppState>,
     body: Json<Transaction>

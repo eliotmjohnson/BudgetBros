@@ -9,6 +9,10 @@ export type Transaction = {
     deleted: boolean;
 };
 
+export type NewTransaction = Omit<Transaction, 'id' | 'lineItemId'> & {
+    lineItemId: string;
+};
+
 export type IsolatedTransaction = Transaction & {
     budgetCategoryName: string;
 };

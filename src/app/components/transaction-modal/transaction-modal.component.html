@@ -47,7 +47,7 @@
             <mat-label> Select Budget Item </mat-label>
             <mat-select
                 [disabled]="!dropdownCategories().length"
-                formControlName="category"
+                formControlName="lineItem"
             >
                 @if (dropdownCategories().length) {
                     @for (
@@ -71,6 +71,17 @@
                 }
             </mat-select>
         </mat-form-field>
+        <mat-form-field class="fullwidth">
+            <mat-label> Notes </mat-label>
+            <textarea
+                matInput
+                formControlName="notes"
+                cdkTextareaAutosize
+                #autosize="cdkTextareaAutosize"
+                cdkAutosizeMinRows="5"
+                cdkAutosizeMaxRows="10"
+            ></textarea>
+        </mat-form-field>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
         <button
@@ -84,6 +95,7 @@
             color="primary"
             style="color: white"
             type="submit"
+            [disabled]="this.form.invalid && this.form.touched"
         >
             {{ modalData.mode === "add" ? "Add" : "Update" }}
         </button>

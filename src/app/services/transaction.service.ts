@@ -2,7 +2,11 @@ import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BE_API_URL } from '../constants/constants';
 import { AuthService } from './auth.service';
-import { IsolatedTransaction, Transaction } from '../models/transaction';
+import {
+    IsolatedTransaction,
+    NewTransaction,
+    Transaction
+} from '../models/transaction';
 
 @Injectable({
     providedIn: 'root'
@@ -29,6 +33,7 @@ export class TransactionService {
             )
             .subscribe({
                 next: (transactions) => {
+                    console.log({ transactions });
                     this.isLoading.set(false);
                     this.transactions.set(transactions);
                 },
@@ -54,10 +59,22 @@ export class TransactionService {
         });
     }
 
-    // addTransaction(transaction: Transaction) {
-    //     const newTransaction: IsolatedTransaction = { ...transaction, userId: this.authService.userId };
-    //     this.transactions.update((transactions) => [...transactions, transaction]);
-    // }
+    addTransaction(transaction: NewTransaction) {
+        this.http.post<Transaction>(this.baseUrl, transaction).subscribe({
+            next: () => {
+                // this.transactions.update((transactions) => {
+                //     const newTransaction: IsolatedTransaction = {
+                //         ...transaction,
+                //         id: crypto.randomUUID(),
+                //         budgetCategoryName: this.currentSelectedLineItem
+                //     }
+                // });
+            },
+            error: (error) => {
+                console.error(error);
+            }
+        });
+    }
 
     clearTransactionData() {
         this.currentSelectedLineItem = '';

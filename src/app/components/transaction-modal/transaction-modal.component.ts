@@ -4,6 +4,7 @@ import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { BudgetCategoryWithLineItems } from 'src/app/models/budgetCategory';
 import { LineItemReduced } from 'src/app/models/lineItem';
+import { NewTransaction } from 'src/app/models/transaction';
 import { BudgetCategoryService } from 'src/app/services/budget-category.service';
 import { TransactionService } from 'src/app/services/transaction.service';
 import {
@@ -34,7 +35,8 @@ export class TransactionModalComponent {
             Validators.required
         ]),
         date: new FormControl<Date | null>(null, [Validators.required]),
-        merchant: new FormControl<string | null>(null, [Validators.required])
+        merchant: new FormControl<string | null>(null, [Validators.required]),
+        notes: new FormControl<string | null>(null)
     });
 
     dropdownCategories = computed<BudgetCategoryWithLineItems[]>(() =>
@@ -75,9 +77,21 @@ export class TransactionModalComponent {
     }
 
     submitForm() {
-        console.log(this.form);
         if (this.form.invalid) return;
 
         console.log(this.form.value);
+
+        const submittedTransaction = this.form.value;
+        const newTransaction: NewTransaction = {
+            title: '',
+            amount: submittedTransaction.amount!,
+            lineItemId: submittedTransaction.lineItem!.lineItemId,
+            date: submittedTransaction.date!.toISOString(),
+            merchant: submittedTransaction.merchant!,
+            notes: submittedTransaction.notes || '',
+            deleted: false
+        };
+
+        this.transactionService.addTransaction(newTransaction);
     }
 }

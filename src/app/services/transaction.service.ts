@@ -44,7 +44,7 @@ export class TransactionService {
             });
     }
 
-    softDeleteTransaction(transactionId: number) {
+    softDeleteTransaction(transactionId: IsolatedTransaction['id']) {
         const currentTransactions = this.transactions();
 
         this.transactions.update((transactions) =>

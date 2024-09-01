@@ -6,6 +6,7 @@
         <button
             mat-icon-button
             class="edit-button"
+            (click)="openEditModal(transaction().id)"
         >
             <mat-icon
                 fontIcon="edit"

@@ -119,7 +119,6 @@ pub async fn update_transaction_handler(
     body: Json<Transaction>
 ) -> impl Responder {
     let updated_transaction = body.into_inner();
-    println!("{:?}", updated_transaction);
 
     let updated_transaction_result = update_transaction(state, updated_transaction).await;
 

@@ -58,7 +58,7 @@ export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
         const inputValue = this.titleInput.nativeElement.value;
 
         if (inputValue === 'Category Name' && this.isNewBudgetCategory) {
-            this.dropBudgetCategory();
+            this.deleteBudgetCategory();
         } else {
             this.name = inputValue;
             if (this.isNewBudgetCategory) {
@@ -81,7 +81,7 @@ export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
         this.isAddingBudgetCategory.emit(false);
     }
 
-    dropBudgetCategory() {
+    deleteBudgetCategory() {
         const currentBudgetCategories =
             this.budgetService.budget()?.budgetCategories;
         if (currentBudgetCategories) {

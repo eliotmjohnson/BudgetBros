@@ -58,7 +58,7 @@ pub struct QueryParams {
 pub async fn get_all_transactions_between_dates_handler(
     state: Data<AppState>,
     params: Path<i64>,
-    query: Query<QueryParams>,
+    query: Query<QueryParams>
 ) -> impl Responder {
     let user_id = params.into_inner();
     let query_params = query.into_inner();

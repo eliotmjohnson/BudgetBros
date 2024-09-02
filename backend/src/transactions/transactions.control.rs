@@ -103,7 +103,6 @@ pub async fn add_transaction_handler(
     body: Json<NewTransaction>
 ) -> impl Responder {
     let new_transaction = body.into_inner();
-    println!("{:?}", new_transaction);
 
     let add_transaction_result = add_transaction(state, new_transaction).await;
 

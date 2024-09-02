@@ -106,13 +106,14 @@ export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
     }
 
     dropBudgetCategory() {
-        const currentBudget = this.budgetService.budget()?.budgetCategories;
-        if (currentBudget) {
-            const foundIndex = currentBudget.findIndex(
+        const currentBudgetCategories =
+            this.budgetService.budget()?.budgetCategories;
+        if (currentBudgetCategories) {
+            const foundIndex = currentBudgetCategories.findIndex(
                 (category) => !category.budgetCategoryId
             );
             if (foundIndex >= 0) {
-                currentBudget.splice(foundIndex, 1);
+                currentBudgetCategories.splice(foundIndex, 1);
             }
         }
     }

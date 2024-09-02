@@ -31,14 +31,10 @@ export class TransactionsComponent implements OnInit {
     }
 
     openAddTransactionDialog() {
-        const dialogRef = this.dialog.open<
+        this.dialog.open<TransactionModalComponent, TransactionModalData>(
             TransactionModalComponent,
-            TransactionModalData
-        >(TransactionModalComponent, {
-            data: {
-                mode: 'add'
-            }
-        });
+            { data: { mode: 'add' } }
+        );
     }
 
     submitForm() {

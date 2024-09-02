@@ -62,13 +62,18 @@ export class TransactionService {
     addTransaction(transaction: NewTransaction) {
         this.http.post<Transaction>(this.baseUrl, transaction).subscribe({
             next: () => {
-                // this.transactions.update((transactions) => {
-                //     const newTransaction: IsolatedTransaction = {
-                //         ...transaction,
-                //         id: crypto.randomUUID(),
-                //         budgetCategoryName: this.currentSelectedLineItem
-                //     }
-                // });
+                // TODO: handle UI change
+            },
+            error: (error) => {
+                console.error(error);
+            }
+        });
+    }
+
+    updateTransaction(transaction: Transaction) {
+        this.http.put<Transaction>(this.baseUrl, transaction).subscribe({
+            next: () => {
+                // TODO: handle UI change
             },
             error: (error) => {
                 console.error(error);

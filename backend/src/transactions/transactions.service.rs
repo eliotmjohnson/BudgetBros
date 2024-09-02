@@ -71,7 +71,7 @@ pub async fn add_transaction(state: Data<AppState>, new_transaction: NewTransact
         .await
 }
 
-pub async fn update_transaction(state: Data<AppState>, new_transaction: Transaction) -> Result<Transaction, sqlx::Error> {
+pub async fn update_transaction(state: Data<AppState>, new_transaction: Transaction) -> Result<PgQueryResult, sqlx::Error> {
     let query = 
         "UPDATE 
             transactions 
@@ -80,17 +80,19 @@ pub async fn update_transaction(state: Data<AppState>, new_transaction: Transact
             merchant = $2,
             amount = $3,
             notes = $4,
-            date = $5,        
-        WHERE id = $6";
+            date = $5,
+            line_item_id = $6::bigint      
+        WHERE id = $7::bigint";
 
-    sqlx::query_as::<_, Transaction>(query)
+    sqlx::query(query)
         .bind(new_transaction.title)   
         .bind(new_transaction.merchant)   
         .bind(new_transaction.amount)   
         .bind(new_transaction.notes)   
         .bind(new_transaction.date)   
+        .bind(new_transaction.line_item_id)
         .bind(new_transaction.id)   
-        .fetch_one(&state.db)
+        .execute(&state.db)
         .await
 }
 

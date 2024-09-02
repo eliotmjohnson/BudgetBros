@@ -6,7 +6,8 @@ import { BudgetCategoryWithLineItems } from 'src/app/models/budgetCategory';
 import { LineItemReduced } from 'src/app/models/lineItem';
 import {
     IsolatedTransaction,
-    NewTransaction
+    NewTransaction,
+    Transaction
 } from 'src/app/models/transaction';
 import { BudgetCategoryService } from 'src/app/services/budget-category.service';
 import { TransactionService } from 'src/app/services/transaction.service';
@@ -42,14 +43,8 @@ export class TransactionModalComponent {
             this.budgetCategoryService.budgetCategoriesWithLineItems();
 
         const lineItem = budgetCategories
-            .find((category) => {
-                return category.lineItems.find(
-                    (lineItem) =>
-                        lineItem.lineItemId ===
-                        this.modalData.transaction?.lineItemId
-                );
-            })
-            ?.lineItems.find(
+            .flatMap((category) => category.lineItems)
+            .find(
                 (lineItem) =>
                     lineItem.lineItemId ===
                     this.modalData.transaction?.lineItemId
@@ -62,9 +57,10 @@ export class TransactionModalComponent {
         amount: new FormControl(this.modalData.transaction?.amount || 0, [
             Validators.required
         ]),
-        lineItem: new FormControl<LineItemReduced | null>(null, [
-            Validators.required
-        ]),
+        lineItem: new FormControl<LineItemReduced | null>(
+            this.preSelectedLineItem() || null,
+            [Validators.required]
+        ),
         date: new FormControl<Date | null>(
             this.modalData.transaction?.date
                 ? new Date(this.modalData.transaction?.date)
@@ -81,6 +77,7 @@ export class TransactionModalComponent {
     });
 
     constructor() {
+        // TODO: fix bug where it doesn't populate on second time clicking
         effect(() => {
             if (this.preSelectedLineItem()) {
                 this.form.patchValue({
@@ -126,18 +123,34 @@ export class TransactionModalComponent {
     submitForm() {
         if (this.form.invalid) return;
 
-        const submittedTransaction = this.form.value;
-        const newTransaction: NewTransaction = {
-            title: '',
-            amount: submittedTransaction.amount!,
-            lineItemId: submittedTransaction.lineItem!.lineItemId,
-            date: submittedTransaction.date!.toISOString(),
-            merchant: submittedTransaction.merchant!,
-            notes: submittedTransaction.notes || '',
-            deleted: false
-        };
+        if (this.modalData.mode === 'add') {
+            const submittedTransaction = this.form.value;
+            const newTransaction: NewTransaction = {
+                title: '',
+                amount: submittedTransaction.amount!,
+                lineItemId: submittedTransaction.lineItem!.lineItemId,
+                date: submittedTransaction.date!.toISOString(),
+                merchant: submittedTransaction.merchant!,
+                notes: submittedTransaction.notes || '',
+                deleted: false
+            };
 
-        this.transactionService.addTransaction(newTransaction);
+            this.transactionService.addTransaction(newTransaction);
+        } else {
+            const submittedTransaction = this.form.value;
+            const updatedTransaction: Transaction = {
+                id: this.modalData.transaction!.id,
+                title: this.modalData.transaction!.title,
+                deleted: this.modalData.transaction!.deleted,
+                amount: submittedTransaction.amount!,
+                lineItemId: submittedTransaction.lineItem!.lineItemId,
+                date: submittedTransaction.date!.toISOString(),
+                merchant: submittedTransaction.merchant!,
+                notes: submittedTransaction.notes || ''
+            };
+
+            this.transactionService.updateTransaction(updatedTransaction);
+        }
         this.closeModal();
     }
 }

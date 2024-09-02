@@ -4,11 +4,13 @@ import {
     Component,
     ElementRef,
     Input,
+    OnInit,
     ViewChild
 } from '@angular/core';
 import { filter, take } from 'rxjs';
 
 import { LineItem, SaveLineItemPayload } from 'src/app/models/lineItem';
+import { BudgetService } from 'src/app/services/budget.service';
 import { LineItemService } from 'src/app/services/line-item.service';
 import { TransactionService } from 'src/app/services/transaction.service';
 
@@ -17,17 +19,18 @@ import { TransactionService } from 'src/app/services/transaction.service';
     templateUrl: './budget-category-card.component.html',
     styleUrls: ['./budget-category-card.component.scss']
 })
-export class BudgetCategoryCardComponent implements AfterViewChecked {
+export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
     @ViewChild('titleInput') titleInput!: ElementRef<HTMLInputElement>;
-    @Input() budgetCategoryId = 0;
+    @Input() budgetCategoryId = '';
     @Input() lineItems: LineItem[] = [];
     @Input() name = '';
-    isEditingName = false;
+    isEditingName = true;
     isAddingLineItem = false;
 
     constructor(
         private transactionService: TransactionService,
-        private lineItemService: LineItemService
+        private lineItemService: LineItemService,
+        private budgetService: BudgetService
     ) {}
 
     ngAfterViewChecked(): void {
@@ -37,10 +40,29 @@ export class BudgetCategoryCardComponent implements AfterViewChecked {
         }
     }
 
-    changeTitle(e: SubmitEvent) {
-        e.preventDefault();
+    ngOnInit(): void {
+        if (this.budgetCategoryId) {
+            this.isEditingName = false;
+        }
+    }
+
+    changeTitle(e?: SubmitEvent) {
+        if (e) e.preventDefault();
+        this.dropBudgetCategory();
         this.name = this.titleInput.nativeElement.value;
         this.isEditingName = false;
+    }
+
+    dropBudgetCategory() {
+        const currentBudget = this.budgetService.budget()?.budgetCategories;
+        if (currentBudget) {
+            const foundIndex = currentBudget.findIndex(
+                (category) => !category.budgetCategoryId
+            );
+            if (foundIndex >= 0) {
+                currentBudget.splice(foundIndex, 1);
+            }
+        }
     }
 
     handleDrop(event: CdkDragDrop<LineItem[]>) {

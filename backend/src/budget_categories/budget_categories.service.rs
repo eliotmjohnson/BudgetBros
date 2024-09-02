@@ -2,7 +2,7 @@ use actix_web::web::Data;
 
 use crate::AppState;
 
-use super::budget_categories_models::BudgetCategoryWithLineItemsRow;
+use super::budget_categories_models::{BudgetCategoryWithLineItemsRow, NewBudgetCategory, NewBudgetCategoryId};
 
 pub async fn get_budget_categories_with_line_items(
     state: Data<AppState>,
@@ -33,5 +33,22 @@ pub async fn get_budget_categories_with_line_items(
         .bind(month_number)
         .bind(year)
         .fetch_all(&state.db)
+        .await
+}
+
+pub async fn add_budget_category(
+    state: Data<AppState>,
+    new_budget_category: NewBudgetCategory,
+) -> Result<NewBudgetCategoryId, sqlx::Error> {
+    let query = "INSERT INTO budget_categories
+        (name, user_id, budget_id)
+        VALUES ($1, $2, $3)
+        RETURNING id";
+
+    sqlx::query_as::<_, NewBudgetCategoryId>(query)
+        .bind(new_budget_category.name)
+        .bind(new_budget_category.user_id)
+        .bind(new_budget_category.budget_id)
+        .fetch_one(&state.db)
         .await
 }

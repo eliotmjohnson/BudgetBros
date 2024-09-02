@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { MatCalendar, MatCalendarView } from '@angular/material/datepicker';
 import { MONTHS } from 'src/app/constants/constants';
-import { BudgetCategory } from 'src/app/models/budget';
+import { BudgetCategory } from 'src/app/models/budgetCategory';
 import { BudgetService } from 'src/app/services/budget.service';
 import { TransactionService } from 'src/app/services/transaction.service';
 
@@ -18,7 +18,7 @@ import { TransactionService } from 'src/app/services/transaction.service';
     styleUrls: ['./budget.component.scss']
 })
 export class BudgetComponent implements OnInit, AfterViewChecked {
-    @ViewChild(MatCalendar) calendarSelector!: MatCalendar<Date>;
+    @ViewChild('calendarSelector') calendarSelector!: MatCalendar<Date>;
 
     months = MONTHS;
     selectedMonth = computed(() => {
@@ -79,6 +79,23 @@ export class BudgetComponent implements OnInit, AfterViewChecked {
                 this.isCalendarClosing = false;
             }, 300);
         }
+    }
+
+    createNewBudget() {
+        const currentBudget = this.budget();
+        if (currentBudget && !currentBudget.budgetId) {
+            this.budgetService.addNewBudget(
+                currentBudget.monthNumber,
+                currentBudget.year
+            );
+        }
+
+        const newBudgetCategoryPlaceholder: BudgetCategory = {
+            budgetCategoryId: '',
+            name: 'Category Name',
+            lineItems: []
+        };
+        this.budget()?.budgetCategories.push(newBudgetCategoryPlaceholder);
     }
 
     openCalendarSelector() {

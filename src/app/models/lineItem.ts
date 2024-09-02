@@ -14,7 +14,7 @@ export type SaveLineItemPayload = {
     isFund: boolean;
     plannedAmount: number;
     startingBalance: number;
-    budgetCategoryId?: number;
+    budgetCategoryId?: string;
 };
 
 export type UpdateLineItemPayload = Omit<

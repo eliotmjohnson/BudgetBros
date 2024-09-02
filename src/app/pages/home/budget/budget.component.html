@@ -41,10 +41,17 @@
             <main class="budget-loader-container">
                 <mat-spinner diameter="70" color="primary" />
             </main>
-        } @else if (!budgetService.budget()?.budgetId) {
+        } @else if (!budgetService.budget()?.budgetCategories?.length) {
             <main class="no-budget-notice">
                 <h1>No Budget Available For This Month</h1>
-                <p>Get Budgeting!</p>
+                <div class="add-budget-category-container">
+                    <p>Get Started</p>
+                    <mat-icon
+                        (click)="createNewBudget()"
+                        class="add-button"
+                        fontIcon="add_circle"
+                    />
+                </div>
             </main>
         } @else {
             <BudgetCategoryCard

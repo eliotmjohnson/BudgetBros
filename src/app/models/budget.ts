@@ -1,14 +1,8 @@
-import { LineItem } from './lineItem';
+import { BudgetCategory } from './budgetCategory';
 
 export type Budget = {
-    budgetId: number;
+    budgetId: string;
     monthNumber: number;
     year: number;
     budgetCategories: BudgetCategory[];
-};
-
-export type BudgetCategory = {
-    budgetCategoryId: number;
-    name: string;
-    lineItems: LineItem[];
 };

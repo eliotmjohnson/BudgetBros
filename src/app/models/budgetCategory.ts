@@ -6,12 +6,6 @@ export type BudgetCategory = {
     lineItems: LineItem[];
 };
 
-export type SaveBudgetCategoryPayload = {
-    budgetCategoryId: number;
-    name: string;
-    lineItems: LineItem[];
-};
-
 export type BudgetCategoryWithLineItems = {
     budgetCategoryId: number;
     budgetCategoryName: string;

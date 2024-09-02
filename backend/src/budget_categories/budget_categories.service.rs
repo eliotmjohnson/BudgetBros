@@ -2,13 +2,15 @@ use actix_web::web::Data;
 
 use crate::AppState;
 
-use super::budget_categories_models::{BudgetCategoryWithLineItemsRow, NewBudgetCategory, NewBudgetCategoryId};
+use super::budget_categories_models::{
+    BudgetCategoryWithLineItemsRow, NewBudgetCategory, NewBudgetCategoryId,
+};
 
 pub async fn get_budget_categories_with_line_items(
     state: Data<AppState>,
     user_id: i64,
     month_number: i64,
-    year: i64
+    year: i64,
 ) -> Result<Vec<BudgetCategoryWithLineItemsRow>, sqlx::Error> {
     let query = "
         SELECT 
@@ -47,8 +49,8 @@ pub async fn add_budget_category(
 
     sqlx::query_as::<_, NewBudgetCategoryId>(query)
         .bind(new_budget_category.name)
-        .bind(new_budget_category.user_id)
-        .bind(new_budget_category.budget_id)
+        .bind(new_budget_category.user_id.parse::<i64>().unwrap())
+        .bind(new_budget_category.budget_id.parse::<i64>().unwrap())
         .fetch_one(&state.db)
         .await
 }

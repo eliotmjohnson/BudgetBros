@@ -29,6 +29,7 @@ export class BudgetComponent implements OnInit, AfterViewChecked {
     budget = this.budgetService.budget;
     isCalMenuOpened = false;
     isCalendarClosing = false;
+    isAddingBudgetCategory = false;
 
     constructor(
         public transactionService: TransactionService,
@@ -81,7 +82,7 @@ export class BudgetComponent implements OnInit, AfterViewChecked {
         }
     }
 
-    createNewBudget() {
+    createNewBudgetCategory() {
         const currentBudget = this.budget();
         if (currentBudget && !currentBudget.budgetId) {
             this.budgetService.addNewBudget(
@@ -95,7 +96,9 @@ export class BudgetComponent implements OnInit, AfterViewChecked {
             name: 'Category Name',
             lineItems: []
         };
+
         this.budget()?.budgetCategories.push(newBudgetCategoryPlaceholder);
+        this.isAddingBudgetCategory = true;
     }
 
     openCalendarSelector() {

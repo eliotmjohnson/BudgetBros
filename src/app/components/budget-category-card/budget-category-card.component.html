@@ -1,7 +1,14 @@
-<Card style="position: relative" paddingBottom="0.5rem" paddingLeft="2rem">
+<Card
+    style="position: relative"
+    paddingBottom="0.5rem"
+    paddingLeft="2rem"
+>
     <ng-content></ng-content>
     <span class="header">
-        <h1 *ngIf="!isEditingName" (click)="isEditingName = true">
+        <h1
+            *ngIf="!isEditingName"
+            (click)="isEditingName = true"
+        >
             {{ name }}
         </h1>
         <form

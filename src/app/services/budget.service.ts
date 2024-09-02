@@ -46,7 +46,12 @@ export class BudgetService {
                     monthNumber,
                     year
                 })
-                .subscribe();
+                .subscribe((budgetId) => {
+                    const currentBudget = this.budget();
+                    if (currentBudget) {
+                        currentBudget.budgetId = budgetId;
+                    }
+                });
         }
     }
 

@@ -43,7 +43,7 @@ pub async fn get_all_line_item_transactions_handler(
         Ok(transactions) => HttpResponse::Ok().json(transactions),
         Err(e) => {
             println!("{}", e);
-            HttpResponse::InternalServerError().finish()
+            HttpResponse::InternalServerError().body(e.to_string())
         }
     }
 }
@@ -92,7 +92,7 @@ pub async fn get_all_transactions_between_dates_handler(
         }
         Err(e) => {
             println!("{}", e);
-            HttpResponse::InternalServerError().finish()
+            HttpResponse::InternalServerError().body(e.to_string())
         }
     }
 }
@@ -108,7 +108,10 @@ pub async fn add_transaction_handler(
 
     match add_transaction_result {
         Ok(_) => HttpResponse::Ok().json("Transaction added successfully"),
-        Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
+        Err(e) => {
+            println!("{}", e);
+            HttpResponse::InternalServerError().body(e.to_string())
+        }
     }
 }
 
@@ -123,7 +126,10 @@ pub async fn update_transaction_handler(
 
     match updated_transaction_result {
         Ok(_) => HttpResponse::Ok().json("Transaction updated successfully"),
-        Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
+        Err(e) => {
+            println!("{}", e);
+            HttpResponse::InternalServerError().body(e.to_string())
+        }
     }
 }
 
@@ -138,7 +144,10 @@ pub async fn soft_delete_transaction_handler(
 
     match delete_transaction_result {
         Ok(_) => HttpResponse::Ok().json("Transaction deleted successfully"),
-        Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
+        Err(e) => {
+            println!("{}", e);
+            HttpResponse::InternalServerError().body(e.to_string())
+        }
     }
 }
 
@@ -153,6 +162,9 @@ pub async fn delete_transaction_handler(
 
     match delete_transaction_result {
         Ok(_) => HttpResponse::Ok().json("Transaction deleted successfully"),
-        Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
+        Err(e) => {
+            println!("{}", e);
+            HttpResponse::InternalServerError().body(e.to_string())
+        }
     }
 }

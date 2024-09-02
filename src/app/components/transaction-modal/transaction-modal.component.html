@@ -1,62 +1,68 @@
 <h2 mat-dialog-title>
-    {{ modalData.mode === 'add' ? 'Add ' : 'Edit '}}
+    {{ modalData.mode === "add" ? "Add " : "Update" }}
     Transaction
 </h2>
-<form [formGroup]="form">
+<form
+    [formGroup]="form"
+    (ngSubmit)="submitForm()"
+>
     <mat-dialog-content class="content">
         <mat-form-field>
-            <mat-label>
-                Amount
-            </mat-label>
-            <input 
+            <mat-label> Amount </mat-label>
+            <input
                 matInput
-                type="number"
+                type="text"
                 formControlName="amount"
-            >
-            <mat-error>
-                error
-            </mat-error>
+                (keydown)="checkIfValidKey($event)"
+                (input)="addValue($event)"
+                [value]="form.value.amount | currency"
+            />
+            <mat-error> error </mat-error>
         </mat-form-field>
         <div class="inner-fields-wrapper">
             <mat-form-field class="fullwidth">
-                <mat-label>
-                    Choose a date
-                </mat-label>
-                <input 
-                    matInput 
+                <mat-label> Choose a date </mat-label>
+                <input
+                    matInput
                     [matDatepicker]="picker"
                     formControlName="date"
                     (dateChange)="getCategories($event)"
-                >
-                <mat-hint>
-                    MM/DD/YYYY
-                </mat-hint>
-                <mat-datepicker-toggle 
-                    matIconSuffix 
+                />
+                <mat-hint> MM/DD/YYYY </mat-hint>
+                <mat-datepicker-toggle
+                    matIconSuffix
                     [for]="picker"
                 />
                 <mat-datepicker #picker />
             </mat-form-field>
             <mat-form-field class="fullwidth">
-                <mat-label>
-                    Merchant
-                </mat-label>
-                <input 
+                <mat-label> Merchant </mat-label>
+                <input
                     matInput
                     formControlName="merchant"
-                >
+                />
             </mat-form-field>
         </div>
         <mat-form-field>
-            <mat-label>
-                Select Budget Item
-            </mat-label>
-            <mat-select [disabled]="!dropdownCategories().length">
+            <mat-label> Select Budget Item </mat-label>
+            <mat-select
+                [disabled]="!dropdownCategories().length"
+                formControlName="lineItem"
+            >
                 @if (dropdownCategories().length) {
-                    @for (category of dropdownCategories(); track category.budgetCategoryId) {
-                        <mat-optgroup [label]="category.budgetCategoryName" style="font-weight: bold;">
-                            @for(lineItem of category.lineItems; track lineItem.lineItemId){
-                                <mat-option [value]="lineItem.lineItemId">
+                    @for (
+                        category of dropdownCategories();
+                        track category.budgetCategoryId
+                    ) {
+                        <mat-optgroup
+                            [label]="category.budgetCategoryName"
+                            style="font-weight: bold"
+                        >
+                            @for (
+                                lineItem of category.lineItems;
+                                track lineItem.lineItemId
+                            ) {
+                                <mat-option [value]="lineItem">
                                     {{ lineItem.lineItemName }}
                                 </mat-option>
                             }
@@ -65,20 +71,34 @@
                 }
             </mat-select>
         </mat-form-field>
+        <mat-form-field class="fullwidth">
+            <mat-label> Notes </mat-label>
+            <textarea
+                matInput
+                formControlName="notes"
+                cdkTextareaAutosize
+                #autosize="cdkTextareaAutosize"
+                cdkAutosizeMinRows="5"
+                cdkAutosizeMaxRows="10"
+            ></textarea>
+        </mat-form-field>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
-        <button 
+        <button
             mat-flat-button
+            type="button"
             (click)="closeModal()"
         >
             cancel
         </button>
-        <button 
-            mat-flat-button 
+        <button
+            mat-flat-button
             color="primary"
-            style="color: white;"
+            style="color: white"
+            type="submit"
+            [disabled]="this.form.invalid && this.form.touched"
         >
-            Add
+            {{ modalData.mode === "add" ? "Add" : "Update" }}
         </button>
     </mat-dialog-actions>
 </form>

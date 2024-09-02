@@ -77,7 +77,6 @@ export class TransactionModalComponent {
     });
 
     constructor() {
-        // TODO: fix bug where it doesn't populate on second time clicking
         effect(() => {
             if (this.preSelectedLineItem()) {
                 this.form.patchValue({
@@ -118,6 +117,7 @@ export class TransactionModalComponent {
 
     closeModal() {
         this.dialogRef.close();
+        this.budgetCategoryService.budgetCategoriesWithLineItems.set([]);
     }
 
     submitForm() {

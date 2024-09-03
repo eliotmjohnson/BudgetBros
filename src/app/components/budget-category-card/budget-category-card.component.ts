@@ -88,12 +88,6 @@ export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
     deleteBudgetCategory() {
         const currentBudget = this.budgetService.budget();
 
-        if (this.budgetCategoryId) {
-            this.budgetCategoryService.deleteBudgetCategory(
-                this.budgetCategoryId
-            );
-        }
-
         if (currentBudget) {
             const foundIndex = currentBudget.budgetCategories.findIndex(
                 (category) =>
@@ -101,13 +95,12 @@ export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
             );
 
             currentBudget.budgetCategories.splice(foundIndex, 1);
+        }
 
-            if (
-                !currentBudget.budgetCategories?.length &&
-                currentBudget.budgetId
-            ) {
-                this.budgetService.deleteBudget(currentBudget.budgetId);
-            }
+        if (this.budgetCategoryId) {
+            this.budgetCategoryService.deleteBudgetCategory(
+                this.budgetCategoryId
+            );
         }
     }
 

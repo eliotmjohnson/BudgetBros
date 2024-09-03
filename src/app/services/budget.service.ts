@@ -5,6 +5,7 @@ import { Budget } from '../models/budget';
 import { AuthService } from './auth.service';
 import { TransactionService } from './transaction.service';
 import { Subject } from 'rxjs';
+import { BBSnagService } from './bb-snag.service';
 
 @Injectable({
     providedIn: 'root'
@@ -13,6 +14,7 @@ export class BudgetService {
     http = inject(HttpClient);
     transactionService = inject(TransactionService);
     authService = inject(AuthService);
+    snagDialogService = inject(BBSnagService);
 
     baseUrl = `${BE_API_URL}/budgets`;
     budget = signal<Budget | undefined>(undefined);
@@ -56,8 +58,13 @@ export class BudgetService {
     }
 
     deleteBudget(budgetId: string) {
-        this.http.delete(`${this.baseUrl}/${budgetId}`).subscribe(() => {
-            this.setBudgetId(undefined);
+        this.http.delete(`${this.baseUrl}/${budgetId}`).subscribe({
+            next: () => {
+                this.setBudgetId(undefined);
+            },
+            error: (error) => {
+                this.snagDialogService.openSnagDialog(error);
+            }
         });
     }
 

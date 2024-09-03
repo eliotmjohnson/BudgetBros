@@ -79,6 +79,14 @@ export class BudgetCategoryService {
         this.http.delete(`${this.baseUrl}/${budgetCategoryId}`).subscribe({
             next: () => {
                 this.transactionService.clearSelectedTransactionData();
+
+                const currentBudget = this.budgetService.budget();
+                if (
+                    currentBudget?.budgetId &&
+                    !currentBudget.budgetCategories?.length
+                ) {
+                    this.budgetService.deleteBudget(currentBudget.budgetId);
+                }
             },
             error: (error) => {
                 this.snagDialogService.openSnagDialog(error);

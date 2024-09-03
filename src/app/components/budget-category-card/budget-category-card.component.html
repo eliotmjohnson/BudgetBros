@@ -7,7 +7,7 @@
     <span class="header">
         <h1
             *ngIf="!isEditingName"
-            (click)="isEditingName = true"
+            (click)="enableEditMode()"
         >
             {{ name }}
         </h1>
@@ -18,10 +18,17 @@
         >
             <input
                 type="text"
-                (blur)="changeTitle()"
                 [defaultValue]="name"
+                (blur)="changeTitle(undefined, $event)"
                 #titleInput
             />
+            @if (budgetCategoryId) {
+                <mat-icon
+                    class="delete-icon"
+                    (mousedown)="deleteBudgetCategory()"
+                    fontIcon="delete"
+                ></mat-icon>
+            }
         </form>
         <p>Planned</p>
         <p>Remaining</p>

@@ -82,15 +82,7 @@ export class BudgetComponent implements OnInit, AfterViewChecked {
         }
     }
 
-    createNewBudgetCategory() {
-        const currentBudget = this.budget();
-        if (currentBudget && !currentBudget.budgetId) {
-            this.budgetService.addNewBudget(
-                currentBudget.monthNumber,
-                currentBudget.year
-            );
-        }
-
+    createNewBudgetCategoryPlaceholder() {
         const newBudgetCategoryPlaceholder: BudgetCategory = {
             budgetCategoryId: '',
             name: 'Category Name',

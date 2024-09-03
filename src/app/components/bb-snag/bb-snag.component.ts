@@ -17,11 +17,17 @@ export class BBSnagComponent implements OnInit {
     constructor(@Inject(MAT_DIALOG_DATA) public data: DialogData) {}
 
     ngOnInit(): void {
-        switch (this.data.errorResponse.status) {
-            case 500:
+        const errorResponse = this.data.errorResponse;
+        const status = errorResponse.status;
+
+        switch (true) {
+            case status === 500:
                 this.errorMessage =
                     'It looks like we are having issues at the moment. Please try again later.';
                 break;
+            case status >= 400 && status < 500:
+                this.errorMessage =
+                    'It looks like there is a conflict with the request. Please try again later.';
         }
     }
 }

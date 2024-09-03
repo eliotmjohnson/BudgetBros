@@ -38,7 +38,7 @@ export class LineItemService {
     deleteLineItem(lineItemId: string) {
         this.http.delete(`${this.baseUrl}/${lineItemId}`).subscribe({
             next: () => {
-                this.transactionService.clearTransactionData();
+                this.transactionService.clearSelectedTransactionData();
             },
             error: (error) => {
                 this.snagDiaglogService.openSnagDialog(error);

@@ -53,8 +53,14 @@ export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
         }
     }
 
-    changeTitle(e?: SubmitEvent) {
-        if (e) e.preventDefault();
+    enableEditMode() {
+        this.isEditingName = true;
+    }
+
+    changeTitle(submitEvent?: SubmitEvent, focusEvent?: FocusEvent): void {
+        if (submitEvent) submitEvent.preventDefault();
+        if (focusEvent) console.log(focusEvent);
+
         const inputValue = this.titleInput.nativeElement.value;
 
         if (inputValue === 'Category Name' && this.isNewBudgetCategory) {
@@ -82,14 +88,27 @@ export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
     }
 
     deleteBudgetCategory() {
-        const currentBudgetCategories =
-            this.budgetService.budget()?.budgetCategories;
-        if (currentBudgetCategories) {
-            const foundIndex = currentBudgetCategories.findIndex(
-                (category) => !category.budgetCategoryId
+        const currentBudget = this.budgetService.budget();
+
+        if (this.budgetCategoryId) {
+            this.budgetCategoryService.deleteBudgetCategory(
+                this.budgetCategoryId
             );
-            if (foundIndex >= 0) {
-                currentBudgetCategories.splice(foundIndex, 1);
+        }
+
+        if (currentBudget) {
+            const foundIndex = currentBudget.budgetCategories.findIndex(
+                (category) =>
+                    category.budgetCategoryId === this.budgetCategoryId
+            );
+
+            currentBudget.budgetCategories.splice(foundIndex, 1);
+
+            if (
+                !currentBudget.budgetCategories?.length &&
+                currentBudget.budgetId
+            ) {
+                this.budgetService.deleteBudget(currentBudget.budgetId);
             }
         }
     }
@@ -138,7 +157,7 @@ export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
             };
 
             this.lineItems.push(newLineItem);
-            this.transactionService.clearTransactionData();
+            this.transactionService.clearSelectedTransactionData();
             this.isAddingLineItem = true;
         } else {
             event.stopPropagation();

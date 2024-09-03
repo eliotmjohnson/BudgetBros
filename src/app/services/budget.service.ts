@@ -4,6 +4,7 @@ import { BE_API_URL } from '../constants/constants';
 import { Budget } from '../models/budget';
 import { AuthService } from './auth.service';
 import { TransactionService } from './transaction.service';
+import { Subject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -17,6 +18,7 @@ export class BudgetService {
     budget = signal<Budget | undefined>(undefined);
     isLoading = signal(false);
     getBudgetError = signal<unknown>(null);
+    newlyCreatedBudgetId = new Subject<string>();
 
     getBudget(monthNumber: number, year: number) {
         if (this.authService.userId) {
@@ -29,7 +31,7 @@ export class BudgetService {
                     next: (budget) => {
                         this.isLoading.set(false);
                         this.budget.set(budget);
-                        this.transactionService.clearTransactionData();
+                        this.transactionService.clearSelectedTransactionData();
                     },
                     error: (error) => {
                         this.isLoading.set(false);
@@ -47,16 +49,27 @@ export class BudgetService {
                     year
                 })
                 .subscribe((budgetId) => {
-                    const currentBudget = this.budget();
-                    if (currentBudget) {
-                        currentBudget.budgetId = budgetId;
-                    }
+                    this.setBudgetId(budgetId);
+                    this.newlyCreatedBudgetId.next(budgetId);
                 });
         }
     }
 
+    deleteBudget(budgetId: string) {
+        this.http.delete(`${this.baseUrl}/${budgetId}`).subscribe(() => {
+            this.setBudgetId(undefined);
+        });
+    }
+
     clearBudget() {
         this.budget.set(undefined);
-        this.transactionService.clearTransactionData();
+        this.transactionService.clearSelectedTransactionData();
+    }
+
+    setBudgetId(budgetId?: string) {
+        const currentBudget = this.budget();
+        if (currentBudget) {
+            currentBudget.budgetId = budgetId ? budgetId : undefined;
+        }
     }
 }

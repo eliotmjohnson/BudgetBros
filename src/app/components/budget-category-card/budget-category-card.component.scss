@@ -1,7 +1,10 @@
+@import "bb-core";
+
 .header {
     display: flex;
     align-items: center;
     margin-bottom: 0.5rem;
+    position: relative;
 
     h1 {
         width: 60%;
@@ -81,4 +84,14 @@
 .budget-items-wrapper.cdk-drop-list-dragging
     .budget-item:not(.cdk-drag-placeholder) {
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.delete-icon {
+    position: absolute;
+    translate: 13.5rem;
+    font-size: 1.5rem;
+    height: 1.5rem;
+    width: 1.5rem;
+    cursor: pointer;
+    color: $bb-error-main;
 }

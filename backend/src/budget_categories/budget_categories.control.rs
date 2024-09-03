@@ -1,9 +1,7 @@
 use std::collections::HashMap;
 
 use actix_web::{
-    get, post,
-    web::{Data, Json, Path, Query},
-    HttpResponse, Responder,
+    delete, get, post, web::{Data, Json, Path, Query}, HttpResponse, Responder
 };
 use serde::Deserialize;
 
@@ -17,7 +15,7 @@ use crate::{
 };
 
 use super::{
-    budget_categories_models::NewBudgetCategory, budget_categories_services::add_budget_category,
+    budget_categories_models::NewBudgetCategory, budget_categories_services::{add_budget_category, delete_budget_category},
 };
 
 #[derive(Deserialize)]
@@ -87,3 +85,18 @@ pub async fn add_budget_category_handler(
         Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
     }
 }
+
+#[delete("{budget_category_id}")]
+pub async fn delete_budget_category_handler(
+    state: Data<AppState>,
+    params: Path<String>,
+) -> impl Responder {
+    let budget_category_id = params.into_inner();
+
+    let delete_budget_category_result = delete_budget_category(state, budget_category_id).await;
+
+    match delete_budget_category_result {
+        Ok(_) => HttpResponse::Ok().json("Budget category deleted successfully"),
+        Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
+    }
+}  

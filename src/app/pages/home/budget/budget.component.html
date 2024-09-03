@@ -4,8 +4,14 @@
         <p>Today is {{ currentDateString }}</p>
     </div>
     <span class="date-selection-container">
-        <span class="date-selector" (click)="openCalendarSelector()">
-            <mat-icon class="cal-icon" fontIcon="calendar_month" />
+        <span
+            class="date-selector"
+            (click)="openCalendarSelector()"
+        >
+            <mat-icon
+                class="cal-icon"
+                fontIcon="calendar_month"
+            />
             <p>{{ selectedMonth() }}</p>
             <mat-icon
                 class="arrow-icon"
@@ -36,15 +42,29 @@
     </span>
 </header>
 <section class="budget-dashboard-wrapper">
-    <div class="budgets" cdkDropList (cdkDropListDropped)="handleDrop($event)">
+    <div
+        class="budgets"
+        cdkDropList
+        (cdkDropListDropped)="handleDrop($event)"
+    >
         @if (budgetService.isLoading()) {
             <main class="budget-loader-container">
-                <mat-spinner diameter="70" color="primary" />
+                <mat-spinner
+                    diameter="70"
+                    color="primary"
+                />
             </main>
-        } @else if (!budgetService.budget()?.budgetId) {
+        } @else if (!budgetService.budget()?.budgetCategories?.length) {
             <main class="no-budget-notice">
                 <h1>No Budget Available For This Month</h1>
-                <p>Get Budgeting!</p>
+                <div class="add-budget-category-container">
+                    <p>Get Started</p>
+                    <mat-icon
+                        (click)="createNewBudgetCategory()"
+                        class="add-button"
+                        fontIcon="add_circle"
+                    />
+                </div>
             </main>
         } @else {
             <BudgetCategoryCard
@@ -53,6 +73,7 @@
                 [budgetCategoryId]="budgetCategory.budgetCategoryId"
                 [lineItems]="budgetCategory.lineItems"
                 [name]="budgetCategory.name"
+                (isAddingBudgetCategory)="isAddingBudgetCategory = $event"
                 cdkDrag
                 cdkDragLockAxis="y"
                 cdkDragBoundary=".budgets"
@@ -63,6 +84,16 @@
                     cdkDragHandle
                 />
             </BudgetCategoryCard>
+            @if (!isAddingBudgetCategory) {
+                <span class="add-budget-category-container bottom">
+                    <p>Add Category</p>
+                    <mat-icon
+                        (click)="createNewBudgetCategory()"
+                        class="add-button"
+                        fontIcon="add_circle"
+                    />
+                </span>
+            }
         }
     </div>
     <BudgetTransactionsCard />

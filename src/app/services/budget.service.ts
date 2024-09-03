@@ -39,6 +39,22 @@ export class BudgetService {
         }
     }
 
+    addNewBudget(monthNumber: number, year: number) {
+        if (this.authService.userId) {
+            this.http
+                .post<string>(`${this.baseUrl}/${this.authService.userId}`, {
+                    monthNumber,
+                    year
+                })
+                .subscribe((budgetId) => {
+                    const currentBudget = this.budget();
+                    if (currentBudget) {
+                        currentBudget.budgetId = budgetId;
+                    }
+                });
+        }
+    }
+
     clearBudget() {
         this.budget.set(undefined);
         this.transactionService.clearTransactionData();

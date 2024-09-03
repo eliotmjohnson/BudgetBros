@@ -174,7 +174,7 @@
 .no-budget-notice {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 2rem;
     justify-content: center;
     align-items: center;
     height: 65%;
@@ -186,12 +186,40 @@
         color: $bb-secondary-title-color;
         opacity: 0.6;
     }
+}
+
+.add-budget-category-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
 
     p {
         font-style: italic;
         margin: 0;
-        font-size: 1rem;
+        font-size: 1.4rem;
         color: $bb-secondary-title-color;
         opacity: 0.5;
+    }
+
+    .add-button {
+        font-size: 3rem;
+        height: 3rem;
+        width: 3rem;
+        color: rgb(170, 170, 170);
+        cursor: pointer;
+        transition: color 0.4s;
+
+        &:hover {
+            color: $bb-primary-green-text;
+        }
+    }
+}
+
+.bottom {
+    margin-top: 1rem;
+
+    p {
+        font-size: 1.2rem;
     }
 }

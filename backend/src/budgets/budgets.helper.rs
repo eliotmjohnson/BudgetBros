@@ -9,35 +9,39 @@ pub fn get_compiled_budget_data(rows: Vec<BudgetRowData>) -> Vec<BudgetCategoryD
     let mut budget_categories_compiled: HashMap<i64, BudgetCategoryDataMap> = HashMap::new();
 
     for row in rows {
-        let budget_category = budget_categories_compiled
-            .entry(row.budget_category_id)
-            .or_insert_with(|| BudgetCategoryDataMap {
-                budget_category_id: row.budget_category_id,
-                name: row.budget_category_name,
-                budget_line_items: HashMap::new(),
-            });
+        if let Some(budget_category_id) = row.budget_category_id {
+            let budget_category = budget_categories_compiled
+                .entry(budget_category_id)
+                .or_insert_with(|| BudgetCategoryDataMap {
+                    budget_category_id: budget_category_id.to_string(),
+                    name: row.budget_category_name.unwrap_or_default(),
+                    budget_line_items: HashMap::new(),
+                });
 
-        let line_item = budget_category
-            .budget_line_items
-            .entry(row.line_item_id)
-            .or_insert_with(|| LineItemData {
-                line_item_id: row.line_item_id.to_string(),
-                name: row.line_item_name,
-                is_fund: row.is_fund,
-                starting_balance: row.starting_balance,
-                planned_amount: row.planned_amount,
-                transactions: Vec::new(),
-            });
+            if let Some(line_item_id) = row.line_item_id {
+                let line_item = budget_category
+                    .budget_line_items
+                    .entry(line_item_id)
+                    .or_insert_with(|| LineItemData {
+                        line_item_id: line_item_id.to_string(),
+                        name: row.line_item_name.unwrap_or_default(),
+                        is_fund: row.is_fund.unwrap_or_default(),
+                        starting_balance: row.starting_balance.unwrap_or_default(),
+                        planned_amount: row.planned_amount.unwrap_or_default(),
+                        transactions: Vec::new(),
+                    });
 
-        if row.transaction_id.is_some() {
-            line_item.transactions.push(TransactionData {
-                transaction_id: row.transaction_id.unwrap_or_default(),
-                title: row.title.unwrap_or_default(),
-                merchant: row.merchant.unwrap_or_default(),
-                amount: row.amount.unwrap_or_default(),
-                notes: row.notes.unwrap_or_default(),
-                date: row.date.unwrap_or_default(),
-            });
+                if row.transaction_id.is_some() {
+                    line_item.transactions.push(TransactionData {
+                        transaction_id: row.transaction_id.unwrap_or_default(),
+                        title: row.title.unwrap_or_default(),
+                        merchant: row.merchant.unwrap_or_default(),
+                        amount: row.amount.unwrap_or_default(),
+                        notes: row.notes.unwrap_or_default(),
+                        date: row.date.unwrap_or_default(),
+                    });
+                }
+            }
         }
     }
 

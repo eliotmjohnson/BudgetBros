@@ -17,7 +17,7 @@ pub async fn add_line_item(
         .bind(new_line_item.is_fund)
         .bind(new_line_item.planned_amount)
         .bind(new_line_item.starting_balance)
-        .bind(new_line_item.budget_category_id)
+        .bind(new_line_item.budget_category_id.parse::<i64>().unwrap())
         .fetch_one(&state.db)
         .await
 }

@@ -1,19 +1,23 @@
 use std::collections::HashMap;
 
 use actix_web::{
-    get,
-    web::{Data, Path, Query},
+    get, post,
+    web::{Data, Json, Path, Query},
     HttpResponse, Responder,
 };
 use serde::Deserialize;
 
 use crate::{
     budget_categories::{
-        budget_categories_models::BudgetCategoryWithLineItems, 
-        budget_categories_services::get_budget_categories_with_line_items
-    }, 
-    line_items::line_items_models::LineItemReduced, 
-    AppState
+        budget_categories_models::BudgetCategoryWithLineItems,
+        budget_categories_services::get_budget_categories_with_line_items,
+    },
+    line_items::line_items_models::LineItemReduced,
+    AppState,
+};
+
+use super::{
+    budget_categories_models::NewBudgetCategory, budget_categories_services::add_budget_category,
 };
 
 #[derive(Deserialize)]
@@ -26,21 +30,18 @@ pub struct QueryParams {
 async fn get_all_budget_categories_with_line_items_handler(
     state: Data<AppState>,
     params: Path<i64>,
-    query: Query<QueryParams>
+    query: Query<QueryParams>,
 ) -> impl Responder {
     let user_id = params.into_inner();
     let query_params = query.into_inner();
 
-    let month_number = query_params.month_number.expect("Month number query param missing");
+    let month_number = query_params
+        .month_number
+        .expect("Month number query param missing");
     let year = query_params.year.expect("Year query param missing");
 
-    let budget_categories_result = 
-        get_budget_categories_with_line_items(
-            state, 
-            user_id, 
-            month_number,
-            year
-        ).await;
+    let budget_categories_result =
+        get_budget_categories_with_line_items(state, user_id, month_number, year).await;
 
     match budget_categories_result {
         Ok(budget_categories_rows) => {
@@ -64,10 +65,25 @@ async fn get_all_budget_categories_with_line_items_handler(
             let result: Vec<BudgetCategoryWithLineItems> = categories_map.into_values().collect();
 
             HttpResponse::Ok().json(result)
-        },
+        }
         Err(e) => {
             println!("{}", e);
             HttpResponse::InternalServerError().finish()
         }
+    }
+}
+
+#[post("")]
+pub async fn add_budget_category_handler(
+    state: Data<AppState>,
+    body: Json<NewBudgetCategory>,
+) -> impl Responder {
+    let new_budget_category = body.into_inner();
+
+    let add_budget_category_result = add_budget_category(state, new_budget_category).await;
+
+    match add_budget_category_result {
+        Ok(new_budget_category) => HttpResponse::Ok().json(new_budget_category.id.to_string()),
+        Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
     }
 }

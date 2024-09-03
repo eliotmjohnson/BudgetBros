@@ -57,10 +57,8 @@ export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
         this.isEditingName = true;
     }
 
-    changeTitle(submitEvent?: SubmitEvent, focusEvent?: FocusEvent): void {
+    changeTitle(submitEvent?: SubmitEvent): void {
         if (submitEvent) submitEvent.preventDefault();
-        if (focusEvent) console.log(focusEvent);
-
         const inputValue = this.titleInput.nativeElement.value;
 
         if (inputValue === 'Category Name' && this.isNewBudgetCategory) {

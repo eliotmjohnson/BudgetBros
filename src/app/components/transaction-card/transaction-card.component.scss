@@ -1,5 +1,10 @@
 @import "bb-core";
 
+.mat-mdc-card {
+    box-shadow: none;
+    border-radius: 1rem;
+}
+
 .actions-wrapper {
     display: flex;
     gap: 1rem;

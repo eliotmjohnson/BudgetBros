@@ -121,7 +121,10 @@ export class TransactionModalComponent {
     }
 
     submitForm() {
-        if (this.form.invalid) return;
+        if (this.form.invalid)
+            return Object.entries(this.form.controls).forEach(([, control]) => {
+                control.markAsTouched();
+            });
 
         if (this.modalData.mode === 'add') {
             const submittedTransaction = this.form.value;

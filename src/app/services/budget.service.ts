@@ -66,6 +66,13 @@ export class BudgetService {
         this.transactionService.clearSelectedTransactionData();
     }
 
+    refreshBudget() {
+        const currentBudget = this.budget();
+        if (currentBudget) {
+            this.getBudget(currentBudget.monthNumber, currentBudget.year);
+        }
+    }
+
     setBudgetId(budgetId?: string) {
         const currentBudget = this.budget();
         if (currentBudget) {

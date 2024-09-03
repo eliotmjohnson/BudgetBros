@@ -44,6 +44,7 @@ export class BudgetCategoryService {
 
     saveBudgetCategory(name: string) {
         const currentBudget = this.budgetService.budget();
+
         if (currentBudget) {
             if (!currentBudget.budgetId) {
                 this.budgetService.addNewBudget(
@@ -81,13 +82,7 @@ export class BudgetCategoryService {
             },
             error: (error) => {
                 this.snagDialogService.openSnagDialog(error);
-                const currentBudget = this.budgetService.budget();
-                if (currentBudget) {
-                    this.budgetService.getBudget(
-                        currentBudget?.monthNumber,
-                        currentBudget?.year
-                    );
-                }
+                this.budgetService.refreshBudget();
             }
         });
     }

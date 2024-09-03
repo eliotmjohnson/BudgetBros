@@ -37,13 +37,7 @@ export class LineItemService {
         this.http.delete(`${this.baseUrl}/${lineItemId}`).subscribe({
             error: (error) => {
                 this.snagDiaglogService.openSnagDialog(error);
-                const currentBudget = this.budgetService.budget();
-                if (currentBudget) {
-                    this.budgetService.getBudget(
-                        currentBudget?.monthNumber,
-                        currentBudget?.year
-                    );
-                }
+                this.budgetService.refreshBudget();
             }
         });
     }

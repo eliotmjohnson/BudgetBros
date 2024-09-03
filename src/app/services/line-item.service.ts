@@ -5,7 +5,6 @@ import { BE_API_URL } from '../constants/constants';
 import { SaveLineItemPayload, UpdateLineItemPayload } from '../models/lineItem';
 import { BBSnagService } from './bb-snag.service';
 import { BudgetService } from './budget.service';
-import { TransactionService } from './transaction.service';
 
 @Injectable({
     providedIn: 'root'
@@ -17,8 +16,7 @@ export class LineItemService {
     constructor(
         private http: HttpClient,
         private snagDiaglogService: BBSnagService,
-        private budgetService: BudgetService,
-        private transactionService: TransactionService
+        private budgetService: BudgetService
     ) {}
 
     saveNewLineItem(saveLineItemPayload: SaveLineItemPayload) {
@@ -37,9 +35,6 @@ export class LineItemService {
 
     deleteLineItem(lineItemId: string) {
         this.http.delete(`${this.baseUrl}/${lineItemId}`).subscribe({
-            next: () => {
-                this.transactionService.clearSelectedTransactionData();
-            },
             error: (error) => {
                 this.snagDiaglogService.openSnagDialog(error);
                 const currentBudget = this.budgetService.budget();

@@ -20,14 +20,12 @@ export class BBSnagComponent implements OnInit {
         const errorResponse = this.data.errorResponse;
         const status = errorResponse.status;
 
-        switch (true) {
-            case status === 500:
-                this.errorMessage =
-                    'It looks like we are having issues at the moment. Please try again later.';
-                break;
-            case status >= 400 && status < 500:
-                this.errorMessage =
-                    'It looks like there is a conflict with the request. Please try again later.';
+        if (status === 500) {
+            this.errorMessage =
+                'It looks like we are having issues at the moment. Please try again later.';
+        } else if (status >= 400 && status < 500) {
+            this.errorMessage =
+                'It looks like there is a conflict with the request. Please try again later.';
         }
     }
 }

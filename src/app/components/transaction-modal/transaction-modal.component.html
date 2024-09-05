@@ -17,7 +17,17 @@
                 (input)="addValue($event)"
                 [value]="form.value.amount | currency"
             />
-            <mat-error> error </mat-error>
+            <mat-error>
+                {{
+                    form.get("amount")?.hasError("required") &&
+                    form.get("amount")?.touched
+                        ? "Amount is required"
+                        : form.get("amount")?.hasError("min") &&
+                            form.get("amount")?.touched
+                          ? "Amount must be more than 0"
+                          : ""
+                }}
+            </mat-error>
         </mat-form-field>
         <div class="inner-fields-wrapper">
             <mat-form-field class="fullwidth">
@@ -27,6 +37,7 @@
                     [matDatepicker]="picker"
                     formControlName="date"
                     (dateChange)="getCategories($event)"
+                    [max]="today"
                 />
                 <mat-hint> MM/DD/YYYY </mat-hint>
                 <mat-datepicker-toggle
@@ -34,6 +45,13 @@
                     [for]="picker"
                 />
                 <mat-datepicker #picker />
+                <mat-error>
+                    {{
+                        form.get("date")?.errors && form.get("date")?.touched
+                            ? "Date is required"
+                            : ""
+                    }}
+                </mat-error>
             </mat-form-field>
             <mat-form-field class="fullwidth">
                 <mat-label> Merchant </mat-label>
@@ -41,14 +59,25 @@
                     matInput
                     formControlName="merchant"
                 />
+                <mat-error>
+                    {{
+                        form.get("merchant")?.errors &&
+                        form.get("merchant")?.touched
+                            ? "Merchant is required"
+                            : ""
+                    }}
+                </mat-error>
             </mat-form-field>
         </div>
-        <mat-form-field>
+        <mat-form-field
+            [matTooltip]="
+                !dropdownCategories().length
+                    ? 'Please pick a date to show budget items'
+                    : ''
+            "
+        >
             <mat-label> Select Budget Item </mat-label>
-            <mat-select
-                [disabled]="!dropdownCategories().length"
-                formControlName="lineItem"
-            >
+            <mat-select formControlName="lineItem">
                 @if (dropdownCategories().length) {
                     @for (
                         category of dropdownCategories();
@@ -70,6 +99,14 @@
                     }
                 }
             </mat-select>
+            <mat-error>
+                {{
+                    form.get("lineItem")?.errors &&
+                    form.get("lineItem")?.touched
+                        ? "Budget item is required"
+                        : ""
+                }}
+            </mat-error>
         </mat-form-field>
         <mat-form-field class="fullwidth">
             <mat-label> Notes </mat-label>
@@ -96,7 +133,7 @@
             color="primary"
             style="color: white"
             type="submit"
-            [disabled]="this.form.invalid && this.form.touched"
+            [disabled]="!(form.valid && form.dirty)"
         >
             {{ modalData.mode === "add" ? "Add" : "Update" }}
         </button>

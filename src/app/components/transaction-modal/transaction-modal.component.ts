@@ -32,6 +32,7 @@ export class TransactionModalComponent {
     transactionService = inject(TransactionService);
     budgetCategoryService = inject(BudgetCategoryService);
 
+    today = new Date();
     prevSelectedDate = signal<Date | null>(null);
 
     dropdownCategories = computed<BudgetCategoryWithLineItems[]>(() =>
@@ -53,28 +54,31 @@ export class TransactionModalComponent {
         return lineItem;
     });
 
-    form = new FormGroup({
-        amount: new FormControl(this.modalData.transaction?.amount || 0, [
-            Validators.required
-        ]),
-        lineItem: new FormControl<LineItemReduced | null>(
-            this.preSelectedLineItem() || null,
-            [Validators.required]
-        ),
-        date: new FormControl<Date | null>(
-            this.modalData.transaction?.date
-                ? new Date(this.modalData.transaction?.date)
-                : null,
-            [Validators.required]
-        ),
-        merchant: new FormControl<string | null>(
-            this.modalData.transaction?.merchant || null,
-            [Validators.required]
-        ),
-        notes: new FormControl<string | null>(
-            this.modalData.transaction?.notes || null
-        )
-    });
+    form = new FormGroup(
+        {
+            amount: new FormControl(this.modalData.transaction?.amount || 0, [
+                Validators.min(0.01)
+            ]),
+            lineItem: new FormControl<LineItemReduced | null>(
+                this.preSelectedLineItem() || null,
+                [Validators.required]
+            ),
+            date: new FormControl<Date | null>(
+                this.modalData.transaction?.date
+                    ? new Date(this.modalData.transaction?.date)
+                    : null,
+                [Validators.required]
+            ),
+            merchant: new FormControl<string | null>(
+                this.modalData.transaction?.merchant || null,
+                [Validators.required]
+            ),
+            notes: new FormControl<string | null>(
+                this.modalData.transaction?.notes || null
+            )
+        },
+        {}
+    );
 
     constructor() {
         effect(() => {
@@ -82,6 +86,13 @@ export class TransactionModalComponent {
                 this.form.patchValue({
                     lineItem: this.preSelectedLineItem()
                 });
+            }
+        });
+
+        effect(() => {
+            if (this.dropdownCategories().length) {
+                this.form.get('lineItem')?.enable();
+                this.form.updateValueAndValidity();
             }
         });
     }
@@ -121,10 +132,7 @@ export class TransactionModalComponent {
     }
 
     submitForm() {
-        if (this.form.invalid)
-            return Object.entries(this.form.controls).forEach(([, control]) => {
-                control.markAsTouched();
-            });
+        if (this.form.invalid) return;
 
         if (this.modalData.mode === 'add') {
             const submittedTransaction = this.form.value;

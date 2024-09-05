@@ -1,5 +1,9 @@
 @import "bb-core";
 
+:host {
+    z-index: 1;
+}
+
 .header {
     display: flex;
     align-items: center;
@@ -94,4 +98,38 @@
     width: 1.5rem;
     cursor: pointer;
     color: $bb-error-main;
+}
+
+:host(.deleting-category) {
+    animation: deleteAnimation 0.4s forwards;
+}
+
+:host(.add-animation) {
+    opacity: 0;
+    animation: slideIn 0.4s 0.01s forwards;
+}
+
+@keyframes slideIn {
+    0% {
+        opacity: 1;
+        translate: 50rem;
+    }
+
+    100% {
+        opacity: 1;
+        translate: 0rem;
+    }
+}
+
+@keyframes deleteAnimation {
+    0% {
+        z-index: 2;
+    }
+
+    100% {
+        z-index: 2;
+        translate: 0 5rem;
+        rotate: 8deg;
+        opacity: 0;
+    }
 }

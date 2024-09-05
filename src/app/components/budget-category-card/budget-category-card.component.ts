@@ -20,7 +20,11 @@ import { TransactionService } from 'src/app/services/transaction.service';
 @Component({
     selector: 'BudgetCategoryCard',
     templateUrl: './budget-category-card.component.html',
-    styleUrls: ['./budget-category-card.component.scss']
+    styleUrls: ['./budget-category-card.component.scss'],
+    host: {
+        '[class.add-animation]': 'isNewBudgetCategory',
+        '[class.deleting-category]': 'isDeletingBudgetCategory'
+    }
 })
 export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
     @ViewChild('titleInput') titleInput!: ElementRef<HTMLInputElement>;
@@ -31,6 +35,7 @@ export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
     isEditingName = false;
     isAddingLineItem = false;
     isNewBudgetCategory = false;
+    isDeletingBudgetCategory = false;
 
     constructor(
         private transactionService: TransactionService,
@@ -48,8 +53,11 @@ export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
 
     ngOnInit(): void {
         if (!this.budgetCategoryId) {
-            this.isEditingName = true;
             this.isNewBudgetCategory = true;
+            // Timout for animation completion
+            setTimeout(() => {
+                this.isEditingName = true;
+            }, 400);
         }
     }
 
@@ -86,16 +94,7 @@ export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
     }
 
     deleteBudgetCategory() {
-        const currentBudget = this.budgetService.budget();
-
-        if (currentBudget) {
-            const foundIndex = currentBudget.budgetCategories.findIndex(
-                (category) =>
-                    category.budgetCategoryId === this.budgetCategoryId
-            );
-
-            currentBudget.budgetCategories.splice(foundIndex, 1);
-        }
+        this.dropBudgetCategory();
 
         if (this.budgetCategoryId) {
             this.budgetCategoryService.deleteBudgetCategory(
@@ -120,11 +119,15 @@ export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
             this.budgetService.budget()?.budgetCategories;
         if (currentBudgetCategories) {
             const foundIndex = currentBudgetCategories.findIndex(
-                (category) => !category.budgetCategoryId
+                (category) =>
+                    category.budgetCategoryId === this.budgetCategoryId
             );
-            if (foundIndex >= 0) {
+
+            this.isDeletingBudgetCategory = true;
+            setTimeout(() => {
                 currentBudgetCategories.splice(foundIndex, 1);
-            }
+                this.isDeletingBudgetCategory = false;
+            }, 400);
         }
     }
 

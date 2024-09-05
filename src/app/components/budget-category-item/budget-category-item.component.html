@@ -5,7 +5,11 @@
 >
     <ng-content></ng-content>
     <span class="title-wrapper">
-        <mat-icon class="fund-logo" *ngIf="fund" fontIcon="savings" />
+        <mat-icon
+            class="fund-logo"
+            *ngIf="fund"
+            fontIcon="savings"
+        />
         <input
             #lineItemTitleInput
             class="line-item-title"
@@ -33,17 +37,22 @@
     }
     @if (isEditModeEnabled) {
         <span
+            (document:keydown.enter)="createOrUpdateLineItem(true)"
             (document:click)="checkIfOutsideParent($event, lineItemContainer)"
             class="edit-menu-container"
         >
             <button
-                (click)="createOrUpdateLineItem()"
+                (click)="createOrUpdateLineItem(false)"
                 color="primary"
                 mat-button
             >
                 Save
             </button>
-            <button (click)="cancelEditing()" color="warn" mat-button>
+            <button
+                (click)="cancelEditing()"
+                color="warn"
+                mat-button
+            >
                 Cancel
             </button>
         </span>
@@ -53,7 +62,10 @@
     [style.visibility]="isLineItemSelected ? 'hidden' : 'visible'"
     class="progress-indicator"
 >
-    <span [style.width]="progressPercentage + '%'" class="progress"></span>
+    <span
+        [style.width]="progressPercentage + '%'"
+        class="progress"
+    ></span>
     <span
         [style.width]="100 - progressPercentage + '%'"
         class="non-progress"

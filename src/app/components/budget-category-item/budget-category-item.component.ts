@@ -29,6 +29,7 @@ import {
 })
 export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     @ViewChild('lineItemTitleInput') lineItemTitleInput!: ElementRef;
+    @ViewChild('plannedAmountInput') plannedAmountInput!: ElementRef;
     @Input() itemId = '';
     @Input() itemTitle = '';
     @Input() startingBalance = 0;
@@ -117,7 +118,9 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
         }
     }
 
-    createOrUpdateLineItem() {
+    createOrUpdateLineItem(blurInputs: boolean) {
+        if (blurInputs) this.blurInputs();
+
         if (!this.itemId) {
             const saveLineItemPayload: SaveLineItemPayload = {
                 name: this.lineItemInputValue.value ?? '',
@@ -167,5 +170,12 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
         }
 
         if (this.isNewLineItem) this.isNewLineItem = false;
+    }
+
+    blurInputs() {
+        if (this.plannedAmountInput && this.lineItemTitleInput) {
+            this.plannedAmountInput.nativeElement.blur();
+            this.lineItemTitleInput.nativeElement.blur();
+        }
     }
 }

@@ -83,7 +83,7 @@ export class BudgetCategoryService {
                 const currentBudget = this.budgetService.budget();
                 if (
                     currentBudget?.budgetId &&
-                    !currentBudget.budgetCategories?.length
+                    currentBudget.budgetCategories?.length === 1
                 ) {
                     this.budgetService.deleteBudget(currentBudget.budgetId);
                 }

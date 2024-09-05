@@ -70,6 +70,7 @@ export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
         const inputValue = this.titleInput.nativeElement.value;
 
         if (inputValue === 'Category Name' && this.isNewBudgetCategory) {
+            this.isNewBudgetCategory = false;
             this.deleteBudgetCategory();
         } else {
             this.name = inputValue;
@@ -78,10 +79,9 @@ export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
                 this.budgetCategoryService.newlyCreatedBudgetCategoryId
                     .pipe(take(1))
                     .subscribe((id) => {
-                        if (this.isNewBudgetCategory) {
-                            this.updateBudgetCategoryId(id);
-                            this.isNewBudgetCategory = false;
-                        }
+                        this.updateBudgetCategoryId(id);
+                        this.isNewBudgetCategory = false;
+                        this.isAddingBudgetCategory.emit(false);
                     });
             } else {
                 // Need to add update logic next!
@@ -90,7 +90,6 @@ export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
         }
 
         this.isEditingName = false;
-        this.isAddingBudgetCategory.emit(false);
     }
 
     deleteBudgetCategory() {
@@ -127,6 +126,7 @@ export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
             setTimeout(() => {
                 currentBudgetCategories.splice(foundIndex, 1);
                 this.isDeletingBudgetCategory = false;
+                this.isAddingBudgetCategory.emit(false);
             }, 400);
         }
     }

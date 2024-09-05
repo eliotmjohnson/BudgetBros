@@ -10,6 +10,7 @@ import {
     ViewChild
 } from '@angular/core';
 import { filter, take } from 'rxjs';
+import { BudgetCategory } from 'src/app/models/budgetCategory';
 
 import { LineItem, SaveLineItemPayload } from 'src/app/models/lineItem';
 import { BudgetCategoryService } from 'src/app/services/budget-category.service';
@@ -23,7 +24,8 @@ import { TransactionService } from 'src/app/services/transaction.service';
     styleUrls: ['./budget-category-card.component.scss'],
     host: {
         '[class.add-animation]': 'isNewBudgetCategory',
-        '[class.deleting-category]': 'isDeletingBudgetCategory'
+        '[class.deleting-category]': 'isDeletingBudgetCategory',
+        '[style.height]': 'hostHeight'
     }
 })
 export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
@@ -32,16 +34,19 @@ export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
     @Input() lineItems: LineItem[] = [];
     @Input() name = '';
     @Output() isAddingBudgetCategory = new EventEmitter<boolean>();
+    @Output() hideCategoryButton = new EventEmitter();
     isEditingName = false;
     isAddingLineItem = false;
     isNewBudgetCategory = false;
     isDeletingBudgetCategory = false;
+    hostHeight = 'auto';
 
     constructor(
         private transactionService: TransactionService,
         private lineItemService: LineItemService,
         private budgetService: BudgetService,
-        private budgetCategoryService: BudgetCategoryService
+        private budgetCategoryService: BudgetCategoryService,
+        private hostElement: ElementRef<HTMLElement>
     ) {}
 
     ngAfterViewChecked(): void {
@@ -122,13 +127,23 @@ export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
                     category.budgetCategoryId === this.budgetCategoryId
             );
 
-            this.isDeletingBudgetCategory = true;
+            this.handleCategoryDeleteAnimation(currentBudgetCategories);
+
             setTimeout(() => {
                 currentBudgetCategories.splice(foundIndex, 1);
                 this.isDeletingBudgetCategory = false;
                 this.isAddingBudgetCategory.emit(false);
             }, 400);
         }
+    }
+
+    handleCategoryDeleteAnimation(currentBudgetCategories: BudgetCategory[]) {
+        if (currentBudgetCategories.length === 1) {
+            this.hideCategoryButton.emit();
+        }
+
+        this.hostHeight = this.hostElement.nativeElement.scrollHeight + 'px';
+        this.isDeletingBudgetCategory = true;
     }
 
     handleDrop(event: CdkDragDrop<LineItem[]>) {

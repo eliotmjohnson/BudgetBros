@@ -2,6 +2,7 @@
 
 :host {
     z-index: 0;
+    margin-bottom: 1rem;
 }
 
 .header {
@@ -131,5 +132,7 @@
         translate: 0 5rem;
         rotate: 8deg;
         opacity: 0;
+        height: 0px;
+        margin-bottom: 0rem;
     }
 }

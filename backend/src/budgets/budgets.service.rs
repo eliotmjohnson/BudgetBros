@@ -1,4 +1,5 @@
 use actix_web::web::Data;
+use sqlx::postgres::PgQueryResult;
 
 use crate::AppState;
 
@@ -65,5 +66,22 @@ pub async fn add_budget(
         .bind(month_number)
         .bind(year)
         .fetch_one(&state.db)
+        .await
+}
+
+pub async fn delete_budget(
+    state: Data<AppState>,
+    budget_id: String,
+) -> Result<PgQueryResult, sqlx::Error> {
+    let query = "
+        DELETE FROM 
+            budgets
+        WHERE 
+            id = $1::int
+        ";
+
+    sqlx::query(query)
+        .bind(budget_id)
+        .execute(&state.db)
         .await
 }

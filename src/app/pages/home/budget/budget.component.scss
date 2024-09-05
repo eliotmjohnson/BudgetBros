@@ -80,7 +80,6 @@
         flex-direction: column;
         width: 65%;
         height: 100%;
-        gap: 1rem;
         padding-top: 2rem;
         padding-bottom: 2rem;
         padding-right: 0.6rem;
@@ -134,36 +133,6 @@
     animation: closeCalendar 0.3s forwards;
 }
 
-@keyframes openCalendar {
-    0% {
-        scale: 0;
-    }
-    50% {
-        scale: 1.03;
-    }
-    80% {
-        scale: 0.99;
-    }
-    100% {
-        scale: 1;
-    }
-}
-
-@keyframes closeCalendar {
-    0% {
-        scale: 1;
-    }
-    20% {
-        scale: 0.99;
-    }
-    50% {
-        scale: 1.03;
-    }
-    100% {
-        scale: 0;
-    }
-}
-
 .budget-loader-container {
     display: flex;
     justify-content: center;
@@ -193,6 +162,7 @@
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
+    transition: translate 0.4s;
 
     p {
         font-style: italic;
@@ -221,5 +191,39 @@
 
     p {
         font-size: 1.2rem;
+    }
+}
+
+.hide-add-button {
+    translate: 0 -10rem;
+}
+
+@keyframes openCalendar {
+    0% {
+        scale: 0;
+    }
+    50% {
+        scale: 1.03;
+    }
+    80% {
+        scale: 0.99;
+    }
+    100% {
+        scale: 1;
+    }
+}
+
+@keyframes closeCalendar {
+    0% {
+        scale: 1;
+    }
+    20% {
+        scale: 0.99;
+    }
+    50% {
+        scale: 1.03;
+    }
+    100% {
+        scale: 0;
     }
 }

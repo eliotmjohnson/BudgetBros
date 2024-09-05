@@ -81,7 +81,7 @@ export class TransactionService {
         });
     }
 
-    clearTransactionData() {
+    clearSelectedTransactionData() {
         this.currentSelectedLineItem = '';
         this.currentSelectedLineItemId = '';
         this.currentSelectedLineItemBalance = 0;

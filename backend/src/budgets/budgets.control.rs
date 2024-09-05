@@ -2,14 +2,12 @@ use crate::{
     budgets::{
         budgets_helper::get_compiled_budget_data,
         budgets_models::{BudgetResponseData, NewBudget},
-        budgets_services::{add_budget, get_budget},
+        budgets_services::{add_budget, delete_budget, get_budget},
     },
     AppState,
 };
 use actix_web::{
-    get, post,
-    web::{Data, Json, Path, Query},
-    HttpResponse, Responder,
+    delete, get, post, web::{Data, Json, Path, Query}, HttpResponse, Responder
 };
 use serde::Deserialize;
 
@@ -78,6 +76,21 @@ pub async fn add_budget_handler(
 
     match add_budget_result {
         Ok(budget_id) => HttpResponse::Ok().json(budget_id.id.to_string()),
+        Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
+    }
+}
+
+#[delete("/{budget_id}")]
+pub async fn delete_budget_handler(
+    state: Data<AppState>,
+    params: Path<String>
+) -> impl Responder {
+    let budget_id = params.into_inner();
+
+    let delete_budget_result = delete_budget(state, budget_id).await;
+
+    match delete_budget_result {
+        Ok(_) => HttpResponse::Ok().json("Budget deleted successfully"),
         Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
     }
 }

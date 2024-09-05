@@ -60,7 +60,7 @@
                 <div class="add-budget-category-container">
                     <p>Get Started</p>
                     <mat-icon
-                        (click)="createNewBudgetCategory()"
+                        (click)="createNewBudgetCategoryPlaceholder()"
                         class="add-button"
                         fontIcon="add_circle"
                     />
@@ -73,7 +73,8 @@
                 [budgetCategoryId]="budgetCategory.budgetCategoryId"
                 [lineItems]="budgetCategory.lineItems"
                 [name]="budgetCategory.name"
-                (isAddingBudgetCategory)="isAddingBudgetCategory = $event"
+                (isAddingBudgetCategory)="enableAddingBudgetCategory($event)"
+                (hideCategoryButton)="isAddCategoryButtonHidden = true"
                 cdkDrag
                 cdkDragLockAxis="y"
                 cdkDragBoundary=".budgets"
@@ -85,10 +86,13 @@
                 />
             </BudgetCategoryCard>
             @if (!isAddingBudgetCategory) {
-                <span class="add-budget-category-container bottom">
+                <span
+                    class="add-budget-category-container bottom"
+                    [class.hide-add-button]="isAddCategoryButtonHidden"
+                >
                     <p>Add Category</p>
                     <mat-icon
-                        (click)="createNewBudgetCategory()"
+                        (click)="createNewBudgetCategoryPlaceholder()"
                         class="add-button"
                         fontIcon="add_circle"
                     />

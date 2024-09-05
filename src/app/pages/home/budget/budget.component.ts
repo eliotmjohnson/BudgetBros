@@ -30,6 +30,7 @@ export class BudgetComponent implements OnInit, AfterViewChecked {
     isCalMenuOpened = false;
     isCalendarClosing = false;
     isAddingBudgetCategory = false;
+    isAddCategoryButtonHidden = false;
 
     constructor(
         public transactionService: TransactionService,
@@ -82,15 +83,7 @@ export class BudgetComponent implements OnInit, AfterViewChecked {
         }
     }
 
-    createNewBudgetCategory() {
-        const currentBudget = this.budget();
-        if (currentBudget && !currentBudget.budgetId) {
-            this.budgetService.addNewBudget(
-                currentBudget.monthNumber,
-                currentBudget.year
-            );
-        }
-
+    createNewBudgetCategoryPlaceholder() {
         const newBudgetCategoryPlaceholder: BudgetCategory = {
             budgetCategoryId: '',
             name: 'Category Name',
@@ -115,6 +108,13 @@ export class BudgetComponent implements OnInit, AfterViewChecked {
                     this.calendarSelector.currentView = view;
                 }
             };
+        }
+    }
+
+    enableAddingBudgetCategory(e: boolean) {
+        this.isAddingBudgetCategory = e;
+        if (this.isAddCategoryButtonHidden) {
+            this.isAddCategoryButtonHidden = false;
         }
     }
 }

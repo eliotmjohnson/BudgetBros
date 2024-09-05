@@ -134,36 +134,6 @@
     animation: closeCalendar 0.3s forwards;
 }
 
-@keyframes openCalendar {
-    0% {
-        scale: 0;
-    }
-    50% {
-        scale: 1.03;
-    }
-    80% {
-        scale: 0.99;
-    }
-    100% {
-        scale: 1;
-    }
-}
-
-@keyframes closeCalendar {
-    0% {
-        scale: 1;
-    }
-    20% {
-        scale: 0.99;
-    }
-    50% {
-        scale: 1.03;
-    }
-    100% {
-        scale: 0;
-    }
-}
-
 .budget-loader-container {
     display: flex;
     justify-content: center;
@@ -221,5 +191,35 @@
 
     p {
         font-size: 1.2rem;
+    }
+}
+
+@keyframes openCalendar {
+    0% {
+        scale: 0;
+    }
+    50% {
+        scale: 1.03;
+    }
+    80% {
+        scale: 0.99;
+    }
+    100% {
+        scale: 1;
+    }
+}
+
+@keyframes closeCalendar {
+    0% {
+        scale: 1;
+    }
+    20% {
+        scale: 0.99;
+    }
+    50% {
+        scale: 1.03;
+    }
+    100% {
+        scale: 0;
     }
 }

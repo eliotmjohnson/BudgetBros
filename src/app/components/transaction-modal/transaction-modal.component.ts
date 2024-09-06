@@ -98,7 +98,7 @@ export class TransactionModalComponent {
         effect(() => {
             if (this.dropdownCategories().length) {
                 this.form.get('lineItem')?.enable();
-                this.form.updateValueAndValidity();
+                this.form.updateValueAndValidity({ onlySelf: true });
             }
         });
     }
@@ -138,13 +138,12 @@ export class TransactionModalComponent {
     }
 
     submitForm() {
-        console.log(this.form);
         if (this.form.invalid) return;
 
         if (this.modalData.mode === 'add') {
             const submittedTransaction = this.form.value;
             const newTransaction: NewTransaction = {
-                title: '',
+                title: submittedTransaction.title || '',
                 amount: submittedTransaction.amount!,
                 lineItemId: submittedTransaction.lineItem!.lineItemId,
                 date: submittedTransaction.date!.toISOString(),
@@ -158,7 +157,7 @@ export class TransactionModalComponent {
             const submittedTransaction = this.form.value;
             const updatedTransaction: Transaction = {
                 id: this.modalData.transaction!.id,
-                title: this.modalData.transaction!.title,
+                title: submittedTransaction.title || '',
                 deleted: this.modalData.transaction!.deleted,
                 amount: submittedTransaction.amount!,
                 lineItemId: submittedTransaction.lineItem!.lineItemId,
@@ -167,7 +166,10 @@ export class TransactionModalComponent {
                 notes: submittedTransaction.notes || ''
             };
 
-            this.transactionService.updateTransaction(updatedTransaction);
+            this.transactionService.updateTransaction(
+                updatedTransaction,
+                this.modalData.transaction?.budgetCategoryName
+            );
         }
         this.closeModal();
     }

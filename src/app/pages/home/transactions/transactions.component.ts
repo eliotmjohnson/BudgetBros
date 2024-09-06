@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, effect, inject } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import {
@@ -6,6 +6,7 @@ import {
     TransactionModalData
 } from 'src/app/components/transaction-modal/transaction-modal.component';
 import { TransactionService } from 'src/app/services/transaction.service';
+import { getTodayIgnoreTZ } from 'src/app/utils/timeUtils';
 
 @Component({
     selector: 'app-transactions',
@@ -23,11 +24,22 @@ export class TransactionsComponent implements OnInit {
 
     transactions = this.transactionService.transactions;
 
+    constructor() {
+        effect(() => {
+            if (!this.transactions().length) return;
+
+            const firstTransaction = this.transactions().at(0)!;
+            const lastTransaction = this.transactions().at(-1)!;
+
+            this.form.get('start')?.setValue(new Date(lastTransaction.date));
+            this.form.get('end')?.setValue(new Date(firstTransaction.date));
+        });
+    }
+
     ngOnInit(): void {
-        this.transactionService.getTransactionsBetweenDates(
-            new Date(),
-            new Date()
-        );
+        const today = getTodayIgnoreTZ();
+
+        this.transactionService.getTransactionsBetweenDates(today, today);
     }
 
     openAddTransactionDialog() {

@@ -107,7 +107,20 @@ pub async fn add_transaction_handler(
     let add_transaction_result = add_transaction(state, new_transaction).await;
 
     match add_transaction_result {
-        Ok(_) => HttpResponse::Ok().json("Transaction added successfully"),
+        Ok(transaction) => {
+            let newly_added_transaction = IsolatedTransactionResponse {
+                line_item_id: transaction.line_item_id.to_string(),
+                id: transaction.id.to_string(),
+                title: transaction.title,
+                amount: transaction.amount,
+                notes: transaction.notes,
+                date: transaction.date,
+                merchant: transaction.merchant,
+                budget_category_name: transaction.budget_category_name,
+                deleted: transaction.deleted
+            };
+            HttpResponse::Ok().json(newly_added_transaction)
+        }
         Err(e) => {
             println!("{}", e);
             HttpResponse::InternalServerError().body(e.to_string())

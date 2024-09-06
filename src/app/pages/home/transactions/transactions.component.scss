@@ -35,7 +35,7 @@
         flex-direction: column;
         overflow-y: scroll;
         gap: 1rem;
-        height: 600px; /* want to try to figure out how to make this calculated height dynamic to window size */
+        height: 800px; /* want to try to figure out how to make this calculated height dynamic to window size */
 
         &::-webkit-scrollbar {
             display: none;

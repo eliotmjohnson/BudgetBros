@@ -5,6 +5,16 @@
     border-radius: 1rem;
 }
 
+.title-text {
+    color: $bb-primary-green-text;
+    margin: 0;
+}
+
+.merchant-text {
+    color: $bb-primary-title-color;
+    margin: 0;
+}
+
 .actions-wrapper {
     display: flex;
     gap: 1rem;
@@ -27,6 +37,7 @@
 
 .date {
     margin: 0 1rem;
+    color: $bb-secondary-title-color;
 }
 
 .mat-mdc-card-actions {

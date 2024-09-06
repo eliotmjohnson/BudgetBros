@@ -1,7 +1,18 @@
 <mat-card>
     <mat-card-header>
-        <mat-card-title>
-            {{ transaction().merchant }}
+        <mat-card-title [style.display]="'flex'">
+            <p class="merchant-text">
+                {{ transaction().merchant }}
+            </p>
+            @if (transaction().title) {
+                <mat-divider
+                    [vertical]="true"
+                    [style.margin]="'0 .5rem'"
+                />
+                <p class="title-text">
+                    {{ transaction().title }}
+                </p>
+            }
         </mat-card-title>
         <button
             mat-icon-button
@@ -25,28 +36,30 @@
             >
                 {{ transaction().date | date }}
             </h3>
-            <button
-                mat-button
-                type="button"
-                cdkOverlayOrigin
-                #trigger="cdkOverlayOrigin"
-                (click)="toggleNotes()"
-            >
-                View Notes
-            </button>
-            <ng-template
-                cdkConnectedOverlay
-                [cdkConnectedOverlayOrigin]="trigger"
-                [cdkConnectedOverlayOpen]="areNotesOpen()"
-            >
-                <mat-card class="popover-card">
-                    <mat-card-title> Notes </mat-card-title>
-                    <mat-divider />
-                    <p [style.margin-top]="'.5rem'">
-                        {{ transaction().notes }}
-                    </p>
-                </mat-card>
-            </ng-template>
+            @if (transaction().notes) {
+                <button
+                    mat-button
+                    type="button"
+                    cdkOverlayOrigin
+                    #trigger="cdkOverlayOrigin"
+                    (click)="toggleNotes()"
+                >
+                    View Notes
+                </button>
+                <ng-template
+                    cdkConnectedOverlay
+                    [cdkConnectedOverlayOrigin]="trigger"
+                    [cdkConnectedOverlayOpen]="areNotesOpen()"
+                >
+                    <mat-card class="popover-card">
+                        <mat-card-title> Notes </mat-card-title>
+                        <mat-divider />
+                        <p [style.margin-top]="'.5rem'">
+                            {{ transaction().notes }}
+                        </p>
+                    </mat-card>
+                </ng-template>
+            }
         </div>
         <div class="actions-buttons-container">
             <mat-chip [disableRipple]="true">

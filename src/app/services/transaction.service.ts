@@ -63,10 +63,10 @@ export class TransactionService {
             .post<IsolatedTransaction>(this.baseUrl, transaction)
             .subscribe({
                 next: (transaction) => {
-                    this.transactions.update((transactions) => [
-                        ...transactions,
-                        transaction
-                    ]);
+                    this.getTransactionsBetweenDates(
+                        new Date(transaction.date),
+                        new Date(transaction.date)
+                    );
                 },
                 error: (error) => {
                     console.error(error);

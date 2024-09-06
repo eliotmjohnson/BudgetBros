@@ -80,6 +80,7 @@ export class TransactionService {
                 const prevTransaction = this.transactions().find(
                     (t) => t.id === transaction.id
                 );
+
                 if (
                     !prevTransaction ||
                     new Date(transaction.date).getMonth() !==

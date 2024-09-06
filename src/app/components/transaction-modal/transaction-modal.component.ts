@@ -32,6 +32,7 @@ export class TransactionModalComponent {
     transactionService = inject(TransactionService);
     budgetCategoryService = inject(BudgetCategoryService);
 
+    today = new Date();
     prevSelectedDate = signal<Date | null>(null);
 
     dropdownCategories = computed<BudgetCategoryWithLineItems[]>(() =>
@@ -53,28 +54,37 @@ export class TransactionModalComponent {
         return lineItem;
     });
 
-    form = new FormGroup({
-        amount: new FormControl(this.modalData.transaction?.amount || 0, [
-            Validators.required
-        ]),
-        lineItem: new FormControl<LineItemReduced | null>(
-            this.preSelectedLineItem() || null,
-            [Validators.required]
-        ),
-        date: new FormControl<Date | null>(
-            this.modalData.transaction?.date
-                ? new Date(this.modalData.transaction?.date)
-                : null,
-            [Validators.required]
-        ),
-        merchant: new FormControl<string | null>(
-            this.modalData.transaction?.merchant || null,
-            [Validators.required]
-        ),
-        notes: new FormControl<string | null>(
-            this.modalData.transaction?.notes || null
-        )
-    });
+    form = new FormGroup(
+        {
+            title: new FormControl<string | null>(
+                this.modalData.transaction?.title || null
+            ),
+            amount: new FormControl(this.modalData.transaction?.amount || 0, [
+                Validators.min(0.01)
+            ]),
+            lineItem: new FormControl<LineItemReduced | null>(
+                {
+                    value: this.preSelectedLineItem() || null,
+                    disabled: !this.dropdownCategories().length
+                },
+                [Validators.required]
+            ),
+            date: new FormControl<Date | null>(
+                this.modalData.transaction?.date
+                    ? new Date(this.modalData.transaction?.date)
+                    : null,
+                [Validators.required]
+            ),
+            merchant: new FormControl<string | null>(
+                this.modalData.transaction?.merchant || null,
+                [Validators.required]
+            ),
+            notes: new FormControl<string | null>(
+                this.modalData.transaction?.notes || null
+            )
+        },
+        {}
+    );
 
     constructor() {
         effect(() => {
@@ -82,6 +92,13 @@ export class TransactionModalComponent {
                 this.form.patchValue({
                     lineItem: this.preSelectedLineItem()
                 });
+            }
+        });
+
+        effect(() => {
+            if (this.dropdownCategories().length) {
+                this.form.get('lineItem')?.enable();
+                this.form.updateValueAndValidity({ onlySelf: true });
             }
         });
     }
@@ -126,7 +143,7 @@ export class TransactionModalComponent {
         if (this.modalData.mode === 'add') {
             const submittedTransaction = this.form.value;
             const newTransaction: NewTransaction = {
-                title: '',
+                title: submittedTransaction.title || '',
                 amount: submittedTransaction.amount!,
                 lineItemId: submittedTransaction.lineItem!.lineItemId,
                 date: submittedTransaction.date!.toISOString(),
@@ -140,7 +157,7 @@ export class TransactionModalComponent {
             const submittedTransaction = this.form.value;
             const updatedTransaction: Transaction = {
                 id: this.modalData.transaction!.id,
-                title: this.modalData.transaction!.title,
+                title: submittedTransaction.title || '',
                 deleted: this.modalData.transaction!.deleted,
                 amount: submittedTransaction.amount!,
                 lineItemId: submittedTransaction.lineItem!.lineItemId,
@@ -149,7 +166,10 @@ export class TransactionModalComponent {
                 notes: submittedTransaction.notes || ''
             };
 
-            this.transactionService.updateTransaction(updatedTransaction);
+            this.transactionService.updateTransaction(
+                updatedTransaction,
+                this.modalData.transaction?.budgetCategoryName
+            );
         }
         this.closeModal();
     }

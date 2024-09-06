@@ -25,6 +25,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 import { ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
@@ -100,7 +101,8 @@ import { LoginComponent } from './pages/login/login.component';
         MatDividerModule,
         MatDialogModule,
         MatTooltipModule,
-        MatSelectModule
+        MatSelectModule,
+        OverlayModule
     ],
     providers: [
         provideHttpClient(withInterceptors([httpInterceptor])),

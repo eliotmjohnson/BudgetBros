@@ -46,6 +46,8 @@ export const checkCurrencyInputKeyValid = (
  */
 export function addValueToCurrencyInput(e: Event): number;
 
+export function addValueToCurrencyInput(amount: number): number;
+
 export function addValueToCurrencyInput(
     e: Event,
     form: FormGroup,
@@ -53,13 +55,20 @@ export function addValueToCurrencyInput(
 ): void;
 
 export function addValueToCurrencyInput(
-    e: Event,
+    eventOrNumber: Event | number,
     form?: FormGroup,
     controlName?: string
 ): void | number {
-    const input = e.target as HTMLInputElement;
+    let amount: number | string;
 
-    const reConvertedValue = Number(input.value.replace(/[^\d]/g, '')) / 100;
+    if (typeof eventOrNumber === 'number') {
+        amount = eventOrNumber;
+    } else {
+        amount = (eventOrNumber.target as HTMLInputElement).value;
+    }
+
+    const reConvertedValue =
+        Number(amount.toString().replace(/[^\d]/g, '')) / 100;
 
     if (form) {
         return form.patchValue({

@@ -1,13 +1,16 @@
 <mat-card>
     <mat-card-header>
-        <mat-card-title [style.display]="'flex'">
+        <mat-card-title
+            [style.display]="'flex'"
+            [style.margin-bottom]="'.25rem'"
+        >
             <p class="merchant-text">
                 {{ transaction().merchant }}
             </p>
             @if (transaction().title) {
                 <mat-divider
                     [vertical]="true"
-                    [style.margin]="'0 .5rem'"
+                    [style.margin]="'.2rem .5rem'"
                 />
                 <p class="title-text">
                     {{ transaction().title }}

@@ -3,31 +3,50 @@ import {
     AfterViewChecked,
     Component,
     ElementRef,
+    EventEmitter,
     Input,
+    OnInit,
+    Output,
     ViewChild
 } from '@angular/core';
 import { filter, take } from 'rxjs';
+import { BudgetCategory } from 'src/app/models/budgetCategory';
 
 import { LineItem, SaveLineItemPayload } from 'src/app/models/lineItem';
+import { BudgetCategoryService } from 'src/app/services/budget-category.service';
+import { BudgetService } from 'src/app/services/budget.service';
 import { LineItemService } from 'src/app/services/line-item.service';
 import { TransactionService } from 'src/app/services/transaction.service';
 
 @Component({
     selector: 'BudgetCategoryCard',
     templateUrl: './budget-category-card.component.html',
-    styleUrls: ['./budget-category-card.component.scss']
+    styleUrls: ['./budget-category-card.component.scss'],
+    host: {
+        '[class.add-animation]': 'isNewBudgetCategory',
+        '[class.deleting-category]': 'isDeletingBudgetCategory',
+        '[style.height]': 'hostHeight'
+    }
 })
-export class BudgetCategoryCardComponent implements AfterViewChecked {
+export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
     @ViewChild('titleInput') titleInput!: ElementRef<HTMLInputElement>;
-    @Input() budgetCategoryId = 0;
+    @Input() budgetCategoryId = '';
     @Input() lineItems: LineItem[] = [];
     @Input() name = '';
+    @Output() isAddingBudgetCategory = new EventEmitter<boolean>();
+    @Output() hideCategoryButton = new EventEmitter();
     isEditingName = false;
     isAddingLineItem = false;
+    isNewBudgetCategory = false;
+    isDeletingBudgetCategory = false;
+    hostHeight = 'auto';
 
     constructor(
         private transactionService: TransactionService,
-        private lineItemService: LineItemService
+        private lineItemService: LineItemService,
+        private budgetService: BudgetService,
+        private budgetCategoryService: BudgetCategoryService,
+        private hostElement: ElementRef<HTMLElement>
     ) {}
 
     ngAfterViewChecked(): void {
@@ -37,10 +56,94 @@ export class BudgetCategoryCardComponent implements AfterViewChecked {
         }
     }
 
-    changeTitle(e: SubmitEvent) {
-        e.preventDefault();
-        this.name = this.titleInput.nativeElement.value;
+    ngOnInit(): void {
+        if (!this.budgetCategoryId) {
+            this.isNewBudgetCategory = true;
+            // Timout for animation completion
+            setTimeout(() => {
+                this.isEditingName = true;
+            }, 400);
+        }
+    }
+
+    enableEditMode() {
+        this.isEditingName = true;
+    }
+
+    changeTitle(submitEvent?: SubmitEvent): void {
+        if (submitEvent) submitEvent.preventDefault();
+        const inputValue = this.titleInput.nativeElement.value;
+
+        if (inputValue === 'Category Name' && this.isNewBudgetCategory) {
+            this.isNewBudgetCategory = false;
+            this.deleteBudgetCategory();
+        } else {
+            this.name = inputValue;
+            if (this.isNewBudgetCategory) {
+                this.budgetCategoryService.saveBudgetCategory(inputValue);
+                this.budgetCategoryService.newlyCreatedBudgetCategoryId
+                    .pipe(take(1))
+                    .subscribe((id) => {
+                        this.updateBudgetCategoryId(id);
+                        this.isNewBudgetCategory = false;
+                        this.isAddingBudgetCategory.emit(false);
+                    });
+            } else {
+                // Need to add update logic next!
+                console.log('Updating');
+            }
+        }
+
         this.isEditingName = false;
+    }
+
+    deleteBudgetCategory() {
+        this.dropBudgetCategory();
+
+        if (this.budgetCategoryId) {
+            this.budgetCategoryService.deleteBudgetCategory(
+                this.budgetCategoryId
+            );
+        }
+    }
+
+    updateBudgetCategoryId(id: string) {
+        const currentBudget = this.budgetService.budget();
+        if (currentBudget) {
+            const newCategory = currentBudget.budgetCategories.find(
+                (category) => !category.budgetCategoryId
+            );
+
+            if (newCategory) newCategory.budgetCategoryId = id;
+        }
+    }
+
+    dropBudgetCategory() {
+        const currentBudgetCategories =
+            this.budgetService.budget()?.budgetCategories;
+        if (currentBudgetCategories) {
+            const foundIndex = currentBudgetCategories.findIndex(
+                (category) =>
+                    category.budgetCategoryId === this.budgetCategoryId
+            );
+
+            this.handleCategoryDeleteAnimation(currentBudgetCategories);
+
+            setTimeout(() => {
+                currentBudgetCategories.splice(foundIndex, 1);
+                this.isDeletingBudgetCategory = false;
+                this.isAddingBudgetCategory.emit(false);
+            }, 400);
+        }
+    }
+
+    handleCategoryDeleteAnimation(currentBudgetCategories: BudgetCategory[]) {
+        if (currentBudgetCategories.length === 1) {
+            this.hideCategoryButton.emit();
+        }
+
+        this.hostHeight = this.hostElement.nativeElement.scrollHeight + 'px';
+        this.isDeletingBudgetCategory = true;
     }
 
     handleDrop(event: CdkDragDrop<LineItem[]>) {
@@ -63,7 +166,7 @@ export class BudgetCategoryCardComponent implements AfterViewChecked {
             };
 
             this.lineItems.push(newLineItem);
-            this.transactionService.clearTransactionData();
+            this.transactionService.clearSelectedTransactionData();
             this.isAddingLineItem = true;
         } else {
             event.stopPropagation();

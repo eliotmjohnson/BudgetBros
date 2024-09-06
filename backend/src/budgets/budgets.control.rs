@@ -1,14 +1,13 @@
 use crate::{
     budgets::{
-        budgets_helper::get_compiled_budget_data, budgets_models::BudgetResponseData,
-        budgets_services::get_budget,
+        budgets_helper::get_compiled_budget_data,
+        budgets_models::{BudgetResponseData, NewBudget},
+        budgets_services::{add_budget, delete_budget, get_budget},
     },
     AppState,
 };
 use actix_web::{
-    get,
-    web::{Data, Path, Query},
-    HttpResponse, Responder,
+    delete, get, post, web::{Data, Json, Path, Query}, HttpResponse, Responder
 };
 use serde::Deserialize;
 
@@ -45,14 +44,53 @@ async fn get_budget_data_handler(
                     year: query_params.year,
                     budget_categories: [].to_vec(),
                 }),
-                _ => HttpResponse::Ok().json(BudgetResponseData {
-                    budget_id: Some(rows[0].budget_id),
-                    month_number: query_params.month_number,
-                    year: query_params.year,
-                    budget_categories: get_compiled_budget_data(rows),
-                }),
+                _ => {
+                    let is_new_budget = rows[0].budget_category_id.is_none();
+                    HttpResponse::Ok().json(BudgetResponseData {
+                        budget_id: Some(rows[0].budget_id.to_string()),
+                        month_number: query_params.month_number,
+                        year: query_params.year,
+                        budget_categories: if is_new_budget {
+                            [].to_vec()
+                        } else {
+                            get_compiled_budget_data(rows)
+                        },
+                    })
+                }
             }
         }
+        Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
+    }
+}
+
+#[post("/{user_id}")]
+pub async fn add_budget_handler(
+    state: Data<AppState>,
+    params: Path<i64>,
+    body: Json<NewBudget>,
+) -> impl Responder {
+    let user_id = params.into_inner();
+    let body = body.into_inner();
+
+    let add_budget_result = add_budget(state.clone(), user_id, body.month_number, body.year).await;
+
+    match add_budget_result {
+        Ok(budget_id) => HttpResponse::Ok().json(budget_id.id.to_string()),
+        Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
+    }
+}
+
+#[delete("/{budget_id}")]
+pub async fn delete_budget_handler(
+    state: Data<AppState>,
+    params: Path<String>
+) -> impl Responder {
+    let budget_id = params.into_inner();
+
+    let delete_budget_result = delete_budget(state, budget_id).await;
+
+    match delete_budget_result {
+        Ok(_) => HttpResponse::Ok().json("Budget deleted successfully"),
         Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
     }
 }

@@ -80,7 +80,6 @@
         flex-direction: column;
         width: 65%;
         height: 100%;
-        gap: 1rem;
         padding-top: 2rem;
         padding-bottom: 2rem;
         padding-right: 0.6rem;
@@ -134,6 +133,71 @@
     animation: closeCalendar 0.3s forwards;
 }
 
+.budget-loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 35%;
+}
+
+.no-budget-notice {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    justify-content: center;
+    align-items: center;
+    height: 65%;
+
+    h1 {
+        font-style: italic;
+        margin: 0;
+        font-size: 2rem;
+        color: $bb-secondary-title-color;
+        opacity: 0.6;
+    }
+}
+
+.add-budget-category-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    transition: translate 0.4s;
+
+    p {
+        font-style: italic;
+        margin: 0;
+        font-size: 1.4rem;
+        color: $bb-secondary-title-color;
+        opacity: 0.5;
+    }
+
+    .add-button {
+        font-size: 3rem;
+        height: 3rem;
+        width: 3rem;
+        color: rgb(170, 170, 170);
+        cursor: pointer;
+        transition: color 0.4s;
+
+        &:hover {
+            color: $bb-primary-green-text;
+        }
+    }
+}
+
+.bottom {
+    margin-top: 1rem;
+
+    p {
+        font-size: 1.2rem;
+    }
+}
+
+.hide-add-button {
+    translate: 0 -10rem;
+}
+
 @keyframes openCalendar {
     0% {
         scale: 0;
@@ -161,37 +225,5 @@
     }
     100% {
         scale: 0;
-    }
-}
-
-.budget-loader-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 35%;
-}
-
-.no-budget-notice {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    justify-content: center;
-    align-items: center;
-    height: 65%;
-
-    h1 {
-        font-style: italic;
-        margin: 0;
-        font-size: 2rem;
-        color: $bb-secondary-title-color;
-        opacity: 0.6;
-    }
-
-    p {
-        font-style: italic;
-        margin: 0;
-        font-size: 1rem;
-        color: $bb-secondary-title-color;
-        opacity: 0.5;
     }
 }

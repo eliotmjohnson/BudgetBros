@@ -1,7 +1,14 @@
-<Card style="position: relative" paddingBottom="0.5rem" paddingLeft="2rem">
+<Card
+    style="position: relative"
+    paddingBottom="0.5rem"
+    paddingLeft="2rem"
+>
     <ng-content></ng-content>
     <span class="header">
-        <h1 *ngIf="!isEditingName" (click)="isEditingName = true">
+        <h1
+            *ngIf="!isEditingName"
+            (click)="enableEditMode()"
+        >
             {{ name }}
         </h1>
         <form
@@ -11,10 +18,17 @@
         >
             <input
                 type="text"
-                (blur)="isEditingName = false"
                 [defaultValue]="name"
+                (blur)="changeTitle()"
                 #titleInput
             />
+            @if (budgetCategoryId) {
+                <mat-icon
+                    class="delete-icon"
+                    (mousedown)="deleteBudgetCategory()"
+                    fontIcon="delete"
+                ></mat-icon>
+            }
         </form>
         <p>Planned</p>
         <p>Remaining</p>

@@ -1,8 +1,9 @@
 use actix_web::web::Data;
+use sqlx::postgres::PgQueryResult;
 
 use crate::AppState;
 
-use super::budgets_models::BudgetRowData;
+use super::budgets_models::{BudgetId, BudgetRowData};
 
 pub async fn get_budget(
     state: Data<AppState>,
@@ -31,9 +32,9 @@ pub async fn get_budget(
             tr.date
         FROM 
             budgets b
-        JOIN 
+        LEFT JOIN 
             budget_categories bc ON b.id = bc.budget_id
-        JOIN 
+        LEFT JOIN 
             line_items li ON bc.id = li.budget_category_id
         LEFT JOIN
             transactions tr ON li.id = tr.line_item_id 
@@ -46,5 +47,41 @@ pub async fn get_budget(
         .bind(month_number)
         .bind(year)
         .fetch_all(&state.db)
+        .await
+}
+
+pub async fn add_budget(
+    state: Data<AppState>,
+    user_id: i64,
+    month_number: i64,
+    year: i64,
+) -> Result<BudgetId, sqlx::Error> {
+    let query = "INSERT INTO budgets
+        (user_id, month_number, year)
+        VALUES ($1, $2, $3)
+        RETURNING id";
+
+    sqlx::query_as::<_, BudgetId>(query)
+        .bind(user_id)
+        .bind(month_number)
+        .bind(year)
+        .fetch_one(&state.db)
+        .await
+}
+
+pub async fn delete_budget(
+    state: Data<AppState>,
+    budget_id: String,
+) -> Result<PgQueryResult, sqlx::Error> {
+    let query = "
+        DELETE FROM 
+            budgets
+        WHERE 
+            id = $1::int
+        ";
+
+    sqlx::query(query)
+        .bind(budget_id)
+        .execute(&state.db)
         .await
 }

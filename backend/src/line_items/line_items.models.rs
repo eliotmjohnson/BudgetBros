@@ -28,7 +28,7 @@ pub struct NewLineItem {
     pub is_fund: bool,
     pub planned_amount: f64,
     pub starting_balance: f64,
-    pub budget_category_id: i64,
+    pub budget_category_id: String,
 }
 
 #[derive(Serialize, FromRow, Debug)]

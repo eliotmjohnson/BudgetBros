@@ -1,9 +1,12 @@
 import {
     AfterViewChecked,
     Component,
+    computed,
     ElementRef,
     EventEmitter,
+    input,
     Input,
+    model,
     OnInit,
     Output,
     ViewChild
@@ -30,43 +33,41 @@ import {
 export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     @ViewChild('lineItemTitleInput') lineItemTitleInput!: ElementRef;
     @ViewChild('plannedAmountInput') plannedAmountInput!: ElementRef;
-    @Input() itemId = '';
     @Input() itemTitle = '';
     @Input() startingBalance = 0;
-    @Input() plannedAmount = 0;
     @Input() fund = false;
-    @Input() transactions?: Transaction[];
     @Output() undoCreateNewLineItem = new EventEmitter();
     @Output() updateNewLineItemId = new EventEmitter<string>();
     @Output() saveNewLineItem = new EventEmitter<SaveLineItemPayload>();
     @Output() deleteSavedLineItem = new EventEmitter<string>();
 
+    itemId = model('');
+    transactions = input<Transaction[]>([]);
+    plannedAmount = model<number>(0);
     lineItemInputValue = new FormControl('');
     initialLineItemTitle = '';
     initialPlannedAmount = 0;
-    progressPercentage = 30;
     isEditModeEnabled = false;
     isNewLineItem = false;
+    remainingAmount = computed(() => this.calculateRemainingAmount());
+    progressPercentage = computed(
+        () => (this.remainingAmount() / this.plannedAmount()) * 100 || 0
+    );
+    isLineItemSelected = computed(
+        () =>
+            this.itemId() ===
+            this.transactionService.currentSelectedLineItemId()
+    );
 
     constructor(
         private transactionService: TransactionService,
         private lineItemService: LineItemService
     ) {}
 
-    get remainingAmount() {
-        return this.startingBalance + this.plannedAmount;
-    }
-
-    get isLineItemSelected() {
-        return (
-            this.itemId === this.transactionService.currentSelectedLineItemId
-        );
-    }
-
     ngOnInit(): void {
         this.lineItemInputValue.setValue(this.itemTitle);
 
-        this.isNewLineItem = this.itemTitle === 'Add Title' && !this.itemId;
+        this.isNewLineItem = this.itemTitle === 'Add Title' && !this.itemId();
 
         if (this.isNewLineItem) {
             this.enableEditMode();
@@ -80,23 +81,34 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
         }
     }
 
+    calculateRemainingAmount() {
+        return this.transactions().length
+            ? this.transactions().reduce(
+                  (balance, transaction) => balance - transaction.amount,
+                  this.startingBalance + this.plannedAmount()
+              )
+            : this.startingBalance + this.plannedAmount();
+    }
+
     setTransactionData() {
-        this.transactionService.currentSelectedLineItemBalance =
-            this.remainingAmount;
-        this.transactionService.currentSelectedLineItem =
-            this.lineItemInputValue.value ?? '';
-        this.transactionService.currentSelectedLineItemId = this.itemId;
-        this.transactionService.currentBudgetTransactionData = this.transactions
-            ? this.transactions
-            : [];
+        this.transactionService.currentSelectedLineItemBalance.set(
+            this.remainingAmount()
+        );
+        this.transactionService.currentSelectedLineItem.set(
+            this.lineItemInputValue.value ?? ''
+        );
+        this.transactionService.currentSelectedLineItemId.set(this.itemId());
+        this.transactionService.currentBudgetTransactionData.set(
+            this.transactions()
+        );
     }
 
     checkIfValidKey(e: KeyboardEvent): boolean {
-        return checkCurrencyInputKeyValid(e, this.plannedAmount);
+        return checkCurrencyInputKeyValid(e, this.plannedAmount());
     }
 
     addValue(e: Event) {
-        this.plannedAmount = addValueToCurrencyInput(e);
+        this.plannedAmount.set(addValueToCurrencyInput(e));
     }
 
     enableEditMode(targetInput?: HTMLInputElement) {
@@ -104,16 +116,16 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
         if (!this.isEditModeEnabled) {
             this.isEditModeEnabled = true;
             this.initialLineItemTitle = this.lineItemInputValue.value ?? '';
-            this.initialPlannedAmount = this.plannedAmount;
+            this.initialPlannedAmount = this.plannedAmount();
         }
     }
 
     cancelEditing() {
-        if (!this.itemId) {
+        if (!this.itemId()) {
             this.undoCreateNewLineItem.emit();
         } else {
             this.lineItemInputValue.setValue(this.initialLineItemTitle);
-            this.plannedAmount = this.initialPlannedAmount;
+            this.plannedAmount.set(this.initialPlannedAmount);
             this.isEditModeEnabled = false;
         }
     }
@@ -121,15 +133,16 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     createOrUpdateLineItem(blurInputs: boolean) {
         if (blurInputs) this.blurInputs();
 
-        if (!this.itemId) {
+        if (!this.itemId()) {
             const saveLineItemPayload: SaveLineItemPayload = {
                 name: this.lineItemInputValue.value ?? '',
                 isFund: false,
-                plannedAmount: this.plannedAmount,
+                plannedAmount: this.plannedAmount(),
                 startingBalance: 0
             };
 
             this.saveNewLineItem.emit(saveLineItemPayload);
+
             this.lineItemService.newlyAddedLineItemId
                 .pipe(
                     filter((id) => !!id),
@@ -137,28 +150,29 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
                 )
                 .subscribe((id) => {
                     this.updateNewLineItemId.emit(id);
-                    this.itemId = id;
+                    this.itemId.set(id);
                     this.isEditModeEnabled = false;
                     this.setTransactionData();
                 });
         } else {
             const updateLineItemPayload: UpdateLineItemPayload = {
-                id: this.itemId,
+                id: this.itemId(),
                 name: this.lineItemInputValue.value ?? '',
                 isFund: false,
-                plannedAmount: this.plannedAmount,
+                plannedAmount: this.plannedAmount(),
                 startingBalance: 0
             };
 
             this.lineItemService.updateLineItem(updateLineItemPayload);
             this.isEditModeEnabled = false;
+            this.setTransactionData();
         }
     }
 
     deleteLineItem() {
-        this.lineItemService.deleteLineItem(this.itemId);
+        this.lineItemService.deleteLineItem(this.itemId());
         this.transactionService.clearSelectedTransactionData();
-        this.deleteSavedLineItem.emit(this.itemId);
+        this.deleteSavedLineItem.emit(this.itemId());
     }
 
     checkIfOutsideParent(e: MouseEvent, lineItemContainer: HTMLSpanElement) {

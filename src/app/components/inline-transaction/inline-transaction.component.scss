@@ -26,13 +26,27 @@
         }
     }
 
-    .transaction-title {
-        margin: 0;
-        font-size: 1.2rem;
-        font-weight: 500;
+    .transaction-title-container {
+        display: flex;
+        align-items: baseline;
+        gap: 0.8rem;
         width: 25rem;
-        color: $bb-primary-title-color;
-        opacity: 0.9;
+
+        .transaction-title {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: $bb-primary-title-color;
+            opacity: 0.9;
+        }
+
+        .transaction-merchant {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 400;
+            opacity: 0.7;
+            color: $bb-secondary-title-color;
+        }
     }
 
     .transaction-amount {

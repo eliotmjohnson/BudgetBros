@@ -16,10 +16,10 @@ export class TransactionService {
     authService = inject(AuthService);
 
     baseUrl = `${BE_API_URL}/transactions`;
-    currentSelectedLineItem = '';
-    currentSelectedLineItemId = '';
-    currentSelectedLineItemBalance = 0;
-    currentBudgetTransactionData: Transaction[] = [];
+    currentSelectedLineItem = signal('');
+    currentSelectedLineItemId = signal('');
+    currentSelectedLineItemBalance = signal(0);
+    currentBudgetTransactionData = signal<Transaction[]>([]);
     transactions = signal<IsolatedTransaction[]>([]);
     isLoading = signal(false);
 
@@ -110,13 +110,15 @@ export class TransactionService {
     }
 
     clearSelectedTransactionData() {
-        this.currentSelectedLineItem = '';
-        this.currentSelectedLineItemId = '';
-        this.currentSelectedLineItemBalance = 0;
-        this.currentBudgetTransactionData = [];
+        if (!this.isTransactionDataEmpty || this.currentSelectedLineItem()) {
+            this.currentSelectedLineItem.set('');
+            this.currentSelectedLineItemId.set('');
+            this.currentSelectedLineItemBalance.set(0);
+            this.currentBudgetTransactionData.set([]);
+        }
     }
 
     isTransactionDataEmpty() {
-        return this.currentBudgetTransactionData.length === 0;
+        return this.currentBudgetTransactionData().length === 0;
     }
 }

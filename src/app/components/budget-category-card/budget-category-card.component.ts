@@ -98,13 +98,13 @@ export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
     }
 
     deleteBudgetCategory() {
-        this.dropBudgetCategory();
-
         if (this.budgetCategoryId) {
             this.budgetCategoryService.deleteBudgetCategory(
                 this.budgetCategoryId
             );
         }
+
+        this.dropBudgetCategory();
     }
 
     updateBudgetCategoryId(id: string) {
@@ -119,6 +119,8 @@ export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
     }
 
     dropBudgetCategory() {
+        this.transactionService.clearSelectedTransactionData();
+
         const currentBudgetCategories =
             this.budgetService.budget()?.budgetCategories;
         if (currentBudgetCategories) {

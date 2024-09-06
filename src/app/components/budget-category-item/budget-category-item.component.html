@@ -1,6 +1,8 @@
 <span
     #lineItemContainer
-    class="budget-item-wrapper {{ isLineItemSelected && 'line-item-selected' }}"
+    class="budget-item-wrapper {{
+        isLineItemSelected() && 'line-item-selected'
+    }}"
     (click)="setTransactionData()"
 >
     <ng-content></ng-content>
@@ -25,10 +27,10 @@
         (keydown)="checkIfValidKey($event)"
         (focus)="enableEditMode(plannedAmountInput)"
         (input)="addValue($event)"
-        [value]="plannedAmount | currency"
+        [value]="plannedAmount() | currency"
     />
-    <p>{{ remainingAmount | currency }}</p>
-    @if (isLineItemSelected && itemId) {
+    <p>{{ remainingAmount() | currency }}</p>
+    @if (isLineItemSelected() && itemId()) {
         <mat-icon
             class="delete-icon"
             (click)="deleteLineItem()"
@@ -59,15 +61,15 @@
     }
 </span>
 <div
-    [style.visibility]="isLineItemSelected ? 'hidden' : 'visible'"
+    [style.visibility]="isLineItemSelected() ? 'hidden' : 'visible'"
     class="progress-indicator"
 >
     <span
-        [style.width]="progressPercentage + '%'"
+        [style.width]="progressPercentage() + '%'"
         class="progress"
     ></span>
     <span
-        [style.width]="100 - progressPercentage + '%'"
+        [style.width]="100 - progressPercentage() + '%'"
         class="non-progress"
     ></span>
 </div>

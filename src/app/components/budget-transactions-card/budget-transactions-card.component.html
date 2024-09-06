@@ -3,7 +3,7 @@
     height="100%"
     padding="0rem"
 >
-    @if (transactionService.currentSelectedLineItem) {
+    @if (transactionService.currentSelectedLineItem()) {
         <section class="banner">
             <div class="icon-wrapper">
                 <mat-icon
@@ -16,11 +16,11 @@
             <section class="title-section">
                 <span class="available">Available</span>
                 <span class="top">
-                    <h1>{{ transactionService.currentSelectedLineItem }}</h1>
+                    <h1>{{ transactionService.currentSelectedLineItem() }}</h1>
                     <h2>
                         <h3 class="dollar-sign">$</h3>
                         {{
-                            transactionService.currentSelectedLineItemBalance
+                            transactionService.currentSelectedLineItemBalance()
                                 | number: "1.2-2"
                         }}
                     </h2>
@@ -41,12 +41,15 @@
         </main>
         <section class="transactions-container">
             @for (
-                transaction of transactionService.currentBudgetTransactionData;
+                transaction of transactionService.currentBudgetTransactionData();
                 track $index
             ) {
                 <InlineTransaction
                     [title]="transaction.title!"
                     [amount]="transaction.amount"
+                    [merchant]="transaction.merchant"
+                    [date]="transaction.date"
+                    [notes]="transaction.notes"
                 />
             }
         </section>

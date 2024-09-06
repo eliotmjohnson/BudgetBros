@@ -56,6 +56,9 @@ export class TransactionModalComponent {
 
     form = new FormGroup(
         {
+            title: new FormControl<string | null>(
+                this.modalData.transaction?.title || null
+            ),
             amount: new FormControl(this.modalData.transaction?.amount || 0, [
                 Validators.min(0.01)
             ]),

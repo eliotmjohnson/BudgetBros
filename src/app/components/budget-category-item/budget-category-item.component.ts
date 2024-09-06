@@ -98,8 +98,9 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
             this.lineItemInputValue.value ?? ''
         );
         this.transactionService.currentSelectedLineItemId.set(this.itemId());
-        this.transactionService.currentBudgetTransactionData =
-            this.transactions();
+        this.transactionService.currentBudgetTransactionData.set(
+            this.transactions()
+        );
     }
 
     checkIfValidKey(e: KeyboardEvent): boolean {

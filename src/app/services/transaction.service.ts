@@ -19,7 +19,7 @@ export class TransactionService {
     currentSelectedLineItem = signal('');
     currentSelectedLineItemId = signal('');
     currentSelectedLineItemBalance = signal(0);
-    currentBudgetTransactionData: Transaction[] = [];
+    currentBudgetTransactionData = signal<Transaction[]>([]);
     transactions = signal<IsolatedTransaction[]>([]);
     isLoading = signal(false);
 
@@ -113,7 +113,7 @@ export class TransactionService {
         this.currentSelectedLineItem.set('');
         this.currentSelectedLineItemId.set('');
         this.currentSelectedLineItemBalance.set(0);
-        this.currentBudgetTransactionData = [];
+        this.currentBudgetTransactionData.set([]);
     }
 
     isTransactionDataEmpty() {

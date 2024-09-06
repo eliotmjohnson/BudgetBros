@@ -98,13 +98,13 @@ export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
     }
 
     deleteBudgetCategory() {
-        this.dropBudgetCategory();
-
         if (this.budgetCategoryId) {
             this.budgetCategoryService.deleteBudgetCategory(
                 this.budgetCategoryId
             );
         }
+
+        this.dropBudgetCategory();
     }
 
     updateBudgetCategoryId(id: string) {

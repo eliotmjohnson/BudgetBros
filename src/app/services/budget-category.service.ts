@@ -76,13 +76,12 @@ export class BudgetCategoryService {
     }
 
     deleteBudgetCategory(budgetCategoryId: string) {
+        const currentBudget = this.budgetService.budget();
+        const shouldDeleteBudget = currentBudget?.budgetCategories.length === 1;
+
         this.http.delete(`${this.baseUrl}/${budgetCategoryId}`).subscribe({
             next: () => {
-                const currentBudget = this.budgetService.budget();
-                if (
-                    currentBudget?.budgetId &&
-                    currentBudget.budgetCategories?.length === 1
-                ) {
+                if (currentBudget?.budgetId && shouldDeleteBudget) {
                     this.budgetService.deleteBudget(currentBudget.budgetId);
                 }
             },

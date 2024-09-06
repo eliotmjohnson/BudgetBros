@@ -142,6 +142,7 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
             };
 
             this.saveNewLineItem.emit(saveLineItemPayload);
+
             this.lineItemService.newlyAddedLineItemId
                 .pipe(
                     filter((id) => !!id),

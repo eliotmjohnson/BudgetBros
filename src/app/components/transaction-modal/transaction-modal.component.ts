@@ -60,7 +60,10 @@ export class TransactionModalComponent {
                 Validators.min(0.01)
             ]),
             lineItem: new FormControl<LineItemReduced | null>(
-                this.preSelectedLineItem() || null,
+                {
+                    value: this.preSelectedLineItem() || null,
+                    disabled: !this.dropdownCategories().length
+                },
                 [Validators.required]
             ),
             date: new FormControl<Date | null>(
@@ -132,6 +135,7 @@ export class TransactionModalComponent {
     }
 
     submitForm() {
+        console.log(this.form);
         if (this.form.invalid) return;
 
         if (this.modalData.mode === 'add') {

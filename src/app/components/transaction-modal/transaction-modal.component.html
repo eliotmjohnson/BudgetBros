@@ -72,7 +72,9 @@
         <mat-form-field
             [matTooltip]="
                 !dropdownCategories().length
-                    ? 'Please pick a date to show budget items'
+                    ? form.value.date
+                        ? 'There are no budget items for this month. Please choose another month'
+                        : 'Please pick a date to show budget items'
                     : ''
             "
         >
@@ -133,7 +135,9 @@
             color="primary"
             style="color: white"
             type="submit"
-            [disabled]="!(form.valid && form.dirty)"
+            [disabled]="
+                !(form.valid && form.dirty && form.get('lineItem')?.valid)
+            "
         >
             {{ modalData.mode === "add" ? "Add" : "Update" }}
         </button>

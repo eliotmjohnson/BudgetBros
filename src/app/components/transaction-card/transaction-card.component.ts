@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, inject, input, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { IsolatedTransaction } from 'src/app/models/transaction';
 import { TransactionService } from 'src/app/services/transaction.service';
@@ -20,6 +20,11 @@ export class TransactionCardComponent {
     budgetCategoryService = inject(BudgetCategoryService);
 
     transaction = input.required<IsolatedTransaction>();
+    areNotesOpen = signal(false);
+
+    toggleNotes() {
+        this.areNotesOpen.set(!this.areNotesOpen());
+    }
 
     deleteTransaction(transactionId: IsolatedTransaction['id']) {
         this.transactionService.softDeleteTransaction(transactionId);

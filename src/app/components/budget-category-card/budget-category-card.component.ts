@@ -119,6 +119,8 @@ export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
     }
 
     dropBudgetCategory() {
+        this.transactionService.clearSelectedTransactionData();
+
         const currentBudgetCategories =
             this.budgetService.budget()?.budgetCategories;
         if (currentBudgetCategories) {

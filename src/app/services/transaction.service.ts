@@ -110,13 +110,15 @@ export class TransactionService {
     }
 
     clearSelectedTransactionData() {
-        this.currentSelectedLineItem.set('');
-        this.currentSelectedLineItemId.set('');
-        this.currentSelectedLineItemBalance.set(0);
-        this.currentBudgetTransactionData.set([]);
+        if (!this.isTransactionDataEmpty || this.currentSelectedLineItem()) {
+            this.currentSelectedLineItem.set('');
+            this.currentSelectedLineItemId.set('');
+            this.currentSelectedLineItemBalance.set(0);
+            this.currentBudgetTransactionData.set([]);
+        }
     }
 
     isTransactionDataEmpty() {
-        return this.currentBudgetTransactionData.length === 0;
+        return this.currentBudgetTransactionData().length === 0;
     }
 }

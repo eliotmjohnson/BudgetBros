@@ -78,8 +78,6 @@ export class BudgetCategoryService {
     deleteBudgetCategory(budgetCategoryId: string) {
         this.http.delete(`${this.baseUrl}/${budgetCategoryId}`).subscribe({
             next: () => {
-                this.transactionService.clearSelectedTransactionData();
-
                 const currentBudget = this.budgetService.budget();
                 if (
                     currentBudget?.budgetId &&

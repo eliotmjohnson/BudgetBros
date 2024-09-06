@@ -1,10 +1,30 @@
 @import "bb-core";
 
+.mat-mdc-card {
+    box-shadow: none;
+    border-radius: 1rem;
+}
+
+.title-text {
+    color: $bb-primary-green-text;
+    margin: 0;
+}
+
+.merchant-text {
+    color: $bb-primary-title-color;
+    margin: 0;
+}
+
 .actions-wrapper {
     display: flex;
     gap: 1rem;
     justify-content: space-between;
     align-items: center;
+
+    .date-wrapper {
+        display: flex;
+        gap: 0.5rem;
+    }
 }
 
 .actions-buttons-container {
@@ -17,6 +37,7 @@
 
 .date {
     margin: 0 1rem;
+    color: $bb-secondary-title-color;
 }
 
 .mat-mdc-card-actions {
@@ -38,5 +59,18 @@ mat-card-header {
         position: absolute;
         top: 0.2rem;
         right: 0.75rem;
+    }
+}
+
+::ng-deep {
+    .cdk-overlay-pane {
+        .mat-mdc-card {
+            padding: 0.5rem;
+            margin-top: 0.25rem;
+            min-width: 250px;
+            min-height: 50px;
+            border-radius: 0.25rem;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.12);
+        }
     }
 }

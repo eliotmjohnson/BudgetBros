@@ -43,7 +43,9 @@ pub async fn get_all_transactions_between_dates(
             b.user_id = $1 
             AND t.deleted = false
             AND t.date
-            BETWEEN $2::timestamptz AND $3::timestamptz";
+            BETWEEN $2::timestamptz AND $3::timestamptz
+        ORDER BY 
+            t.date DESC";
 
     sqlx::query_as::<_, IsolatedTransaction>(query)
         .bind(user_id)
@@ -53,13 +55,27 @@ pub async fn get_all_transactions_between_dates(
         .await
 }
 
-pub async fn add_transaction(state: Data<AppState>, new_transaction: NewTransaction) -> Result<PgQueryResult, sqlx::Error> {
+pub async fn add_transaction(state: Data<AppState>, new_transaction: NewTransaction) -> Result<IsolatedTransaction, sqlx::Error> {
     let query = 
-        "INSERT INTO transactions 
-        (title, merchant, amount, notes, date, line_item_id, deleted) 
-        VALUES ($1, $2, $3, $4, $5, $6, $7)";
+        "WITH inserted_transaction AS (
+            INSERT INTO transactions 
+            (title, merchant, amount, notes, date, line_item_id, deleted) 
+            VALUES ($1, $2, $3, $4, $5, $6, $7)
+            RETURNING *
+        )
+        SELECT 
+            t.*, 
+            bc.name as budget_category_name 
+        FROM 
+            inserted_transaction t
+        JOIN 
+            line_items li ON t.line_item_id = li.id
+        JOIN 
+            budget_categories bc ON li.budget_category_id = bc.id
+        JOIN 
+            budgets b ON bc.budget_id = b.id";
 
-    sqlx::query(query)
+    sqlx::query_as::<_, IsolatedTransaction>(query)
         .bind(new_transaction.title)   
         .bind(new_transaction.merchant)   
         .bind(new_transaction.amount)   
@@ -67,7 +83,7 @@ pub async fn add_transaction(state: Data<AppState>, new_transaction: NewTransact
         .bind(new_transaction.date)   
         .bind(new_transaction.line_item_id)   
         .bind(new_transaction.deleted)
-        .execute(&state.db)
+        .fetch_one(&state.db)
         .await
 }
 

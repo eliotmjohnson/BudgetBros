@@ -33,7 +33,6 @@ export class TransactionService {
             )
             .subscribe({
                 next: (transactions) => {
-                    console.log({ transactions });
                     this.isLoading.set(false);
                     this.transactions.set(transactions);
                 },
@@ -60,20 +59,49 @@ export class TransactionService {
     }
 
     addTransaction(transaction: NewTransaction) {
-        this.http.post<Transaction>(this.baseUrl, transaction).subscribe({
-            next: () => {
-                // TODO: handle UI change
-            },
-            error: (error) => {
-                console.error(error);
-            }
-        });
+        this.http
+            .post<IsolatedTransaction>(this.baseUrl, transaction)
+            .subscribe({
+                next: (transaction) => {
+                    this.getTransactionsBetweenDates(
+                        new Date(transaction.date),
+                        new Date(transaction.date)
+                    );
+                },
+                error: (error) => {
+                    console.error(error);
+                }
+            });
     }
 
-    updateTransaction(transaction: Transaction) {
-        this.http.put<Transaction>(this.baseUrl, transaction).subscribe({
+    updateTransaction(transaction: Transaction, budgetCategoryName?: string) {
+        this.http.put<string>(this.baseUrl, transaction).subscribe({
             next: () => {
-                // TODO: handle UI change
+                const prevTransaction = this.transactions().find(
+                    (t) => t.id === transaction.id
+                );
+
+                if (
+                    !prevTransaction ||
+                    new Date(transaction.date).getMonth() !==
+                        new Date(prevTransaction!.date).getMonth()
+                ) {
+                    this.getTransactionsBetweenDates(
+                        new Date(transaction.date),
+                        new Date(transaction.date)
+                    );
+                } else {
+                    this.transactions.update((transactions) =>
+                        transactions.map((t) =>
+                            t.id === transaction.id
+                                ? {
+                                      ...transaction,
+                                      budgetCategoryName: budgetCategoryName!
+                                  }
+                                : t
+                        )
+                    );
+                }
             },
             error: (error) => {
                 console.error(error);

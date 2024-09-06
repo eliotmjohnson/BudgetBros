@@ -8,17 +8,30 @@
                 class="plus-button"
                 (click)="openAddTransactionDialog()"
             >
-                <mat-icon fontIcon="add" class="icon" />
+                <mat-icon
+                    fontIcon="add"
+                    class="icon"
+                />
             </button>
         </div>
-        <TransactionsDatePicker [form]="form" (submitForm)="submitForm()" />
+        <TransactionsDatePicker
+            [form]="form"
+            (submitForm)="submitForm()"
+        />
     </div>
     <mat-divider />
     <div class="transactions-inner-container">
-        @for (transaction of transactions(); track transaction.id) {
-            <TransactionCard [transaction]="transaction" />
-        } @empty {
-            No Transactions Found
+        @if (transactionService.isLoading()) {
+            <mat-spinner
+                [diameter]="50"
+                [style.align-self]="'center'"
+            />
+        } @else {
+            @for (transaction of transactions(); track transaction.id) {
+                <TransactionCard [transaction]="transaction" />
+            } @empty {
+                No Transactions Found
+            }
         }
     </div>
 </div>

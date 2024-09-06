@@ -1,5 +1,16 @@
-::ng-deep.mat-mdc-dialog-container {
-    min-width: 600px;
+::ng-deep {
+    &.mat-mdc-dialog-container {
+        min-width: 600px;
+    }
+
+    &.mat-mdc-dialog-surface {
+        border-radius: 1rem;
+        padding: 1rem 0.5rem;
+    }
+}
+
+.mat-mdc-dialog-title {
+    font-size: 2rem;
 }
 
 .fullwidth {
@@ -7,14 +18,14 @@
 }
 
 .inner-fields-wrapper {
-    display: flex; 
+    display: flex;
     gap: 1rem;
     width: 100%;
 }
 
 .content {
-    display: flex; 
-    flex-direction: column; 
+    display: flex;
+    flex-direction: column;
     gap: 1rem;
     padding-top: 0;
 }

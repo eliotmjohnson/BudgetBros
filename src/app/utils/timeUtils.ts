@@ -19,7 +19,7 @@ export const getTodayIgnoreTZ = () => {
     const localDate = now.getDate();
 
     const adjustedDate = new Date(
-        Date.UTC(localYear, localMonth, localDate, 5, 0, 0, 0)
+        Date.UTC(localYear, localMonth, localDate, 0, 0, 0, 0)
     );
 
     return adjustedDate;

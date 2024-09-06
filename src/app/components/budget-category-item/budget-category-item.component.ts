@@ -51,7 +51,7 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     isNewLineItem = false;
     remainingAmount = computed(() => this.calculateRemainingAmount());
     progressPercentage = computed(
-        () => (this.remainingAmount() / this.plannedAmount()) * 100
+        () => (this.remainingAmount() / this.plannedAmount()) * 100 || 0
     );
     isLineItemSelected = computed(
         () =>

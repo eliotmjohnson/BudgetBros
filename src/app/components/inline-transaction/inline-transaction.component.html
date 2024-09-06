@@ -1,8 +1,15 @@
-<span class="inline-transaction-wrapper">
+<span
+    class="inline-transaction-wrapper"
+    matTooltip="Notes: {{ notes }}"
+    matTooltipPosition="left"
+>
     <div class="date">
-        <h3>Aug</h3>
-        <h3>18</h3>
+        <h3>{{ getMonth() }}</h3>
+        <h3>{{ date.getDate() }}</h3>
     </div>
-    <h1 class="transaction-title">{{ title }}</h1>
-    <p class="transaction-amount">-${{ amount | number : "1.2-2" }}</p>
+    <span class="transaction-title-container">
+        <h1 class="transaction-title">{{ title }}</h1>
+        <p class="transaction-merchant">{{ merchant }}</p>
+    </span>
+    <p class="transaction-amount">-${{ amount | number: "1.2-2" }}</p>
 </span>

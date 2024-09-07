@@ -14,10 +14,23 @@
                 />
             </button>
         </div>
-        <TransactionsDatePicker
-            [form]="form"
-            (submitForm)="submitForm()"
-        />
+        <div [style]="{ display: 'flex', gap: '1rem' }">
+            @if (transactions().length) {
+                <button
+                    mat-icon-button
+                    matTooltip="Filter transactions"
+                >
+                    <mat-icon
+                        fontIcon="filter_list"
+                        class="icon"
+                    />
+                </button>
+            }
+            <TransactionsDatePicker
+                [form]="form"
+                (submitForm)="submitForm()"
+            />
+        </div>
     </div>
     <mat-divider />
     <div class="transactions-inner-container">

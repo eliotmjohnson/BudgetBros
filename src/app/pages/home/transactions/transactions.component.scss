@@ -44,7 +44,15 @@
             display: none;
         }
 
+        @media screen and (min-height: 600px) {
+            max-height: 65vh;
+        }
+
         @media screen and (min-height: 800px) {
+            max-height: 70vh;
+        }
+
+        @media screen and (min-height: 900px) {
             max-height: 75vh;
         }
 

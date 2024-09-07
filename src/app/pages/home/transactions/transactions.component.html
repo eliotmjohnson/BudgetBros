@@ -19,12 +19,19 @@
                 <button
                     mat-icon-button
                     matTooltip="Filter transactions"
+                    cdkOverlayOrigin
+                    #trigger="cdkOverlayOrigin"
+                    (click)="toggleFilter()"
                 >
                     <mat-icon
                         fontIcon="filter_list"
                         class="icon"
                     />
                 </button>
+                <TransactionsFilterPopover
+                    [trigger]="trigger"
+                    [isFilterPopoverOpen]="isFilterOpen()"
+                />
             }
             <TransactionsDatePicker
                 [form]="form"

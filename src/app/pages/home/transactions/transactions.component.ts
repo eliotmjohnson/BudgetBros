@@ -1,4 +1,4 @@
-import { Component, OnInit, effect, inject } from '@angular/core';
+import { Component, OnInit, effect, inject, signal } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import {
@@ -23,6 +23,7 @@ export class TransactionsComponent implements OnInit {
     });
 
     transactions = this.transactionService.transactions;
+    isFilterOpen = signal(false);
 
     constructor() {
         effect(() => {
@@ -56,5 +57,9 @@ export class TransactionsComponent implements OnInit {
         if (start && end) {
             this.transactionService.getTransactionsBetweenDates(start, end);
         }
+    }
+
+    toggleFilter() {
+        this.isFilterOpen.set(!this.isFilterOpen());
     }
 }

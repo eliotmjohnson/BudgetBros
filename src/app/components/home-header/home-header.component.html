@@ -9,12 +9,18 @@
         <mat-icon fontIcon="account_circle" />
         {{ authService.loggedInUserName }}
     </button>
-    <mat-menu #accountMenu="matMenu" xPosition="before">
+    <mat-menu
+        #accountMenu="matMenu"
+        xPosition="before"
+    >
         <button mat-menu-item>
             <mat-icon>person</mat-icon>
             Account
         </button>
-        <button mat-menu-item (click)="logout()">
+        <button
+            mat-menu-item
+            (click)="logout()"
+        >
             <mat-icon>logout</mat-icon>
             Logout
         </button>

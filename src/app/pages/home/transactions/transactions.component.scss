@@ -5,7 +5,7 @@
     flex-direction: column;
     gap: 1.5rem;
     padding: 1.5rem;
-    height: 100%;
+    height: calc(100vh - $bb-header-height);
 
     .title-wrapper {
         display: flex;
@@ -37,31 +37,11 @@
         overflow-y: scroll;
         gap: 1rem;
         flex: 1;
-        max-height: 75vh;
+        height: 100%;
         padding-bottom: 1rem;
 
         &::-webkit-scrollbar {
             display: none;
-        }
-
-        @media screen and (min-height: 600px) {
-            max-height: 65vh;
-        }
-
-        @media screen and (min-height: 800px) {
-            max-height: 70vh;
-        }
-
-        @media screen and (min-height: 900px) {
-            max-height: 75vh;
-        }
-
-        @media screen and (min-height: 1000px) {
-            max-height: 80vh;
-        }
-
-        @media screen and (min-height: 1250px) {
-            max-height: 85vh;
         }
     }
 }

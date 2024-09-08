@@ -16,10 +16,10 @@ import {
     checkCurrencyInputKeyValid
 } from 'src/app/utils/currencyUtils';
 
-export type TransactionModalData = {
+export interface TransactionModalData {
     mode: 'add' | 'edit';
     transaction?: IsolatedTransaction;
-};
+}
 
 @Component({
     selector: 'app-transaction-modal',

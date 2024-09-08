@@ -1,6 +1,6 @@
 <a
     mat-button
-    (click)="onClick.emit(description)"
+    (click)="handleClick.emit(description)"
     [routerLink]="description.toLowerCase()"
     class="link-button"
     *ngIf="!isActive; else selectedButton"
@@ -12,7 +12,7 @@
 <ng-template #selectedButton>
     <a
         mat-raised-button
-        (click)="onClick.emit(description)"
+        (click)="handleClick.emit(description)"
         [color]="variant"
         class="link-button raised"
     >

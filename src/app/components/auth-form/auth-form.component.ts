@@ -13,8 +13,8 @@ import { AuthService } from 'src/app/services/auth.service';
     }
 })
 export class AuthFormComponent {
-    @Input() register: boolean = false;
-    @Input() isRegistering: boolean = false;
+    @Input() register = false;
+    @Input() isRegistering = false;
     @Output() emitFlipCard = new EventEmitter();
 
     loginForm = this.formBuilder.group({
@@ -35,8 +35,8 @@ export class AuthFormComponent {
                 ? ''
                 : 'hide-card'
             : !this.isRegistering
-            ? ''
-            : 'hide-card';
+              ? ''
+              : 'hide-card';
     }
 
     get isSubmitButtonDisabled() {

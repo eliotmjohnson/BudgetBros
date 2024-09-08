@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
     styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-    isRegistering: boolean = false;
+    isRegistering = false;
 
     flipCard() {
         this.isRegistering = !this.isRegistering;

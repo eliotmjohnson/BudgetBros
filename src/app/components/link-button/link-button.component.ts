@@ -10,5 +10,5 @@ export class LinkButtonComponent {
     @Input() iconName = '';
     @Input() variant = '';
     @Input() isActive = false;
-    @Output() onClick = new EventEmitter<string>();
+    @Output() handleClick = new EventEmitter<string>();
 }

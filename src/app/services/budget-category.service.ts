@@ -55,7 +55,9 @@ export class BudgetCategoryService {
                 this.budgetService.newlyCreatedBudgetId
                     .pipe(take(1))
                     .subscribe((budgetId) => {
-                        this.executeBudgetCategorySave(budgetId, name);
+                        if (budgetId) {
+                            this.executeBudgetCategorySave(budgetId, name);
+                        }
                     });
             } else {
                 this.executeBudgetCategorySave(currentBudget.budgetId, name);
@@ -70,8 +72,14 @@ export class BudgetCategoryService {
                 userId: this.authService.userId,
                 budgetId: budgetCategoryId
             })
-            .subscribe((budgetCategoryId) => {
-                this.newlyCreatedBudgetCategoryId.next(budgetCategoryId);
+            .subscribe({
+                next: (budgetCategoryId) => {
+                    this.newlyCreatedBudgetCategoryId.next(budgetCategoryId);
+                },
+                error: (error) => {
+                    this.newlyCreatedBudgetCategoryId.next('');
+                    this.budgetService.openSnagDialogAndRefresh(error);
+                }
             });
     }
 
@@ -86,8 +94,7 @@ export class BudgetCategoryService {
                 }
             },
             error: (error) => {
-                this.snagDialogService.openSnagDialog(error);
-                this.budgetService.refreshBudget();
+                this.budgetService.openSnagDialogAndRefresh(error);
             }
         });
     }

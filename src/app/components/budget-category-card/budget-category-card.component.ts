@@ -9,7 +9,7 @@ import {
     Output,
     ViewChild
 } from '@angular/core';
-import { filter, take } from 'rxjs';
+import { take } from 'rxjs';
 import { BudgetCategory } from 'src/app/models/budgetCategory';
 
 import { LineItem, SaveLineItemPayload } from 'src/app/models/lineItem';
@@ -84,7 +84,11 @@ export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
                 this.budgetCategoryService.newlyCreatedBudgetCategoryId
                     .pipe(take(1))
                     .subscribe((id) => {
-                        this.updateBudgetCategoryId(id);
+                        if (id) {
+                            this.updateBudgetCategoryId(id);
+                        } else {
+                            this.dropBudgetCategory(false);
+                        }
                         this.isNewBudgetCategory = false;
                         this.isAddingBudgetCategory.emit(false);
                     });
@@ -118,7 +122,7 @@ export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
         }
     }
 
-    dropBudgetCategory() {
+    dropBudgetCategory(needsAnimation = true) {
         this.transactionService.clearSelectedTransactionData();
 
         const currentBudgetCategories =
@@ -129,13 +133,17 @@ export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
                     category.budgetCategoryId === this.budgetCategoryId
             );
 
-            this.handleCategoryDeleteAnimation(currentBudgetCategories);
+            if (needsAnimation) {
+                this.handleCategoryDeleteAnimation(currentBudgetCategories);
 
-            setTimeout(() => {
+                setTimeout(() => {
+                    currentBudgetCategories.splice(foundIndex, 1);
+                    this.isDeletingBudgetCategory = false;
+                    this.isAddingBudgetCategory.emit(false);
+                }, 400);
+            } else {
                 currentBudgetCategories.splice(foundIndex, 1);
-                this.isDeletingBudgetCategory = false;
-                this.isAddingBudgetCategory.emit(false);
-            }, 400);
+            }
         }
     }
 
@@ -180,12 +188,11 @@ export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
 
         this.lineItemService.saveNewLineItem(saveLineItemPayload);
         this.lineItemService.newlyAddedLineItemId
-            .pipe(
-                filter((id) => !!id),
-                take(1)
-            )
-            .subscribe(() => {
-                this.isAddingLineItem = false;
+            .pipe(take(1))
+            .subscribe((id) => {
+                if (id) {
+                    this.isAddingLineItem = false;
+                }
             });
     }
 

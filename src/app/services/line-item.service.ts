@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { BE_API_URL } from '../constants/constants';
 import { SaveLineItemPayload, UpdateLineItemPayload } from '../models/lineItem';
-import { BBSnagService } from './bb-snag.service';
 import { BudgetService } from './budget.service';
 
 @Injectable({
@@ -15,7 +14,6 @@ export class LineItemService {
 
     constructor(
         private http: HttpClient,
-        private snagDiaglogService: BBSnagService,
         private budgetService: BudgetService
     ) {}
 
@@ -25,19 +23,26 @@ export class LineItemService {
             .subscribe({
                 next: (res) => {
                     this.newlyAddedLineItemId.next(res);
+                },
+                error: (error) => {
+                    this.newlyAddedLineItemId.next('');
+                    this.budgetService.openSnagDialogAndRefresh(error);
                 }
             });
     }
 
     updateLineItem(updateLineItemPayload: UpdateLineItemPayload) {
-        this.http.put(`${this.baseUrl}`, updateLineItemPayload).subscribe();
+        this.http.put(`${this.baseUrl}`, updateLineItemPayload).subscribe({
+            error: (error) => {
+                this.budgetService.openSnagDialogAndRefresh(error);
+            }
+        });
     }
 
     deleteLineItem(lineItemId: string) {
         this.http.delete(`${this.baseUrl}/${lineItemId}`).subscribe({
             error: (error) => {
-                this.snagDiaglogService.openSnagDialog(error);
-                this.budgetService.refreshBudget();
+                this.budgetService.openSnagDialogAndRefresh(error);
             }
         });
     }

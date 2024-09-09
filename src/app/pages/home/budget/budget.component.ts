@@ -38,10 +38,14 @@ export class BudgetComponent implements OnInit, AfterViewChecked {
     ) {}
 
     ngOnInit(): void {
-        this.budgetService.getBudget(
-            this.today.getMonth() + 1,
-            this.today.getFullYear()
-        );
+        if (!this.budget()?.budgetId) {
+            this.budgetService.getBudget(
+                this.today.getMonth() + 1,
+                this.today.getFullYear()
+            );
+        } else {
+            this.budgetService.refreshBudget();
+        }
     }
 
     ngAfterViewChecked(): void {

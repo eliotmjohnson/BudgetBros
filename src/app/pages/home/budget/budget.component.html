@@ -1,6 +1,13 @@
 <header class="header">
     <div class="title-wrapper">
-        <h1 class="title">Budget</h1>
+        <span>
+            <h1 class="title">Budget</h1>
+            <mat-icon
+                (click)="budgetService.refreshBudget()"
+                class="refresh-icon"
+                fontIcon="replay"
+            />
+        </span>
         <p>Today is {{ currentDateString }}</p>
     </div>
     <span class="date-selection-container">

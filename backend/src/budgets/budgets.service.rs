@@ -37,9 +37,12 @@ pub async fn get_budget(
         LEFT JOIN 
             line_items li ON bc.id = li.budget_category_id
         LEFT JOIN
-            transactions tr ON li.id = tr.line_item_id 
+            transactions tr ON li.id = tr.line_item_id
+            AND (tr.deleted IS NULL OR tr.deleted = false)
         WHERE 
-            b.user_id = $1 AND b.month_number = $2 AND b.year = $3
+            b.user_id = $1 
+            AND b.month_number = $2 
+            AND b.year = $3
     ";
 
     sqlx::query_as::<_, BudgetRowData>(query)

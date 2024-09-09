@@ -19,10 +19,26 @@
         display: flex;
         flex-direction: column;
 
-        .title {
-            font-weight: bold;
-            font-size: 1.3rem;
-            color: $bb-primary-title-color;
+        span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+
+            .title {
+                font-weight: bold;
+                font-size: 1.3rem;
+                color: $bb-primary-title-color;
+            }
+
+            .refresh-icon {
+                cursor: pointer;
+                color: rgb(167, 167, 167);
+                transition: color 0.3s;
+
+                &:hover {
+                    color: $bb-primary-title-color;
+                }
+            }
         }
 
         p {

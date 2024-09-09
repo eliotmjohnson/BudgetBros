@@ -86,11 +86,11 @@ export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
                     .subscribe((id) => {
                         if (id) {
                             this.updateBudgetCategoryId(id);
-                            this.isNewBudgetCategory = false;
                         } else {
                             this.dropBudgetCategory(false);
-                            this.isAddingBudgetCategory.emit(false);
                         }
+                        this.isNewBudgetCategory = false;
+                        this.isAddingBudgetCategory.emit(false);
                     });
             } else {
                 // Need to add update logic next!

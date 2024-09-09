@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { BE_API_URL } from '../constants/constants';
 import { Budget } from '../models/budget';
@@ -19,10 +19,11 @@ export class BudgetService {
     baseUrl = `${BE_API_URL}/budgets`;
     budget = signal<Budget | undefined>(undefined);
     isLoading = signal(false);
-    getBudgetError = signal<unknown>(null);
+    budgetError = signal(false);
     newlyCreatedBudgetId = new Subject<string>();
 
     getBudget(monthNumber: number, year: number) {
+        this.budgetError.set(false);
         if (this.authService.userId) {
             this.isLoading.set(true);
             this.http
@@ -37,7 +38,9 @@ export class BudgetService {
                     },
                     error: (error) => {
                         this.isLoading.set(false);
-                        this.getBudgetError.set(error);
+                        this.budgetError.set(true);
+                        this.clearBudget();
+                        this.snagDialogService.openSnagDialog(error);
                     }
                 });
         }
@@ -50,9 +53,15 @@ export class BudgetService {
                     monthNumber,
                     year
                 })
-                .subscribe((budgetId) => {
-                    this.setBudgetId(budgetId);
-                    this.newlyCreatedBudgetId.next(budgetId);
+                .subscribe({
+                    next: (budgetId) => {
+                        this.setBudgetId(budgetId);
+                        this.newlyCreatedBudgetId.next(budgetId);
+                    },
+                    error: (error) => {
+                        this.newlyCreatedBudgetId.next('');
+                        this.openSnagDialogAndRefresh(error);
+                    }
                 });
         }
     }
@@ -63,7 +72,7 @@ export class BudgetService {
                 this.setBudgetId(undefined);
             },
             error: (error) => {
-                this.snagDialogService.openSnagDialog(error);
+                this.openSnagDialogAndRefresh(error);
             }
         });
     }
@@ -78,6 +87,11 @@ export class BudgetService {
         if (currentBudget) {
             this.getBudget(currentBudget.monthNumber, currentBudget.year);
         }
+    }
+
+    openSnagDialogAndRefresh(error: HttpErrorResponse) {
+        this.snagDialogService.openSnagDialog(error);
+        this.refreshBudget();
     }
 
     setBudgetId(budgetId?: string) {

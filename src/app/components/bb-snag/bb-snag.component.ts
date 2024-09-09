@@ -22,10 +22,13 @@ export class BBSnagComponent implements OnInit {
 
         if (status === 500) {
             this.errorMessage =
-                'It looks like we are having issues at the moment. Please try again later.';
+                'It looks like our servers are having issues at the moment. Please try again later.';
         } else if (status >= 400 && status < 500) {
             this.errorMessage =
-                'It looks like there is a conflict with the request. Please try again later.';
+                'It looks like there is a conflict with the request. Please try again.';
+        } else {
+            this.errorMessage =
+                'It looks like our app is having issues at the moment. Please try again later.';
         }
     }
 }

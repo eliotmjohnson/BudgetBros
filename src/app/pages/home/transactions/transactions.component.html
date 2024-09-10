@@ -14,7 +14,12 @@
                 />
             </button>
         </div>
-        <div [style]="{ display: 'flex', gap: '1rem' }">
+        <div
+            [style]="{
+                display: 'flex',
+                gap: '1rem'
+            }"
+        >
             @if (transactions().length) {
                 <button
                     mat-icon-button

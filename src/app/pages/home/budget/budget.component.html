@@ -3,8 +3,8 @@
         <span>
             <h1 class="title">Budget</h1>
             <mat-icon
-                (click)="budgetService.refreshBudget()"
-                class="refresh-icon"
+                (click)="refreshBudget()"
+                class="refresh-icon {{ isRefreshing ? 'animate-refresh' : '' }}"
                 fontIcon="replay"
             />
         </span>

@@ -6,6 +6,8 @@ export interface BudgetCategory {
     lineItems: LineItem[];
 }
 
+export type UpdateBudgetCategoryPayload = Omit<BudgetCategory, 'lineItems'>;
+
 export interface BudgetCategoryWithLineItems {
     budgetCategoryId: number;
     budgetCategoryName: string;

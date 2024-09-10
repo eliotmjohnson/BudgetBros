@@ -10,7 +10,10 @@ import {
     ViewChild
 } from '@angular/core';
 import { take } from 'rxjs';
-import { BudgetCategory } from 'src/app/models/budgetCategory';
+import {
+    BudgetCategory,
+    UpdateBudgetCategoryPayload
+} from 'src/app/models/budgetCategory';
 
 import { LineItem, SaveLineItemPayload } from 'src/app/models/lineItem';
 import { BudgetCategoryService } from 'src/app/services/budget-category.service';
@@ -40,6 +43,7 @@ export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
     isNewBudgetCategory = false;
     isDeletingBudgetCategory = false;
     hostHeight = 'auto';
+    cachedCategoryName = '';
 
     constructor(
         private transactionService: TransactionService,
@@ -70,38 +74,54 @@ export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
         this.isEditingName = true;
     }
 
-    changeTitle(submitEvent?: SubmitEvent): void {
+    updateCategoryName(submitEvent?: SubmitEvent): void {
         if (submitEvent) submitEvent.preventDefault();
         const inputValue = this.titleInput.nativeElement.value;
 
-        if (inputValue === 'Category Name' && this.isNewBudgetCategory) {
-            this.isNewBudgetCategory = false;
+        if (
+            (inputValue === 'Category Name' || !inputValue.trim()) &&
+            this.isNewBudgetCategory
+        ) {
             this.deleteBudgetCategory();
-        } else {
-            this.name = inputValue;
-            if (this.isNewBudgetCategory) {
-                this.budgetCategoryService.saveBudgetCategory(inputValue);
-                this.budgetCategoryService.newlyCreatedBudgetCategoryId
-                    .pipe(take(1))
-                    .subscribe((id) => {
-                        if (id) {
-                            this.updateBudgetCategoryId(id);
-                        } else {
-                            this.dropBudgetCategory(false);
-                        }
-                        this.isNewBudgetCategory = false;
-                        this.isAddingBudgetCategory.emit(false);
-                    });
-            } else {
-                // Need to add update logic next!
-                console.log('Updating');
-            }
+        } else if (this.isNewBudgetCategory) {
+            this.saveBudgetCategory(inputValue);
+        } else if (inputValue.trim() && inputValue !== this.name) {
+            this.updateBudgetCategory(inputValue);
         }
 
         this.isEditingName = false;
     }
 
+    saveBudgetCategory(inputValue: string) {
+        this.name = inputValue;
+        this.budgetCategoryService.saveBudgetCategory(inputValue);
+        this.budgetCategoryService.newlyCreatedBudgetCategoryId
+            .pipe(take(1))
+            .subscribe((id) => {
+                if (id) {
+                    this.updateBudgetCategoryId(id);
+                } else {
+                    this.dropBudgetCategory(false);
+                }
+                this.isNewBudgetCategory = false;
+                this.isAddingBudgetCategory.emit(false);
+            });
+    }
+
+    updateBudgetCategory(inputValue: string) {
+        this.name = inputValue;
+        const budgetCategoryUpdatePayload: UpdateBudgetCategoryPayload = {
+            budgetCategoryId: this.budgetCategoryId,
+            name: inputValue
+        };
+
+        this.budgetCategoryService.updateBudgetCategory(
+            budgetCategoryUpdatePayload
+        );
+    }
+
     deleteBudgetCategory() {
+        this.isNewBudgetCategory = false;
         if (this.budgetCategoryId) {
             this.budgetCategoryService.deleteBudgetCategory(
                 this.budgetCategoryId

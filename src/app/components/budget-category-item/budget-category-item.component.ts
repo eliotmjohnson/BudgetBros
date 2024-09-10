@@ -133,46 +133,64 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     createOrUpdateLineItem(blurInputs: boolean) {
         if (blurInputs) this.blurInputs();
 
-        if (!this.itemId()) {
-            const saveLineItemPayload: SaveLineItemPayload = {
-                name: this.lineItemInputValue.value ?? '',
-                isFund: false,
-                plannedAmount: this.plannedAmount(),
-                startingBalance: 0
-            };
-
-            this.saveNewLineItem.emit(saveLineItemPayload);
-
-            this.lineItemService.newlyAddedLineItemId
-                .pipe(
-                    filter((id) => !!id),
-                    take(1)
-                )
-                .subscribe((id) => {
-                    this.updateNewLineItemId.emit(id);
-                    this.itemId.set(id);
-                    this.isEditModeEnabled = false;
-                    this.setTransactionData();
-                });
+        if (this.isNotValidLineItemValues()) {
+            this.cancelEditing();
+        } else if (!this.itemId()) {
+            this.saveLineItem();
         } else {
-            const updateLineItemPayload: UpdateLineItemPayload = {
-                id: this.itemId(),
-                name: this.lineItemInputValue.value ?? '',
-                isFund: false,
-                plannedAmount: this.plannedAmount(),
-                startingBalance: 0
-            };
-
-            this.lineItemService.updateLineItem(updateLineItemPayload);
-            this.isEditModeEnabled = false;
-            this.setTransactionData();
+            this.updateLineItem();
         }
+    }
+
+    saveLineItem() {
+        const saveLineItemPayload: SaveLineItemPayload = {
+            name: this.lineItemInputValue.value ?? '',
+            isFund: false,
+            plannedAmount: this.plannedAmount(),
+            startingBalance: 0
+        };
+
+        this.saveNewLineItem.emit(saveLineItemPayload);
+
+        this.lineItemService.newlyAddedLineItemId
+            .pipe(
+                filter((id) => !!id),
+                take(1)
+            )
+            .subscribe((id) => {
+                this.updateNewLineItemId.emit(id);
+                this.itemId.set(id);
+                this.isEditModeEnabled = false;
+                this.setTransactionData();
+            });
+    }
+
+    updateLineItem() {
+        const updateLineItemPayload: UpdateLineItemPayload = {
+            id: this.itemId(),
+            name: this.lineItemInputValue.value ?? '',
+            isFund: false,
+            plannedAmount: this.plannedAmount(),
+            startingBalance: 0
+        };
+
+        this.lineItemService.updateLineItem(updateLineItemPayload);
+        this.isEditModeEnabled = false;
+        this.setTransactionData();
     }
 
     deleteLineItem() {
         this.lineItemService.deleteLineItem(this.itemId());
         this.transactionService.clearSelectedTransactionData();
         this.deleteSavedLineItem.emit(this.itemId());
+    }
+
+    isNotValidLineItemValues() {
+        return (
+            (!this.lineItemInputValue.value?.trim() ||
+                this.lineItemInputValue.value === this.initialLineItemTitle) &&
+            this.plannedAmount() === this.initialPlannedAmount
+        );
     }
 
     checkIfOutsideParent(e: MouseEvent, lineItemContainer: HTMLSpanElement) {

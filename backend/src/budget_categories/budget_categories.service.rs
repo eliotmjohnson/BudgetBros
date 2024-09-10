@@ -4,7 +4,7 @@ use sqlx::postgres::PgQueryResult;
 use crate::AppState;
 
 use super::budget_categories_models::{
-    BudgetCategoryWithLineItemsRow, NewBudgetCategory, NewBudgetCategoryId,
+    BudgetCategoryWithLineItemsRow, NewBudgetCategory, NewBudgetCategoryId, UpdatedBudgetCategory
 };
 
 pub async fn get_budget_categories_with_line_items(
@@ -53,6 +53,26 @@ pub async fn add_budget_category(
         .bind(new_budget_category.user_id.parse::<i64>().unwrap())
         .bind(new_budget_category.budget_id.parse::<i64>().unwrap())
         .fetch_one(&state.db)
+        .await
+}
+
+pub async fn update_budget_category(
+    state: Data<AppState>,
+    updated_budget_category: UpdatedBudgetCategory,
+) -> Result<PgQueryResult, sqlx::Error> {
+    let query = "
+        UPDATE 
+            budget_categories
+        SET 
+            name = $1
+        WHERE 
+            id = $2::int
+        ";
+
+    sqlx::query(query)
+        .bind(updated_budget_category.name)
+        .bind(updated_budget_category.budget_category_id)
+        .execute(&state.db)
         .await
 }
 

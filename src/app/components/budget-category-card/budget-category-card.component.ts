@@ -43,7 +43,6 @@ export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
     isNewBudgetCategory = false;
     isDeletingBudgetCategory = false;
     hostHeight = 'auto';
-    cachedCategoryName = '';
 
     constructor(
         private transactionService: TransactionService,

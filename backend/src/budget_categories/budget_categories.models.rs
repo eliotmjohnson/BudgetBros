@@ -39,7 +39,6 @@ pub struct BudgetCategoryWithLineItemsRow {
 
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
-
 pub struct BudgetCategoryWithLineItems {
     pub budget_category_id: i64,
     pub budget_category_name: String,

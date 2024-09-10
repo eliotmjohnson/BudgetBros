@@ -14,7 +14,9 @@ export class BBSnagService {
             data: { errorResponse: errorResponse }
         };
 
-        this.snagDialog.closeAll();
-        this.snagDialog.open(BBSnagComponent, config);
+        const isDialogCurrentlyOpen = this.snagDialog.openDialogs.length;
+        if (!isDialogCurrentlyOpen) {
+            this.snagDialog.open(BBSnagComponent, config);
+        }
     }
 }

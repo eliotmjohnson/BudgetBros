@@ -1,13 +1,13 @@
 import { LineItem, LineItemReduced } from './lineItem';
 
-export type BudgetCategory = {
+export interface BudgetCategory {
     budgetCategoryId: string;
     name: string;
     lineItems: LineItem[];
-};
+}
 
-export type BudgetCategoryWithLineItems = {
+export interface BudgetCategoryWithLineItems {
     budgetCategoryId: number;
     budgetCategoryName: string;
     lineItems: LineItemReduced[];
-};
+}

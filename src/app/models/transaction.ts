@@ -1,4 +1,4 @@
-export type Transaction = {
+export interface Transaction {
     id: string;
     title?: string;
     merchant: string;
@@ -7,7 +7,7 @@ export type Transaction = {
     date: string;
     lineItemId: string;
     deleted: boolean;
-};
+}
 
 export type NewTransaction = Omit<Transaction, 'id' | 'lineItemId'> & {
     lineItemId: string;

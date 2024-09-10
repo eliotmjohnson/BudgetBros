@@ -1,6 +1,13 @@
 <header class="header">
     <div class="title-wrapper">
-        <h1 class="title">Budget</h1>
+        <span>
+            <h1 class="title">Budget</h1>
+            <mat-icon
+                (click)="budgetService.refreshBudget()"
+                class="refresh-icon"
+                fontIcon="replay"
+            />
+        </span>
         <p>Today is {{ currentDateString }}</p>
     </div>
     <span class="date-selection-container">
@@ -56,14 +63,27 @@
             </main>
         } @else if (!budget()?.budgetCategories?.length) {
             <main class="no-budget-notice">
-                <h1>No Budget Available For This Month</h1>
+                <h1>
+                    {{
+                        budgetService.budgetError()
+                            ? "Unable to Load Budget"
+                            : "No Budget Available For This Month"
+                    }}
+                </h1>
                 <div class="add-budget-category-container">
-                    <p>Get Started</p>
-                    <mat-icon
-                        (click)="createNewBudgetCategoryPlaceholder()"
-                        class="add-button"
-                        fontIcon="add_circle"
-                    />
+                    @if (budgetService.budgetError()) {
+                        <mat-icon
+                            fontIcon="warning"
+                            class="error-icon"
+                        />
+                    } @else {
+                        <p>Get Started</p>
+                        <mat-icon
+                            (click)="createNewBudgetCategoryPlaceholder()"
+                            class="add-button"
+                            fontIcon="add_circle"
+                        />
+                    }
                 </div>
             </main>
         } @else {

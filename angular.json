@@ -7,7 +7,20 @@
             "projectType": "application",
             "schematics": {
                 "@schematics/angular:component": {
-                    "style": "scss"
+                    "style": "scss",
+                    "skipTests": true,
+                    "standalone": false
+                },
+                "@schematics/angular:directive": {
+                    "skipTests": true,
+                    "standalone": false
+                },
+                "@schematics/angular:pipe": {
+                    "skipTests": true,
+                    "standalone": false
+                },
+                "@schematics/angular:service": {
+                    "skipTests": true
                 }
             },
             "root": "",
@@ -84,26 +97,21 @@
                         "buildTarget": "BudgetBros:build"
                     }
                 },
-                "test": {
-                    "builder": "@angular-devkit/build-angular:karma",
+                "lint": {
+                    "builder": "@angular-eslint/builder:lint",
                     "options": {
-                        "polyfills": [
-                            "zone.js",
-                            "zone.js/testing"
-                        ],
-                        "tsConfig": "tsconfig.spec.json",
-                        "inlineStyleLanguage": "scss",
-                        "assets": [
-                            "src/favicon.ico",
-                            "src/assets"
-                        ],
-                        "styles": [
-                            "src/styles.scss"
-                        ],
-                        "scripts": []
+                        "lintFilePatterns": [
+                            "src/**/*.ts",
+                            "src/**/*.html"
+                        ]
                     }
                 }
             }
         }
+    },
+    "cli": {
+        "schematicCollections": [
+            "@angular-eslint/schematics"
+        ]
     }
 }

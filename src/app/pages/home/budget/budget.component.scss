@@ -19,10 +19,26 @@
         display: flex;
         flex-direction: column;
 
-        .title {
-            font-weight: bold;
-            font-size: 1.3rem;
-            color: $bb-primary-title-color;
+        span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+
+            .title {
+                font-weight: bold;
+                font-size: 1.3rem;
+                color: $bb-primary-title-color;
+            }
+
+            .refresh-icon {
+                cursor: pointer;
+                color: rgb(167, 167, 167);
+                transition: color 0.3s;
+
+                &:hover {
+                    color: $bb-primary-title-color;
+                }
+            }
         }
 
         p {
@@ -163,6 +179,14 @@
     align-items: center;
     gap: 0.5rem;
     transition: translate 0.4s;
+
+    .error-icon {
+        font-size: 3rem;
+        height: 3rem;
+        width: 3rem;
+        color: rgb(180, 180, 180);
+        translate: 0 -7.5rem;
+    }
 
     p {
         font-style: italic;

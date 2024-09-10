@@ -1,8 +1,8 @@
 import { BudgetCategory } from './budgetCategory';
 
-export type Budget = {
+export interface Budget {
     budgetId?: string;
     monthNumber: number;
     year: number;
     budgetCategories: BudgetCategory[];
-};
+}

@@ -1,14 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from './pages/home/home.component';
-import { LoginComponent } from './pages/login/login.component';
+import { MobileConstructionComponent } from './components/mobile-construction/mobile-construction.component';
 import { authGuard } from './guards/auth.guard';
 import { loginGuard } from './guards/login.guard';
-import { BudgetComponent } from './pages/home/budget/budget.component';
-import { TransactionsComponent } from './pages/home/transactions/transactions.component';
-import { GoalsComponent } from './pages/home/goals/goals.component';
 import { AccountsComponent } from './pages/home/accounts/accounts.component';
+import { BudgetComponent } from './pages/home/budget/budget.component';
+import { GoalsComponent } from './pages/home/goals/goals.component';
+import { HomeComponent } from './pages/home/home.component';
 import { SettingsComponent } from './pages/home/settings/settings.component';
+import { TransactionsComponent } from './pages/home/transactions/transactions.component';
+import { LoginComponent } from './pages/login/login.component';
 
 const routes: Routes = [
     { path: '', redirectTo: 'home/budget', pathMatch: 'full' },
@@ -46,6 +47,7 @@ const routes: Routes = [
         ]
     },
     { path: 'login', component: LoginComponent, canActivate: [loginGuard] },
+    { path: 'mobile', component: MobileConstructionComponent },
     { path: '**', redirectTo: 'home/budget' }
 ];
 

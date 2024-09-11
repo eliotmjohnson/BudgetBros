@@ -2,12 +2,11 @@ import { NgModule } from '@angular/core';
 
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideNativeDateAdapter } from '@angular/material/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AppRoutingModule } from './app-routing.module';
 
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { LayoutModule } from '@angular/cdk/layout';
 import { OverlayModule } from '@angular/cdk/overlay';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
@@ -26,8 +25,10 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AppRoutingModule } from './app-routing.module';
 
-import { ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { AuthFormComponent } from './components/auth-form/auth-form.component';
 import { BBLogoComponent } from './components/bb-logo/bb-logo.component';
@@ -40,6 +41,7 @@ import { FieldErrorComponent } from './components/field-error/field-error.compon
 import { HomeHeaderComponent } from './components/home-header/home-header.component';
 import { InlineTransactionComponent } from './components/inline-transaction/inline-transaction.component';
 import { LinkButtonComponent } from './components/link-button/link-button.component';
+import { MobileConstructionComponent } from './components/mobile-construction/mobile-construction.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { TransactionCardComponent } from './components/transaction-card/transaction-card.component';
 import { TransactionModalComponent } from './components/transaction-modal/transaction-modal.component';
@@ -77,7 +79,8 @@ import { LoginComponent } from './pages/login/login.component';
         InlineTransactionComponent,
         TransactionModalComponent,
         FieldErrorComponent,
-        BBSnagComponent
+        BBSnagComponent,
+        MobileConstructionComponent
     ],
     bootstrap: [AppComponent],
     imports: [
@@ -102,7 +105,8 @@ import { LoginComponent } from './pages/login/login.component';
         MatDialogModule,
         MatTooltipModule,
         MatSelectModule,
-        OverlayModule
+        OverlayModule,
+        LayoutModule
     ],
     providers: [
         provideHttpClient(withInterceptors([httpInterceptor])),

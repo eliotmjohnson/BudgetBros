@@ -1,21 +1,17 @@
 use std::collections::HashMap;
 
 use actix_web::{
-    delete, get, post, web::{Data, Json, Path, Query}, HttpResponse, Responder
+    delete, get, patch, post, web::{Data, Json, Path, Query}, HttpResponse, Responder
 };
 use serde::Deserialize;
 
 use crate::{
     budget_categories::{
-        budget_categories_models::BudgetCategoryWithLineItems,
-        budget_categories_services::get_budget_categories_with_line_items,
+        budget_categories_models::*,
+        budget_categories_services::*,
     },
     line_items::line_items_models::LineItemReduced,
     AppState,
-};
-
-use super::{
-    budget_categories_models::NewBudgetCategory, budget_categories_services::{add_budget_category, delete_budget_category},
 };
 
 #[derive(Deserialize)]
@@ -82,6 +78,21 @@ pub async fn add_budget_category_handler(
 
     match add_budget_category_result {
         Ok(new_budget_category) => HttpResponse::Ok().json(new_budget_category.id.to_string()),
+        Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
+    }
+}
+
+#[patch("")]
+pub async fn update_budget_category_handler(
+    state: Data<AppState>,
+    body: Json<UpdatedBudgetCategory>,
+) -> impl Responder {
+    let updated_budget_category = body.into_inner();
+
+    let update_budget_category_result = update_budget_category(state, updated_budget_category).await;
+
+    match update_budget_category_result {
+        Ok(_) => HttpResponse::Ok().json("Budget Category updated successfully"),
         Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
     }
 }

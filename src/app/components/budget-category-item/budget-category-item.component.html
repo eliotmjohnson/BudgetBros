@@ -3,13 +3,13 @@
     class="budget-item-wrapper {{
         isLineItemSelected() && 'line-item-selected'
     }}"
-    (click)="setTransactionData()"
+    (click)="setSelectedLineItem()"
 >
     <ng-content></ng-content>
     <span class="title-wrapper">
         <mat-icon
             class="fund-logo"
-            *ngIf="fund"
+            *ngIf="true"
             fontIcon="savings"
         />
         <input

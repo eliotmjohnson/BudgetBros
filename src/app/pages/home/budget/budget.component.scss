@@ -39,6 +39,16 @@
                     color: $bb-primary-title-color;
                 }
             }
+
+            .animate-refresh {
+                animation: animateRefresh 1s forwards;
+
+                @keyframes animateRefresh {
+                    100% {
+                        rotate: -360deg;
+                    }
+                }
+            }
         }
 
         p {
@@ -94,7 +104,7 @@
     .budgets {
         display: flex;
         flex-direction: column;
-        width: 65%;
+        width: 60%;
         height: 100%;
         padding-top: 2rem;
         padding-bottom: 2rem;

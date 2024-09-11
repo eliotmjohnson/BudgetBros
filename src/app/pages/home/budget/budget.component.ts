@@ -31,6 +31,7 @@ export class BudgetComponent implements OnInit, AfterViewChecked {
     isCalendarClosing = false;
     isAddingBudgetCategory = false;
     isAddCategoryButtonHidden = false;
+    isRefreshing = false;
 
     constructor(
         public transactionService: TransactionService,
@@ -38,10 +39,14 @@ export class BudgetComponent implements OnInit, AfterViewChecked {
     ) {}
 
     ngOnInit(): void {
-        this.budgetService.getBudget(
-            this.today.getMonth() + 1,
-            this.today.getFullYear()
-        );
+        if (!this.budget()?.budgetId) {
+            this.budgetService.getBudget(
+                this.today.getMonth() + 1,
+                this.today.getFullYear()
+            );
+        } else {
+            this.budgetService.refreshBudget();
+        }
     }
 
     ngAfterViewChecked(): void {
@@ -114,6 +119,14 @@ export class BudgetComponent implements OnInit, AfterViewChecked {
         this.isAddingBudgetCategory = e;
         if (this.isAddCategoryButtonHidden) {
             this.isAddCategoryButtonHidden = false;
+        }
+    }
+
+    refreshBudget() {
+        if (!this.isRefreshing) {
+            this.isRefreshing = true;
+            this.budgetService.refreshBudget();
+            setTimeout(() => (this.isRefreshing = false), 1000);
         }
     }
 }

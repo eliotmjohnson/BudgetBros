@@ -1,7 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { BE_API_URL } from '../constants/constants';
-import { BudgetCategoryWithLineItems } from '../models/budgetCategory';
+import {
+    BudgetCategoryWithLineItems,
+    UpdateBudgetCategoryPayload
+} from '../models/budgetCategory';
 import { AuthService } from './auth.service';
 import { BudgetService } from './budget.service';
 import { Subject, take } from 'rxjs';
@@ -97,5 +100,17 @@ export class BudgetCategoryService {
                 this.budgetService.openSnagDialogAndRefresh(error);
             }
         });
+    }
+
+    updateBudgetCategory(
+        updateBudgetCategoryPayload: UpdateBudgetCategoryPayload
+    ) {
+        this.http
+            .patch(`${this.baseUrl}`, updateBudgetCategoryPayload)
+            .subscribe({
+                error: (error) => {
+                    this.budgetService.openSnagDialogAndRefresh(error);
+                }
+            });
     }
 }

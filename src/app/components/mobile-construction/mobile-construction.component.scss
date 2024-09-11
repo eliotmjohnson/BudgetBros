@@ -1,0 +1,39 @@
+@import "bb-core";
+
+:host {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    animation: onLoad 1s forwards;
+
+    h1 {
+        margin: 0;
+        font-style: italic;
+        text-align: center;
+        color: $bb-secondary-title-color;
+    }
+
+    @keyframes onLoad {
+        0% {
+            opacity: 0;
+            translate: 0 10rem;
+        }
+
+        100% {
+            translate: 0 0;
+            opacity: 1;
+        }
+    }
+}

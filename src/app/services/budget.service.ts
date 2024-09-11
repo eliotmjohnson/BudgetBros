@@ -1,11 +1,11 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Injectable, inject, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
+import { Subject } from 'rxjs';
 import { BE_API_URL } from '../constants/constants';
 import { Budget } from '../models/budget';
 import { AuthService } from './auth.service';
-import { TransactionService } from './transaction.service';
-import { Subject } from 'rxjs';
 import { BBSnagService } from './bb-snag.service';
+import { TransactionService } from './transaction.service';
 
 @Injectable({
     providedIn: 'root'
@@ -24,7 +24,7 @@ export class BudgetService {
 
     getBudget(monthNumber: number, year: number) {
         this.budgetError.set(false);
-        if (this.authService.userId) {
+        if (this.authService.userId && !this.isLoading()) {
             this.isLoading.set(true);
             this.http
                 .get<Budget>(

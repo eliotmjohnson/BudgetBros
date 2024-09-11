@@ -12,7 +12,7 @@
     position: relative;
 
     h1 {
-        width: 60%;
+        width: 50%;
         font-size: 1.2rem;
         font-weight: 600;
         opacity: 0.6;
@@ -21,7 +21,7 @@
     }
 
     p {
-        width: 20%;
+        width: 22%;
         margin: 0;
         opacity: 0.4;
         text-align: center;
@@ -31,7 +31,7 @@
         display: flex;
         align-items: center;
         height: 2rem;
-        width: 60%;
+        width: 50%;
 
         input {
             outline: none;
@@ -93,12 +93,13 @@
 
 .delete-icon {
     position: absolute;
-    translate: 13.5rem;
+    translate: 13.15rem;
     font-size: 1.5rem;
     height: 1.5rem;
     width: 1.5rem;
     cursor: pointer;
     color: $bb-error-main;
+    z-index: 1;
 }
 
 :host(.deleting-category) {

@@ -13,13 +13,13 @@
         </h1>
         <form
             class="title-form"
-            (submit)="changeTitle($event)"
+            (submit)="updateCategoryName($event)"
             *ngIf="isEditingName"
         >
             <input
                 type="text"
                 [defaultValue]="name"
-                (blur)="changeTitle()"
+                (blur)="updateCategoryName()"
                 #titleInput
             />
             @if (budgetCategoryId) {
@@ -53,6 +53,7 @@
             (deleteSavedLineItem)="deleteSavedLineItem($event)"
             cdkDropListLockAxis="y"
             cdkDragBoundary=".budget-items-wrapper"
+            [cdkDragDisabled]="isAddingLineItem"
             cdkDrag
         >
             <mat-icon

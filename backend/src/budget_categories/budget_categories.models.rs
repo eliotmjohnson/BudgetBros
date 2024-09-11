@@ -11,6 +11,13 @@ pub struct BudgetCategory {
 
 #[derive(Serialize, Deserialize, FromRow, Debug)]
 #[serde(rename_all = "camelCase")]
+pub struct UpdatedBudgetCategory {
+    pub budget_category_id: String,
+    pub name: String,
+}
+
+#[derive(Serialize, Deserialize, FromRow, Debug)]
+#[serde(rename_all = "camelCase")]
 pub struct NewBudgetCategory {
     pub name: String,
     pub user_id: String,
@@ -32,7 +39,6 @@ pub struct BudgetCategoryWithLineItemsRow {
 
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
-
 pub struct BudgetCategoryWithLineItems {
     pub budget_category_id: i64,
     pub budget_category_name: String,

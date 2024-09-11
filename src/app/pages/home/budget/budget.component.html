@@ -97,6 +97,7 @@
                 (hideCategoryButton)="isAddCategoryButtonHidden = true"
                 cdkDrag
                 cdkDragLockAxis="y"
+                [cdkDragDisabled]="isAddingBudgetCategory"
                 cdkDragBoundary=".budgets"
             >
                 <mat-icon

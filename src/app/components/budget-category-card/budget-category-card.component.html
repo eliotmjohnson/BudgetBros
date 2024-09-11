@@ -53,6 +53,7 @@
             (deleteSavedLineItem)="deleteSavedLineItem($event)"
             cdkDropListLockAxis="y"
             cdkDragBoundary=".budget-items-wrapper"
+            [cdkDragDisabled]="isAddingLineItem"
             cdkDrag
         >
             <mat-icon

@@ -90,6 +90,12 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
             : this.startingBalance + this.plannedAmount();
     }
 
+    setSelectedLineItem() {
+        if (!this.isLineItemSelected()) {
+            this.setTransactionData();
+        }
+    }
+
     setTransactionData() {
         this.transactionService.currentSelectedLineItemBalance.set(
             this.remainingAmount()

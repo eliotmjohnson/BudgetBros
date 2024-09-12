@@ -1,2 +1,0 @@
-ALTER TABLE line_items
-DROP COLUMN id;

@@ -7,7 +7,7 @@ use super::budgets_models::{BudgetId, BudgetRowData};
 
 pub async fn get_budget(
     state: Data<AppState>,
-    user_id: i64,
+    user_id: String,
     month_number: i64,
     year: i64,
 ) -> Result<Vec<BudgetRowData>, sqlx::Error> {
@@ -55,7 +55,7 @@ pub async fn get_budget(
 
 pub async fn add_budget(
     state: Data<AppState>,
-    user_id: i64,
+    user_id: String,
     month_number: i64,
     year: i64,
 ) -> Result<BudgetId, sqlx::Error> {
@@ -80,7 +80,7 @@ pub async fn delete_budget(
         DELETE FROM 
             budgets
         WHERE 
-            id = $1::int
+            id = $1
         ";
 
     sqlx::query(query)

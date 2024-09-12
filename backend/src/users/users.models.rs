@@ -13,7 +13,7 @@ pub struct NewUser {
 #[derive(Serialize, FromRow, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct User {
-    pub id: i64,
+    pub id: String,
     pub first_name: String,
     pub last_name: String,
     pub email: String,
@@ -21,7 +21,7 @@ pub struct User {
 
 #[derive(Serialize, FromRow)]
 pub struct AuthUser {
-    pub id: i64,
+    pub id: String,
     pub email: String,
     pub password: String,
 }

@@ -22,18 +22,18 @@ pub struct NewBudget {
 #[derive(Serialize, FromRow, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct BudgetRowData {
-    pub budget_id: i64,
-    pub user_id: i64,
+    pub budget_id: String,
+    pub user_id: String,
     pub month_number: i64,
     pub year: i64,
-    pub budget_category_id: Option<i64>,
+    pub budget_category_id: Option<String>,
     pub budget_category_name: Option<String>,
-    pub line_item_id: Option<i64>,
+    pub line_item_id: Option<String>,
     pub line_item_name: Option<String>,
     pub is_fund: Option<bool>,
     pub planned_amount: Option<f64>,
     pub starting_balance: Option<f64>,
-    pub transaction_id: Option<i64>,
+    pub transaction_id: Option<String>,
     pub title: Option<String>,
     pub merchant: Option<String>,
     pub amount: Option<f64>,
@@ -44,7 +44,7 @@ pub struct BudgetRowData {
 #[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct TransactionData {
-    pub transaction_id: i64,
+    pub transaction_id: String,
     pub title: String,
     pub merchant: String,
     pub amount: f64,
@@ -66,7 +66,7 @@ pub struct LineItemData {
 pub struct BudgetCategoryDataMap {
     pub budget_category_id: String,
     pub name: String,
-    pub budget_line_items: HashMap<i64, LineItemData>,
+    pub budget_line_items: HashMap<String, LineItemData>,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -88,5 +88,5 @@ pub struct BudgetResponseData {
 
 #[derive(Serialize, Deserialize, FromRow)]
 pub struct BudgetId {
-    pub id: i64,
+    pub id: String,
 }

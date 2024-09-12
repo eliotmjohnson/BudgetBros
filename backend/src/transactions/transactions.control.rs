@@ -34,7 +34,7 @@ use super::transactions_services::{
 #[get("/{line_item_id}")]
 pub async fn get_all_line_item_transactions_handler(
     state: Data<AppState>,
-    params: Path<i64>,
+    params: Path<String>,
 ) -> impl Responder {
     let line_item_id = params.into_inner();
     let transactions_result = get_line_item_transactions(state, line_item_id).await;
@@ -57,7 +57,7 @@ pub struct QueryParams {
 #[get("/{user_id}")]
 pub async fn get_all_transactions_between_dates_handler(
     state: Data<AppState>,
-    params: Path<i64>,
+    params: Path<String>,
     query: Query<QueryParams>
 ) -> impl Responder {
     let user_id = params.into_inner();
@@ -76,8 +76,8 @@ pub async fn get_all_transactions_between_dates_handler(
             let transactions_response: Vec<IsolatedTransactionResponse> = transactions
                 .into_iter()
                 .map(|transaction| IsolatedTransactionResponse {
-                    line_item_id: transaction.line_item_id.to_string(),
-                    id: transaction.id.to_string(),
+                    line_item_id: transaction.line_item_id,
+                    id: transaction.id,
                     title: transaction.title,
                     amount: transaction.amount,
                     notes: transaction.notes,
@@ -109,8 +109,8 @@ pub async fn add_transaction_handler(
     match add_transaction_result {
         Ok(transaction) => {
             let newly_added_transaction = IsolatedTransactionResponse {
-                line_item_id: transaction.line_item_id.to_string(),
-                id: transaction.id.to_string(),
+                line_item_id: transaction.line_item_id,
+                id: transaction.id,
                 title: transaction.title,
                 amount: transaction.amount,
                 notes: transaction.notes,
@@ -149,7 +149,7 @@ pub async fn update_transaction_handler(
 #[delete("/soft/{transaction_id}")]
 pub async fn soft_delete_transaction_handler(
     state: Data<AppState>,
-    params: Path<i64>,
+    params: Path<String>,
 ) -> impl Responder {
     let transaction_id = params.into_inner();
 
@@ -167,7 +167,7 @@ pub async fn soft_delete_transaction_handler(
 #[delete("/{transaction_id}")]
 pub async fn delete_transaction_handler(
     state: Data<AppState>,
-    params: Path<i64>,
+    params: Path<String>,
 ) -> impl Responder {
     let transaction_id = params.into_inner();
 

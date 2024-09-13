@@ -125,6 +125,9 @@ export class AuthFormComponent {
             if (error.status === 409) {
                 this.errorMessage =
                     'User already exists. Please try another email.';
+            } else {
+                this.errorMessage =
+                    'Looks like our app is having issues. Please try again later.';
             }
             this.isRegisterError.set(true);
         } else {

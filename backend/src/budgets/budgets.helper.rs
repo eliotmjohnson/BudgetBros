@@ -6,14 +6,14 @@ use super::budgets_models::{
 use std::collections::HashMap;
 
 pub fn get_compiled_budget_data(rows: Vec<BudgetRowData>) -> Vec<BudgetCategoryDataConverted> {
-    let mut budget_categories_compiled: HashMap<i64, BudgetCategoryDataMap> = HashMap::new();
+    let mut budget_categories_compiled: HashMap<String, BudgetCategoryDataMap> = HashMap::new();
 
     for row in rows {
         if let Some(budget_category_id) = row.budget_category_id {
             let budget_category = budget_categories_compiled
-                .entry(budget_category_id)
+                .entry(budget_category_id.clone())
                 .or_insert_with(|| BudgetCategoryDataMap {
-                    budget_category_id: budget_category_id.to_string(),
+                    budget_category_id,
                     name: row.budget_category_name.unwrap_or_default(),
                     budget_line_items: HashMap::new(),
                 });
@@ -21,9 +21,9 @@ pub fn get_compiled_budget_data(rows: Vec<BudgetRowData>) -> Vec<BudgetCategoryD
             if let Some(line_item_id) = row.line_item_id {
                 let line_item = budget_category
                     .budget_line_items
-                    .entry(line_item_id)
+                    .entry(line_item_id.clone())
                     .or_insert_with(|| LineItemData {
-                        line_item_id: line_item_id.to_string(),
+                        line_item_id,
                         name: row.line_item_name.unwrap_or_default(),
                         is_fund: row.is_fund.unwrap_or_default(),
                         starting_balance: row.starting_balance.unwrap_or_default(),

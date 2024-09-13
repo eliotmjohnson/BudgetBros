@@ -10,7 +10,7 @@ pub async fn get_all_users(state: Data<AppState>) -> Result<Vec<User>, sqlx::Err
         .await
 }
 
-pub async fn get_user_by_id(state: Data<AppState>, id: i64) -> Result<User, sqlx::Error> {
+pub async fn get_user_by_id(state: Data<AppState>, id: String) -> Result<User, sqlx::Error> {
     sqlx::query_as::<_, User>("SELECT * FROM users WHERE id = $1")
         .bind(id)
         .fetch_one(&state.db)
@@ -26,7 +26,7 @@ pub async fn get_auth_user_by_email(
         FROM users 
         WHERE email = $1",
     )
-    .bind(username.to_string())
+    .bind(username)
     .fetch_one(&state.db)
     .await
 }

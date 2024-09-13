@@ -36,7 +36,7 @@ async fn session_refresh(state: Data<AppState>, body: Json<SessionData>) -> impl
 
             match email {
                 Some(email) => HttpResponse::Ok().json(LoginResponse {
-                    id: user_id.to_string(),
+                    id: user_id,
                     email,
                     token: token_str,
                 }),
@@ -45,7 +45,7 @@ async fn session_refresh(state: Data<AppState>, body: Json<SessionData>) -> impl
 
                     match found_user {
                         Ok(user) => HttpResponse::Ok().json(LoginResponse {
-                            id: user.id.to_string(),
+                            id: user.id,
                             email: user.email,
                             token: token_str,
                         }),
@@ -111,11 +111,11 @@ async fn login_handler(state: Data<AppState>, credentials: BasicAuth) -> impl Re
                         .unwrap();
 
                     if is_valid {
-                        let claims = TokenClaims { id: user.id };
+                        let claims = TokenClaims { id: user.id.clone() };
                         let token_str = claims.sign_with_key(&jwt_secret).unwrap();
 
                         HttpResponse::Ok().json(LoginResponse {
-                            id: user.id.to_string(),
+                            id: user.id.clone(),
                             email: user.email,
                             token: token_str,
                         })

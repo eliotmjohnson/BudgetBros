@@ -17,13 +17,13 @@ pub struct Transaction {
 
 #[derive(Serialize, Deserialize, FromRow, Debug)]
 pub struct IsolatedTransaction {
-    pub id: i64,
+    pub id: String,
     pub title: String,
     pub merchant: String,
     pub amount: f64,
     pub notes: String,
     pub date: DateTime<Local>,
-    pub line_item_id: i64,
+    pub line_item_id: String,
     pub budget_category_name: String,
     pub deleted: bool
 }

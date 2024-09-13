@@ -20,7 +20,7 @@ pub struct QueryParams {
 #[get("/{user_id}")]
 async fn get_budget_data_handler(
     state: Data<AppState>,
-    params: Path<i64>,
+    params: Path<String>,
     query: Query<QueryParams>,
 ) -> impl Responder {
     let user_id = params.into_inner();
@@ -47,7 +47,7 @@ async fn get_budget_data_handler(
                 _ => {
                     let is_new_budget = rows[0].budget_category_id.is_none();
                     HttpResponse::Ok().json(BudgetResponseData {
-                        budget_id: Some(rows[0].budget_id.to_string()),
+                        budget_id: Some(rows[0].budget_id.clone()),
                         month_number: query_params.month_number,
                         year: query_params.year,
                         budget_categories: if is_new_budget {
@@ -66,7 +66,7 @@ async fn get_budget_data_handler(
 #[post("/{user_id}")]
 pub async fn add_budget_handler(
     state: Data<AppState>,
-    params: Path<i64>,
+    params: Path<String>,
     body: Json<NewBudget>,
 ) -> impl Responder {
     let user_id = params.into_inner();
@@ -75,7 +75,7 @@ pub async fn add_budget_handler(
     let add_budget_result = add_budget(state.clone(), user_id, body.month_number, body.year).await;
 
     match add_budget_result {
-        Ok(budget_id) => HttpResponse::Ok().json(budget_id.id.to_string()),
+        Ok(budget_id) => HttpResponse::Ok().json(budget_id.id),
         Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
     }
 }

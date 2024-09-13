@@ -17,7 +17,7 @@ pub async fn add_line_item(
         .bind(new_line_item.is_fund)
         .bind(new_line_item.planned_amount)
         .bind(new_line_item.starting_balance)
-        .bind(new_line_item.budget_category_id.parse::<i64>().unwrap())
+        .bind(new_line_item.budget_category_id)
         .fetch_one(&state.db)
         .await
 }
@@ -35,7 +35,7 @@ pub async fn update_line_item(
             planned_amount = $3, 
             starting_balance = $4 
         WHERE 
-            id = $5::int
+            id = $5
         ";
 
     sqlx::query(query)
@@ -56,7 +56,7 @@ pub async fn delete_line_item(
         DELETE FROM 
             line_items
         WHERE 
-            id = $1::int
+            id = $1
         ";
 
     sqlx::query(query)

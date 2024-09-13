@@ -4,7 +4,7 @@ use sqlx::{self, FromRow};
 #[derive(Serialize, Deserialize, FromRow, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct LineItem {
-    pub id: i64,
+    pub id: String,
     pub name: String,
     pub is_fund: bool,
     pub planned_amount: f64,

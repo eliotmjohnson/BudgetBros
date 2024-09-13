@@ -23,7 +23,7 @@ pub struct QueryParams {
 #[get("/{user_id}")]
 async fn get_all_budget_categories_with_line_items_handler(
     state: Data<AppState>,
-    params: Path<i64>,
+    params: Path<String>,
     query: Query<QueryParams>,
 ) -> impl Responder {
     let user_id = params.into_inner();
@@ -39,11 +39,11 @@ async fn get_all_budget_categories_with_line_items_handler(
 
     match budget_categories_result {
         Ok(budget_categories_rows) => {
-            let mut categories_map: HashMap<i64, BudgetCategoryWithLineItems> = HashMap::new();
+            let mut categories_map: HashMap<String, BudgetCategoryWithLineItems> = HashMap::new();
 
             for row in budget_categories_rows {
                 categories_map
-                    .entry(row.budget_category_id)
+                    .entry(row.budget_category_id.clone())
                     .or_insert_with(|| BudgetCategoryWithLineItems {
                         budget_category_id: row.budget_category_id,
                         budget_category_name: row.budget_category_name.clone(),
@@ -51,7 +51,7 @@ async fn get_all_budget_categories_with_line_items_handler(
                     })
                     .line_items
                     .push(LineItemReduced {
-                        line_item_id: row.line_item_id.to_string(),
+                        line_item_id: row.line_item_id,
                         line_item_name: row.line_item_name,
                     });
             }
@@ -77,7 +77,7 @@ pub async fn add_budget_category_handler(
     let add_budget_category_result = add_budget_category(state, new_budget_category).await;
 
     match add_budget_category_result {
-        Ok(new_budget_category) => HttpResponse::Ok().json(new_budget_category.id.to_string()),
+        Ok(new_budget_category) => HttpResponse::Ok().json(new_budget_category.id),
         Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
     }
 }

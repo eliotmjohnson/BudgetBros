@@ -17,7 +17,7 @@ pub async fn add_line_item_handler(
     let add_line_item_result = add_line_item(state, new_line_item).await;
 
     match add_line_item_result {
-        Ok(new_line_item) => HttpResponse::Ok().json(new_line_item.id.to_string()),
+        Ok(new_line_item) => HttpResponse::Ok().json(new_line_item.id),
         Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
     }
 }

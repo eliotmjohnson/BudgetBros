@@ -41,7 +41,7 @@
             font-weight: 500;
             color: rgb(76, 76, 76);
             padding: 0.3rem;
-            translate: -0.36rem -0.02rem;
+            translate: -0.36rem -0.04rem;
             border: 1px solid rgb(206, 206, 206);
             border-radius: 0.4rem;
         }
@@ -51,7 +51,7 @@
 .budget-items-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
+    gap: 0.25rem;
 }
 
 .add-item-button {

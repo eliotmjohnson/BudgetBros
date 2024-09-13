@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { User, UserLoginResponse } from 'src/app/models/user';
@@ -18,16 +19,20 @@ export class AuthFormComponent {
     @Output() emitFlipCard = new EventEmitter();
 
     loginForm = this.formBuilder.group({
-        username: ['', Validators.required],
+        username: ['', [Validators.email, Validators.required]],
         password: ['', Validators.required]
     });
 
     registerForm = this.formBuilder.group({
-        firstName: ['', Validators.required],
-        lastName: ['', Validators.required],
-        email: ['', Validators.required],
-        password: ['', Validators.required]
+        firstName: ['', [Validators.required, Validators.pattern(/^\S*$/)]],
+        lastName: ['', [Validators.required, Validators.pattern(/^\S*$/)]],
+        email: ['', [Validators.email, Validators.required]],
+        password: ['', [Validators.required, Validators.pattern(/^\S*$/)]]
     });
+
+    isLoginError = signal(false);
+    isRegisterError = signal(false);
+    errorMessage = '';
 
     get isRegisterForm() {
         return this.register
@@ -56,8 +61,10 @@ export class AuthFormComponent {
     flipCard() {
         if (this.isRegistering) {
             this.registerForm.reset();
+            this.isRegisterError.set(false);
         } else {
             this.loginForm.reset();
+            this.isLoginError.set(false);
         }
 
         this.emitFlipCard.emit();
@@ -67,21 +74,32 @@ export class AuthFormComponent {
         e.preventDefault();
 
         if (this.isRegistering) {
+            this.isRegisterError.set(false);
             const newUser = this.registerForm.value;
 
-            this.authService
-                .register(newUser as User)
-                .subscribe((createdUser) => {
+            this.authService.register(newUser as User).subscribe({
+                next: (createdUser) => {
                     this.authService
                         .login(createdUser.email, newUser.password!)
-                        .subscribe((loginRes) => this.handleLogin(loginRes));
-                });
+                        .subscribe({
+                            next: (loginRes) => this.handleLogin(loginRes),
+                            error: (error) => this.handleError(error)
+                        });
+                },
+                error: (error) => {
+                    this.handleError(error);
+                }
+            });
         } else {
+            this.isLoginError.set(false);
             const loginCreds = this.loginForm.value;
 
             this.authService
                 .login(loginCreds.username!, loginCreds.password!)
-                .subscribe((loginRes) => this.handleLogin(loginRes));
+                .subscribe({
+                    next: (loginRes) => this.handleLogin(loginRes),
+                    error: (error) => this.handleError(error)
+                });
         }
     }
 
@@ -99,5 +117,25 @@ export class AuthFormComponent {
         );
 
         this.router.navigateByUrl('/home');
+    }
+
+    handleError(error: HttpErrorResponse) {
+        this.authService.isSubmitting = false;
+        if (this.isRegistering) {
+            if (error.status === 409) {
+                this.errorMessage =
+                    'User already exists. Please try another email.';
+            }
+            this.isRegisterError.set(true);
+        } else {
+            if (error.status === 401) {
+                this.errorMessage =
+                    'Email or password is incorrect. Please try again.';
+            } else {
+                this.errorMessage =
+                    'Looks like our app is having issues. Please try again later.';
+            }
+            this.isLoginError.set(true);
+        }
     }
 }

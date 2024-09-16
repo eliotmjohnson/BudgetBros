@@ -28,6 +28,7 @@ import { TransactionService } from 'src/app/services/transaction.service';
     host: {
         '[class.add-animation]': 'isNewBudgetCategory',
         '[class.deleting-category]': 'isDeletingBudgetCategory',
+        '[style.min-height]': 'hostHeight',
         '[style.height]': 'hostHeight'
     }
 })

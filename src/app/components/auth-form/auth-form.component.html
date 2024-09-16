@@ -4,21 +4,48 @@
         (submit)="loginOrRegister($event)"
         [formGroup]="register ? registerForm : loginForm"
     >
-        <BBLogo class="login-logo" translate="-0.35rem .05rem" />
-        <h1 class="title">{{ register ? "Register" : "Login" }}</h1>
+        <BBLogo
+            class="login-logo"
+            translate="-0.35rem .05rem"
+        />
+        @if (!isRegisterError() && !isLoginError()) {
+            <h1 class="title">{{ register ? "Register" : "Login" }}</h1>
+        } @else {
+            <span class="auth-error-alert">{{ errorMessage }}</span>
+        }
         <ng-container *ngIf="register">
             <mat-form-field appearance="outline">
                 <mat-label class="login-label">First Name</mat-label>
-                <input type="text" matInput formControlName="firstName" />
-                <mat-error *ngIf="registerForm.controls.firstName.errors">
-                    First Name is required
+                <input
+                    type="text"
+                    matInput
+                    formControlName="firstName"
+                />
+                <mat-error
+                    *ngIf="registerForm.controls.firstName.errors as errors"
+                >
+                    {{
+                        errors["pattern"]
+                            ? "No spaces please"
+                            : "First name is required"
+                    }}
                 </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
                 <mat-label class="login-label">Last Name</mat-label>
-                <input type="text" matInput formControlName="lastName" />
-                <mat-error *ngIf="registerForm.controls.lastName.errors">
-                    Last Name is required
+                <input
+                    type="text"
+                    matInput
+                    formControlName="lastName"
+                />
+                <mat-error
+                    *ngIf="registerForm.controls.lastName.errors as errors"
+                >
+                    {{
+                        errors["pattern"]
+                            ? "No spaces please"
+                            : "Last name is required"
+                    }}
                 </mat-error>
             </mat-form-field>
         </ng-container>
@@ -44,14 +71,22 @@
         </mat-form-field>
         <mat-form-field appearance="outline">
             <mat-label class="login-label">Password</mat-label>
-            <input type="password" matInput formControlName="password" />
+            <input
+                type="password"
+                matInput
+                formControlName="password"
+            />
             <mat-error
                 *ngIf="
                     (register ? registerForm : loginForm).controls.password
-                        .errors
+                        .errors as errors
                 "
             >
-                Password is required
+                {{
+                    errors["pattern"]
+                        ? "No spaces please"
+                        : "Password is required"
+                }}
             </mat-error>
         </mat-form-field>
         <button
@@ -74,7 +109,10 @@
     >
         {{ register ? "Login" : "Register" }}
     </button>
-    <mat-icon class="logo-overlay" fontIcon="attach_money" />
+    <mat-icon
+        class="logo-overlay"
+        fontIcon="attach_money"
+    />
 </section>
 
 <ng-template #spinner>

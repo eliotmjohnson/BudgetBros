@@ -109,8 +109,14 @@
         padding-top: 2rem;
         padding-bottom: 2rem;
         padding-right: 0.6rem;
-        scrollbar-width: thin;
         overflow-y: auto;
+        overflow-x: hidden;
+
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        &::-webkit-scrollbar {
+            display: none;
+        }
     }
 }
 

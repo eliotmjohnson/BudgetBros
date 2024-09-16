@@ -72,12 +72,21 @@ async fn register_user_handler(state: Data<AppState>, body: Json<NewUser>) -> im
 
     println!("password_hash: {}", password_hash);
 
-    let create_user_result = create_user(state, new_user, password_hash).await;
+    let found_user = get_auth_user_by_email(state.clone(), &new_user.email).await;
 
-    match create_user_result {
-        Ok(created_user) => HttpResponse::Ok().json(created_user),
-        Err(e) => HttpResponse::InternalServerError().json(format!("{:?}", e)),
+    match found_user {
+        Ok(_) => HttpResponse::Conflict().json("User already exists"),
+        _ => {
+            let create_user_result = create_user(state, new_user, password_hash).await;
+
+            match create_user_result {
+                Ok(created_user) => HttpResponse::Ok().json(created_user),
+                Err(e) => HttpResponse::InternalServerError().json(format!("{:?}", e)),
+            }
+        }
     }
+
+    
 }
 
 #[get("/login")]
@@ -123,7 +132,7 @@ async fn login_handler(state: Data<AppState>, credentials: BasicAuth) -> impl Re
                         HttpResponse::Unauthorized().json("Incorrect password!")
                     }
                 }
-                Err(e) => HttpResponse::InternalServerError().json(format!(
+                Err(e) => HttpResponse::Unauthorized().json(format!(
                     "Incorrect login credentials or error logging in - {:?}",
                     e
                 )),

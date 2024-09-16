@@ -16,19 +16,22 @@
             (submit)="updateCategoryName($event)"
             *ngIf="isEditingName"
         >
-            <input
-                type="text"
-                [defaultValue]="name"
-                (blur)="updateCategoryName()"
-                #titleInput
-            />
-            @if (budgetCategoryId) {
-                <mat-icon
-                    class="delete-icon"
-                    (mousedown)="deleteBudgetCategory()"
-                    fontIcon="delete"
-                ></mat-icon>
-            }
+            <span>
+                <input
+                    class="category-name-input"
+                    type="text"
+                    [defaultValue]="name"
+                    (blur)="updateCategoryName()"
+                    #titleInput
+                />
+                @if (budgetCategoryId) {
+                    <mat-icon
+                        class="delete-icon"
+                        (mousedown)="deleteBudgetCategory()"
+                        fontIcon="delete"
+                    ></mat-icon>
+                }
+            </span>
         </form>
         <p>Planned</p>
         <p>Remaining</p>

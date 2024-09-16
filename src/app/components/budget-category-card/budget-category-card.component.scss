@@ -33,17 +33,24 @@
         height: 2rem;
         width: 53%;
 
-        input {
-            outline: none;
-            height: 2rem;
-            font-family: inherit;
-            font-size: 1.2rem;
-            font-weight: 500;
-            color: rgb(76, 76, 76);
-            padding: 0.3rem;
-            translate: -0.36rem -0.02rem;
-            border: 1px solid rgb(206, 206, 206);
-            border-radius: 0.4rem;
+        span {
+            display: flex;
+            align-items: center;
+            width: max-content;
+            position: relative;
+
+            .category-name-input {
+                outline: none;
+                height: 2rem;
+                font-family: inherit;
+                font-size: 1.2rem;
+                font-weight: 500;
+                color: rgb(76, 76, 76);
+                padding: 0.3rem;
+                translate: -0.36rem -0.04rem;
+                border: 1px solid rgb(206, 206, 206);
+                border-radius: 0.4rem;
+            }
         }
     }
 }
@@ -51,7 +58,7 @@
 .budget-items-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
+    gap: 0.25rem;
 }
 
 .add-item-button {
@@ -93,7 +100,7 @@
 
 .delete-icon {
     position: absolute;
-    translate: 13.15rem;
+    right: -1.5rem;
     font-size: 1.5rem;
     height: 1.5rem;
     width: 1.5rem;
@@ -103,6 +110,7 @@
 }
 
 :host(.deleting-category) {
+    overflow-y: hidden;
     animation: deleteAnimation 0.4s forwards;
 }
 
@@ -124,16 +132,10 @@
 }
 
 @keyframes deleteAnimation {
-    0% {
-        z-index: 1;
-    }
-
     100% {
-        z-index: 1;
-        translate: 0 5rem;
-        rotate: 8deg;
         opacity: 0;
         height: 0px;
+        min-height: 0px;
         margin-bottom: 0rem;
     }
 }

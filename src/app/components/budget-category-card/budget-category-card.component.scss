@@ -74,9 +74,6 @@
 .drag-handle {
     color: rgb(159, 159, 159);
     cursor: grab;
-    position: absolute;
-    top: 0.75rem;
-    left: -1.65rem;
     z-index: 1;
 }
 
@@ -156,11 +153,6 @@
                 }
             }
         }
-    }
-
-    :host(.add-animation) {
-        opacity: 1;
-        animation: none;
     }
 
     .delete-icon {

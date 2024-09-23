@@ -30,7 +30,9 @@ import { TransactionService } from 'src/app/services/transaction.service';
         '[class.add-animation]': 'isNewBudgetCategory',
         '[class.deleting-category]': 'isDeletingBudgetCategory',
         '[style.min-height]': 'hostHeight',
-        '[style.height]': 'hostHeight'
+        '[style.height]': 'hostHeight',
+        '[style.translate.rem]':
+            'this.mobileModalService.isMobileDevice() && isNewBudgetCategory ? 50 : 0'
     }
 })
 export class BudgetCategoryCardComponent implements OnInit, AfterViewChecked {
@@ -76,6 +78,13 @@ export class BudgetCategoryCardComponent implements OnInit, AfterViewChecked {
                     !this.isNewBudgetCategory)
             ) {
                 this.focusTitleInput();
+
+                if (
+                    this.budgetService.budget()!.budgetCategories.length > 1 &&
+                    this.mobileModalService.isMobileDevice()
+                ) {
+                    this.centerNewCategory();
+                }
             }
         }
     }
@@ -270,5 +279,14 @@ export class BudgetCategoryCardComponent implements OnInit, AfterViewChecked {
         } else {
             this.isTitleNameHovered = true;
         }
+    }
+
+    centerNewCategory() {
+        const categoryLocation =
+            this.titleInput.nativeElement.getBoundingClientRect();
+        window.scrollTo({
+            top: categoryLocation.top - 275,
+            behavior: 'smooth'
+        });
     }
 }

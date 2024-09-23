@@ -10,7 +10,7 @@
 
 :host(.open-budget-transactions-modal) {
     display: initial;
-    animation: slideIn 0.6s cubic-bezier(0.26, 1, 0.26, 1) forwards;
+    animation: slideIn 0.6s cubic-bezier(0.29, 1, 0.29, 1) forwards;
 
     @keyframes slideIn {
         100% {

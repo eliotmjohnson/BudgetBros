@@ -22,3 +22,9 @@
     scale: 1.5;
     translate: 0.7rem;
 }
+
+@media (max-width: 1145px) {
+    :host {
+        width: 100%;
+    }
+}

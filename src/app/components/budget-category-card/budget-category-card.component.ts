@@ -44,8 +44,9 @@ export class BudgetCategoryCardComponent implements OnInit, AfterViewChecked {
     isAddingLineItem = false;
     isNewBudgetCategory = false;
     isDeletingBudgetCategory = false;
-    hostHeight = 'auto';
+    isSavingBudgetCategory = false;
     isTitleNameHovered = false;
+    hostHeight = 'auto';
 
     constructor(
         private transactionService: TransactionService,
@@ -92,7 +93,7 @@ export class BudgetCategoryCardComponent implements OnInit, AfterViewChecked {
             this.isNewBudgetCategory
         ) {
             this.deleteBudgetCategory();
-        } else if (this.isNewBudgetCategory) {
+        } else if (this.isNewBudgetCategory && !this.isSavingBudgetCategory) {
             this.saveBudgetCategory(inputValue);
         } else if (inputValue.trim() && inputValue !== this.name) {
             this.updateBudgetCategory(inputValue);
@@ -106,6 +107,7 @@ export class BudgetCategoryCardComponent implements OnInit, AfterViewChecked {
     }
 
     saveBudgetCategory(inputValue: string) {
+        this.isSavingBudgetCategory = true;
         this.name = inputValue;
         this.budgetCategoryService.saveBudgetCategory(inputValue);
         this.budgetCategoryService.newlyCreatedBudgetCategoryId
@@ -117,6 +119,7 @@ export class BudgetCategoryCardComponent implements OnInit, AfterViewChecked {
                     this.dropBudgetCategory(false);
                 }
                 this.isNewBudgetCategory = false;
+                this.isSavingBudgetCategory = false;
                 this.isAddingBudgetCategory.emit(false);
             });
     }

@@ -7,7 +7,8 @@
         "be": "cd backend && cargo watch -x run",
         "build": "ng build",
         "watch": "ng build --watch --configuration development",
-        "lint": "ng lint"
+        "lint": "ng lint",
+        "external": "ng serve --host 0.0.0.0"
     },
     "private": true,
     "dependencies": {

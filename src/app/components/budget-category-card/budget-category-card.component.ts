@@ -32,7 +32,7 @@ import { TransactionService } from 'src/app/services/transaction.service';
         '[style.min-height]': 'hostHeight',
         '[style.height]': 'hostHeight',
         '[style.translate.rem]':
-            'this.mobileModalService.isMobileDevice() && isNewBudgetCategory ? 50 : 0'
+            'this.mobileModalService.isIOSDevice() && isNewBudgetCategory ? 50 : 0'
     }
 })
 export class BudgetCategoryCardComponent implements OnInit, AfterViewChecked {

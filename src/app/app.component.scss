@@ -11,4 +11,17 @@
     width: 100%;
     background-color: rgb(81, 156, 81);
     z-index: 9999;
+
+    .logo {
+        translate: 1rem;
+    }
+}
+
+@media (max-width: 1145px) {
+    :host {
+        display: block;
+        width: 100vw;
+        height: 100vh;
+        background-color: black;
+    }
 }

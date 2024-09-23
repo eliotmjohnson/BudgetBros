@@ -5,26 +5,24 @@
 >
     <ng-content></ng-content>
     <span class="header">
-        <h1
-            *ngIf="!isEditingName"
-            (click)="enableEditMode()"
-        >
-            {{ name }}
-        </h1>
         <form
             class="title-form"
             (submit)="updateCategoryName($event)"
-            *ngIf="isEditingName"
         >
             <span>
                 <input
-                    class="category-name-input"
+                    #titleInput
+                    class="category-name-input {{
+                        isTitleNameHovered ? 'category-name-input-hover' : ''
+                    }}"
                     type="text"
                     [defaultValue]="name"
+                    (click)="enableEditMode()"
+                    (mouseover)="addRemoveHoverClass()"
+                    (mouseout)="addRemoveHoverClass(true)"
                     (blur)="updateCategoryName()"
-                    #titleInput
                 />
-                @if (budgetCategoryId) {
+                @if (budgetCategoryId && isEditingName) {
                     <mat-icon
                         class="delete-icon"
                         (mousedown)="deleteBudgetCategory()"
@@ -33,8 +31,18 @@
                 }
             </span>
         </form>
-        <p>Planned</p>
-        <p>Remaining</p>
+        @if (
+            mobileModalService.showPlannedAmounts() ||
+            !mobileModalService.isMobileDevice()
+        ) {
+            <p class="planned">Planned</p>
+        }
+        @if (
+            !mobileModalService.showPlannedAmounts() ||
+            !mobileModalService.isMobileDevice()
+        ) {
+            <p>Remaining</p>
+        }
     </span>
     <section
         class="budget-items-wrapper"

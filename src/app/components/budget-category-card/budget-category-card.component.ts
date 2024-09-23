@@ -19,6 +19,7 @@ import { LineItem, SaveLineItemPayload } from 'src/app/models/lineItem';
 import { BudgetCategoryService } from 'src/app/services/budget-category.service';
 import { BudgetService } from 'src/app/services/budget.service';
 import { LineItemService } from 'src/app/services/line-item.service';
+import { MobileModalService } from 'src/app/services/mobile-modal.service';
 import { TransactionService } from 'src/app/services/transaction.service';
 
 @Component({
@@ -32,7 +33,7 @@ import { TransactionService } from 'src/app/services/transaction.service';
         '[style.height]': 'hostHeight'
     }
 })
-export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
+export class BudgetCategoryCardComponent implements OnInit, AfterViewChecked {
     @ViewChild('titleInput') titleInput!: ElementRef<HTMLInputElement>;
     @Input() budgetCategoryId = '';
     @Input() lineItems: LineItem[] = [];
@@ -44,29 +45,37 @@ export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
     isNewBudgetCategory = false;
     isDeletingBudgetCategory = false;
     hostHeight = 'auto';
+    isTitleNameHovered = false;
 
     constructor(
         private transactionService: TransactionService,
         private lineItemService: LineItemService,
         private budgetService: BudgetService,
         private budgetCategoryService: BudgetCategoryService,
-        private hostElement: ElementRef<HTMLElement>
+        private hostElement: ElementRef<HTMLElement>,
+        public mobileModalService: MobileModalService
     ) {}
-
-    ngAfterViewChecked(): void {
-        if (this.titleInput && this.isEditingName) {
-            this.titleInput.nativeElement.focus();
-            this.titleInput.nativeElement.select();
-        }
-    }
 
     ngOnInit(): void {
         if (!this.budgetCategoryId) {
             this.isNewBudgetCategory = true;
-            // Timout for animation completion
-            setTimeout(() => {
-                this.isEditingName = true;
-            }, 400);
+            this.enableEditMode();
+
+            if (!this.mobileModalService.isMobileDevice()) {
+                setTimeout(() => this.focusTitleInput(), 400);
+            }
+        }
+    }
+
+    ngAfterViewChecked(): void {
+        if (this.titleInput && this.isEditingName) {
+            if (
+                this.mobileModalService.isMobileDevice() ||
+                (!this.mobileModalService.isMobileDevice() &&
+                    !this.isNewBudgetCategory)
+            ) {
+                this.focusTitleInput();
+            }
         }
     }
 
@@ -87,9 +96,13 @@ export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
             this.saveBudgetCategory(inputValue);
         } else if (inputValue.trim() && inputValue !== this.name) {
             this.updateBudgetCategory(inputValue);
+        } else {
+            this.titleInput.nativeElement.value = this.name;
         }
 
         this.isEditingName = false;
+        this.titleInput.nativeElement.blur();
+        this.isTitleNameHovered = false;
     }
 
     saveBudgetCategory(inputValue: string) {
@@ -239,5 +252,20 @@ export class BudgetCategoryCardComponent implements AfterViewChecked, OnInit {
 
         this.lineItems.splice(foundIndex, 1);
         this.isAddingLineItem = false;
+    }
+
+    focusTitleInput() {
+        this.titleInput.nativeElement.focus();
+        this.titleInput.nativeElement.select();
+    }
+
+    addRemoveHoverClass(isMouseOut = false) {
+        if (isMouseOut && !this.isTitleNameHovered) {
+            return;
+        } else if (isMouseOut && this.isTitleNameHovered) {
+            this.isTitleNameHovered = false;
+        } else {
+            this.isTitleNameHovered = true;
+        }
     }
 }

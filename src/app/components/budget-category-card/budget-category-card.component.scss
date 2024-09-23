@@ -11,15 +11,6 @@
     margin-bottom: 0.5rem;
     position: relative;
 
-    h1 {
-        width: 53%;
-        font-size: 1.2rem;
-        font-weight: 600;
-        opacity: 0.6;
-        margin: 0;
-        cursor: text;
-    }
-
     p {
         width: 21%;
         margin: 0;
@@ -44,12 +35,21 @@
                 height: 2rem;
                 font-family: inherit;
                 font-size: 1.2rem;
-                font-weight: 500;
-                color: rgb(76, 76, 76);
+                font-weight: 600;
+                color: $bb-secondary-title-color;
                 padding: 0.3rem;
-                translate: -0.36rem -0.04rem;
-                border: 1px solid rgb(206, 206, 206);
+                border: none;
                 border-radius: 0.4rem;
+                width: 98%;
+
+                &:focus {
+                    color: $bb-primary-title-color;
+                    outline: 1px solid rgb(206, 206, 206);
+                }
+
+                &-hover {
+                    outline: 1px solid rgb(206, 206, 206);
+                }
             }
         }
     }
@@ -137,5 +137,33 @@
         height: 0px;
         min-height: 0px;
         margin-bottom: 0rem;
+    }
+}
+
+@media (max-width: 1145px) {
+    .header {
+        h1 {
+            width: 70%;
+        }
+
+        .title-form {
+            width: 70%;
+
+            span {
+                .category-name-input {
+                    max-width: 35vw;
+                    width: 100%;
+                }
+            }
+        }
+    }
+
+    :host(.add-animation) {
+        opacity: 1;
+        animation: none;
+    }
+
+    .delete-icon {
+        right: -1.8rem;
     }
 }

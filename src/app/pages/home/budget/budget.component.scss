@@ -12,6 +12,7 @@
     align-items: center;
     height: 7rem;
     padding: 2rem;
+    position: relative;
     box-shadow: 0 0.1rem 1rem 0 rgb(0, 0, 0, 0.15);
     z-index: 1;
 
@@ -187,6 +188,7 @@
         font-size: 2rem;
         color: $bb-secondary-title-color;
         opacity: 0.6;
+        padding: 5px;
     }
 }
 
@@ -211,6 +213,7 @@
         font-size: 1.4rem;
         color: $bb-secondary-title-color;
         opacity: 0.5;
+        padding: 5px;
     }
 
     .add-button {
@@ -266,5 +269,31 @@
     }
     100% {
         scale: 0;
+    }
+}
+
+@media (max-width: 1145px) {
+    .budget-dashboard-wrapper {
+        padding: 1rem;
+        padding-top: 0rem;
+
+        .budgets {
+            width: 100vw;
+            padding-right: 0rem;
+            padding-top: 1rem;
+            padding-bottom: 30vh;
+        }
+    }
+
+    .budget-loader-container {
+        margin-top: 4rem;
+    }
+
+    .add-budget-category-container {
+        .add-button {
+            &:hover {
+                color: rgb(170, 170, 170);
+            }
+        }
     }
 }

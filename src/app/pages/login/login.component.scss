@@ -49,3 +49,14 @@
         opacity: 1;
     }
 }
+
+@media (max-width: 1145px) {
+    :host {
+        background-color: #fafafa;
+        height: 90vh;
+    }
+
+    .card-flip {
+        width: 95vw;
+    }
+}

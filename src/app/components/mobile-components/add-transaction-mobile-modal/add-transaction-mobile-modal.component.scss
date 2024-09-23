@@ -1,0 +1,78 @@
+@import "bb-core";
+
+:host {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    translate: 0 100vh;
+    height: 100vh;
+    width: 100vw;
+    border-radius: 0.5rem;
+    z-index: 9999;
+    overflow: hidden;
+}
+
+:host(.sheet-modal) {
+    animation: loadModal 0.6s cubic-bezier(0.22, 1, 0.22, 1) forwards;
+
+    @keyframes loadModal {
+        100% {
+            translate: 0 4vh;
+        }
+    }
+}
+
+:host(.full-screen-modal) {
+    animation: loadFullScreenModal 0.6s cubic-bezier(0.22, 1, 0.22, 1) forwards;
+
+    @keyframes loadFullScreenModal {
+        100% {
+            translate: 0 0;
+        }
+    }
+}
+
+.modal-header {
+    position: fixed;
+    width: 100%;
+    height: 3.5rem;
+    background-color: $bb-primary-green-text;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 500;
+
+    .done-button {
+        position: absolute;
+        right: 0.7rem;
+        border: none;
+        font-size: 1rem;
+        font-weight: 600;
+        flex: 1;
+        background-color: transparent;
+        color: white;
+
+        &:disabled {
+            opacity: 0.5;
+        }
+    }
+
+    .cancel-button {
+        flex: 1;
+        position: absolute;
+        left: 0.7rem;
+        border: none;
+        font-size: 1rem;
+        font-weight: 500;
+        background-color: transparent;
+        color: white;
+    }
+}

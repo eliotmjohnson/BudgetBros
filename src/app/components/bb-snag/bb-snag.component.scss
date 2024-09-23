@@ -14,10 +14,17 @@
         color: $bb-primary-title-color;
         margin: 0;
         font-style: italic;
+        padding: 5px;
     }
 }
 
 .logo {
     scale: 1.5;
     translate: 0.7rem;
+}
+
+@media (max-width: 1145px) {
+    :host {
+        width: 100%;
+    }
 }

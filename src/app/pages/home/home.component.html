@@ -2,8 +2,14 @@
     <HomeHeader />
     <section class="sidebar-budget-wrapper">
         <Sidebar />
-        <main [@routerAnimations]="routeData" class="main-window">
+        <main
+            [@routerAnimations]="routeData"
+            class="main-window"
+        >
             <router-outlet></router-outlet>
         </main>
     </section>
 </main>
+@if (mobileModalService.isBudgetTransactionsModalOpen()) {
+    <div class="dimmer"></div>
+}

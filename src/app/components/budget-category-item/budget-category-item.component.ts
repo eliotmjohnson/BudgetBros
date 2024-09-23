@@ -19,6 +19,7 @@ import {
 } from 'src/app/models/lineItem';
 import { Transaction } from 'src/app/models/transaction';
 import { LineItemService } from 'src/app/services/line-item.service';
+import { MobileModalService } from 'src/app/services/mobile-modal.service';
 import { TransactionService } from 'src/app/services/transaction.service';
 import {
     addValueToCurrencyInput,
@@ -61,7 +62,8 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
 
     constructor(
         private transactionService: TransactionService,
-        private lineItemService: LineItemService
+        private lineItemService: LineItemService,
+        public mobileModalService: MobileModalService
     ) {}
 
     ngOnInit(): void {
@@ -92,7 +94,15 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
 
     setSelectedLineItem() {
         if (!this.isLineItemSelected()) {
-            this.setTransactionData();
+            if (
+                this.mobileModalService.isMobileDevice() &&
+                !this.isEditModeEnabled
+            ) {
+                this.setTransactionData();
+                this.mobileModalService.isBudgetTransactionsModalOpen.set(true);
+            } else if (!this.mobileModalService.isMobileDevice()) {
+                this.setTransactionData();
+            }
         }
     }
 
@@ -118,15 +128,21 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     }
 
     enableEditMode(targetInput?: HTMLInputElement) {
-        if (targetInput) targetInput.select();
+        targetInput?.select();
         if (!this.isEditModeEnabled) {
             this.isEditModeEnabled = true;
             this.initialLineItemTitle = this.lineItemInputValue.value ?? '';
             this.initialPlannedAmount = this.plannedAmount();
+
+            if (this.mobileModalService.isMobileDevice()) {
+                this.mobileModalService.showPlannedAmounts.set(true);
+            }
         }
     }
 
-    cancelEditing() {
+    cancelEditing(e?: MouseEvent) {
+        if (e) e.stopPropagation();
+
         if (!this.itemId()) {
             this.undoCreateNewLineItem.emit();
         } else {
@@ -136,7 +152,8 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
         }
     }
 
-    createOrUpdateLineItem(blurInputs: boolean) {
+    createOrUpdateLineItem(blurInputs: boolean, e?: MouseEvent) {
+        if (e) e.stopPropagation();
         if (blurInputs) this.blurInputs();
 
         if (this.isNotValidLineItemValues()) {
@@ -167,7 +184,10 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
                 this.updateNewLineItemId.emit(id);
                 this.itemId.set(id);
                 this.isEditModeEnabled = false;
-                this.setTransactionData();
+
+                if (!this.mobileModalService.isMobileDevice()) {
+                    this.setTransactionData();
+                }
             });
     }
 
@@ -182,7 +202,10 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
 
         this.lineItemService.updateLineItem(updateLineItemPayload);
         this.isEditModeEnabled = false;
-        this.setTransactionData();
+
+        if (!this.mobileModalService.isMobileDevice()) {
+            this.setTransactionData();
+        }
     }
 
     deleteLineItem() {

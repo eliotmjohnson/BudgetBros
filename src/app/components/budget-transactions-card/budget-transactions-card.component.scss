@@ -8,6 +8,17 @@
     padding-bottom: 2rem;
 }
 
+:host(.open-budget-transactions-modal) {
+    display: initial;
+    animation: slideIn 0.6s cubic-bezier(0.29, 1, 0.29, 1) forwards;
+
+    @keyframes slideIn {
+        100% {
+            translate: 0 0;
+        }
+    }
+}
+
 .banner {
     position: relative;
     width: 100%;
@@ -16,6 +27,10 @@
     border-top-right-radius: 1rem;
     background-color: rgb(109, 206, 109);
     margin-bottom: 0.5rem;
+}
+
+.back-button {
+    display: none;
 }
 
 .main-content-container {
@@ -45,7 +60,7 @@
 
         h1 {
             font-size: 2rem;
-            font-weight: 900;
+            font-weight: 700;
             margin: 0;
             color: $bb-primary-title-color;
         }
@@ -53,7 +68,8 @@
         h2 {
             display: flex;
             font-size: 1.9rem;
-            font-weight: 900;
+            letter-spacing: -0.05rem;
+            font-weight: 700;
             color: $bb-primary-green-text;
             margin: 0;
 
@@ -120,4 +136,40 @@
     width: 100%;
     justify-content: center;
     align-items: center;
+}
+
+@media (max-width: 1145px) {
+    :host {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        max-width: 100vw;
+        min-width: 100vw;
+        padding: 0;
+        translate: 100vw 0;
+    }
+
+    .banner {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        min-height: 6rem;
+    }
+
+    .back-button {
+        display: flex;
+        align-items: center;
+        position: absolute;
+        top: 1.5rem;
+        left: 1rem;
+        font-weight: 500;
+        font-size: 1rem;
+        color: white;
+
+        mat-icon {
+            font-size: 1.2rem;
+            height: 1.2rem;
+            width: 1.2rem;
+        }
+    }
 }

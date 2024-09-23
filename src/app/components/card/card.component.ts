@@ -14,4 +14,5 @@ export class CardComponent {
     @Input() padding = '1.5rem';
     @Input() paddingBottom = '';
     @Input() paddingLeft = '';
+    @Input() isBudgetTransactionsModal = false;
 }

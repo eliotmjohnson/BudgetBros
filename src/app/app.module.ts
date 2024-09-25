@@ -54,7 +54,6 @@ import { HomeComponent } from './pages/home/home.component';
 import { SettingsComponent } from './pages/home/settings/settings.component';
 import { TransactionsComponent } from './pages/home/transactions/transactions.component';
 import { LoginComponent } from './pages/login/login.component';
-import { TransactionsFilterPopoverComponent } from './components/transactions-filter-popover/transactions-filter-popover.component';
 import { TabsBarComponent } from './components/mobile-components/tabs-bar/tabs-bar.component';
 import { AddTransactionMobileModalComponent } from './components/mobile-components/add-transaction-mobile-modal/add-transaction-mobile-modal.component';
 import { AmountTypeSelectorComponent } from './components/mobile-components/amount-type-selector/amount-type-selector.component';
@@ -84,7 +83,6 @@ import { AmountTypeSelectorComponent } from './components/mobile-components/amou
         TransactionModalComponent,
         FieldErrorComponent,
         BBSnagComponent,
-        TransactionsFilterPopoverComponent,
         MobileConstructionComponent,
         TabsBarComponent,
         AddTransactionMobileModalComponent,

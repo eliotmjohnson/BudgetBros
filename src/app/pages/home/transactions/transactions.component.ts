@@ -1,4 +1,11 @@
-import { Component, OnInit, effect, inject, signal } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    computed,
+    effect,
+    inject,
+    signal
+} from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import {
@@ -6,7 +13,8 @@ import {
     TransactionModalData
 } from 'src/app/components/transaction-modal/transaction-modal.component';
 import { TransactionService } from 'src/app/services/transaction.service';
-import { getTodayIgnoreTZ } from 'src/app/utils/timeUtils';
+import { addValueToCurrencyInput } from 'src/app/utils/currencyUtils';
+import { getTodayMidnight } from 'src/app/utils/timeUtils';
 
 @Component({
     selector: 'app-transactions',
@@ -23,7 +31,47 @@ export class TransactionsComponent implements OnInit {
     });
 
     transactions = this.transactionService.transactions;
+
     isFilterOpen = signal(false);
+    filterFields = signal([
+        {
+            title: 'Title',
+            value: ''
+        },
+        {
+            title: 'Amount',
+            value: ''
+        },
+        {
+            title: 'Merchant',
+            value: ''
+        }
+    ]);
+
+    filteredTransactions = computed(() => {
+        const transactions = this.transactions();
+        const [titleField, amountField, merchantField] = this.filterFields();
+
+        return transactions.filter((transaction) => {
+            const titleFilter = titleField.value
+                ? transaction.title
+                      ?.toLowerCase()
+                      .includes(titleField.value.toLowerCase())
+                : true;
+
+            const amountFilter = amountField.value
+                ? transaction.amount.toString().startsWith(amountField.value)
+                : true;
+
+            const merchantFilter = merchantField.value
+                ? transaction.merchant
+                      .toLowerCase()
+                      .includes(merchantField.value.toLowerCase())
+                : true;
+
+            return titleFilter && amountFilter && merchantFilter;
+        });
+    });
 
     constructor() {
         effect(() => {
@@ -38,9 +86,28 @@ export class TransactionsComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        const today = getTodayIgnoreTZ();
+        const today = getTodayMidnight();
 
         this.transactionService.getTransactionsBetweenDates(today, today);
+    }
+
+    updateFilters(fieldTitle: string, e?: Event) {
+        const value = (e?.target as HTMLInputElement)?.value;
+        const isAmountField = fieldTitle === 'Amount';
+
+        this.filterFields.update((prevFilters) => {
+            return prevFilters.map((filter) => ({
+                title: filter.title,
+                value:
+                    filter.title === fieldTitle
+                        ? value
+                            ? isAmountField
+                                ? addValueToCurrencyInput(e!).toString()
+                                : value
+                            : ''
+                        : filter.value
+            }));
+        });
     }
 
     openAddTransactionDialog() {

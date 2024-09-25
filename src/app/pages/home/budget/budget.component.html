@@ -47,9 +47,11 @@
             <main class="calendar-selector-overlay"></main>
         }
     </span>
+    <AmountTypeSelector />
 </header>
 <section class="budget-dashboard-wrapper">
     <div
+        #budgets
         class="budgets"
         cdkDropList
         (cdkDropListDropped)="handleDrop($event)"
@@ -113,7 +115,7 @@
                 >
                     <p>Add Category</p>
                     <mat-icon
-                        (click)="createNewBudgetCategoryPlaceholder()"
+                        (click)="createNewBudgetCategoryPlaceholder(budgets)"
                         class="add-button"
                         fontIcon="add_circle"
                     />

@@ -6,7 +6,7 @@ use crate::AppState;
 
 use super::transactions_models::{IsolatedTransaction, NewTransaction, Transaction};
 
-pub async fn get_line_item_transactions(state: Data<AppState>, line_item_id: i64) -> Result<Vec<Transaction>, sqlx::Error> {
+pub async fn get_line_item_transactions(state: Data<AppState>, line_item_id: String) -> Result<Vec<Transaction>, sqlx::Error> {
     let query = 
         "SELECT * 
         FROM 
@@ -23,7 +23,7 @@ pub async fn get_line_item_transactions(state: Data<AppState>, line_item_id: i64
 
 pub async fn get_all_transactions_between_dates(
     state: Data<AppState>,
-    user_id: i64,
+    user_id: String,
     start_date: String,
     end_date: String
 ) -> Result<Vec<IsolatedTransaction>, sqlx::Error> {
@@ -97,8 +97,9 @@ pub async fn update_transaction(state: Data<AppState>, new_transaction: Transact
             amount = $3,
             notes = $4,
             date = $5,
-            line_item_id = $6::bigint      
-        WHERE id = $7::bigint";
+            line_item_id = $6      
+        WHERE id = $7
+    ";
 
     sqlx::query(query)
         .bind(new_transaction.title)   
@@ -112,7 +113,7 @@ pub async fn update_transaction(state: Data<AppState>, new_transaction: Transact
         .await
 }
 
-pub async fn soft_delete_transaction(state: Data<AppState>, id: i64) -> Result<i64, sqlx::Error> {
+pub async fn soft_delete_transaction(state: Data<AppState>, id: String) -> Result<String, sqlx::Error> {
     let query = 
         "UPDATE 
             transactions 
@@ -122,20 +123,20 @@ pub async fn soft_delete_transaction(state: Data<AppState>, id: i64) -> Result<i
             id = $1";
 
     let _ = sqlx::query_as::<_, Transaction>(query)
-                .bind(id)   
+                .bind(id.clone())   
                 .fetch_one(&state.db)
                 .await;
 
     Ok(id)
 }
 
-pub async fn delete_transaction(state: Data<AppState>, id: i64) -> Result<i64, sqlx::Error> {
+pub async fn delete_transaction(state: Data<AppState>, id: String) -> Result<String, sqlx::Error> {
     let query = 
         "DELETE FROM transactions
         WHERE id = $1";
 
     let _ = sqlx::query_as::<_, Transaction>(query)
-                .bind(id)   
+                .bind(id.clone())   
                 .fetch_one(&state.db)
                 .await;
 

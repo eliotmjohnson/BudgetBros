@@ -1,0 +1,44 @@
+<span class="tab-bar">
+    <button
+        #budgetTab="routerLinkActive"
+        class="tab-button"
+        [routerLink]="['/home/budget']"
+        routerLinkActive
+    >
+        <mat-icon
+            [class.tab-active]="budgetTab.isActive"
+            fontIcon="savings"
+        />
+        <p [class.tab-active]="budgetTab.isActive">Budget</p>
+    </button>
+    <button
+        #trxTab="routerLinkActive"
+        class="tab-button"
+        [routerLink]="['/home/transactions']"
+        routerLinkActive
+    >
+        <mat-icon
+            [class.tab-active]="trxTab.isActive"
+            fontIcon="paid"
+        />
+        <p [class.tab-active]="trxTab.isActive">Transactions</p>
+    </button>
+    <button
+        #settingsTab="routerLinkActive"
+        class="tab-button"
+        [routerLink]="['/home/settings']"
+        routerLinkActive
+    >
+        <mat-icon
+            [class.tab-active]="settingsTab.isActive"
+            fontIcon="settings"
+        />
+        <p [class.tab-active]="settingsTab.isActive">Settings</p>
+    </button>
+    <button
+        class="add-transaction-button"
+        (click)="mobileModalService.isAddTransactionModalOpen.set(true)"
+    >
+        <mat-icon fontIcon="add" />
+    </button>
+</span>

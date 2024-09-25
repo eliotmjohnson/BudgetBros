@@ -1,6 +1,6 @@
 CREATE TABLE budgets (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL,
+    id VARCHAR(100) PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id VARCHAR(100) NOT NULL,
     month_number INTEGER NOT NULL,
     year INTEGER NOT NULL,
     FOREIGN KEY(user_id) REFERENCES users(id)

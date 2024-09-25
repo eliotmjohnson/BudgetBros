@@ -15,3 +15,9 @@
         gap: 1rem;
     }
 }
+
+@media (max-width: 1145px) {
+    :host {
+        display: none;
+    }
+}

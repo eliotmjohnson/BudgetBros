@@ -10,6 +10,7 @@ import { MatCalendar, MatCalendarView } from '@angular/material/datepicker';
 import { MONTHS } from 'src/app/constants/constants';
 import { BudgetCategory } from 'src/app/models/budgetCategory';
 import { BudgetService } from 'src/app/services/budget.service';
+import { MobileModalService } from 'src/app/services/mobile-modal.service';
 import { TransactionService } from 'src/app/services/transaction.service';
 
 @Component({
@@ -35,7 +36,8 @@ export class BudgetComponent implements OnInit, AfterViewChecked {
 
     constructor(
         public transactionService: TransactionService,
-        public budgetService: BudgetService
+        public budgetService: BudgetService,
+        public mobileModalService: MobileModalService
     ) {}
 
     ngOnInit(): void {
@@ -86,7 +88,14 @@ export class BudgetComponent implements OnInit, AfterViewChecked {
         }
     }
 
-    createNewBudgetCategoryPlaceholder() {
+    createNewBudgetCategoryPlaceholder(elem?: HTMLDivElement) {
+        if (elem) {
+            elem.scrollTo({
+                top: elem.scrollHeight,
+                behavior: 'smooth'
+            });
+        }
+
         const newBudgetCategoryPlaceholder: BudgetCategory = {
             budgetCategoryId: '',
             name: 'Category Name',

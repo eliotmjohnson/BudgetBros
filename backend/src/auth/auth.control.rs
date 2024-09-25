@@ -36,7 +36,7 @@ async fn session_refresh(state: Data<AppState>, body: Json<SessionData>) -> impl
 
             match email {
                 Some(email) => HttpResponse::Ok().json(LoginResponse {
-                    id: user_id.to_string(),
+                    id: user_id,
                     email,
                     token: token_str,
                 }),
@@ -45,7 +45,7 @@ async fn session_refresh(state: Data<AppState>, body: Json<SessionData>) -> impl
 
                     match found_user {
                         Ok(user) => HttpResponse::Ok().json(LoginResponse {
-                            id: user.id.to_string(),
+                            id: user.id,
                             email: user.email,
                             token: token_str,
                         }),
@@ -72,12 +72,21 @@ async fn register_user_handler(state: Data<AppState>, body: Json<NewUser>) -> im
 
     println!("password_hash: {}", password_hash);
 
-    let create_user_result = create_user(state, new_user, password_hash).await;
+    let found_user = get_auth_user_by_email(state.clone(), &new_user.email).await;
 
-    match create_user_result {
-        Ok(created_user) => HttpResponse::Ok().json(created_user),
-        Err(e) => HttpResponse::InternalServerError().json(format!("{:?}", e)),
+    match found_user {
+        Ok(_) => HttpResponse::Conflict().json("User already exists"),
+        _ => {
+            let create_user_result = create_user(state, new_user, password_hash).await;
+
+            match create_user_result {
+                Ok(created_user) => HttpResponse::Ok().json(created_user),
+                Err(e) => HttpResponse::InternalServerError().json(format!("{:?}", e)),
+            }
+        }
     }
+
+    
 }
 
 #[get("/login")]
@@ -111,11 +120,11 @@ async fn login_handler(state: Data<AppState>, credentials: BasicAuth) -> impl Re
                         .unwrap();
 
                     if is_valid {
-                        let claims = TokenClaims { id: user.id };
+                        let claims = TokenClaims { id: user.id.clone() };
                         let token_str = claims.sign_with_key(&jwt_secret).unwrap();
 
                         HttpResponse::Ok().json(LoginResponse {
-                            id: user.id.to_string(),
+                            id: user.id.clone(),
                             email: user.email,
                             token: token_str,
                         })
@@ -123,7 +132,7 @@ async fn login_handler(state: Data<AppState>, credentials: BasicAuth) -> impl Re
                         HttpResponse::Unauthorized().json("Incorrect password!")
                     }
                 }
-                Err(e) => HttpResponse::InternalServerError().json(format!(
+                Err(e) => HttpResponse::Unauthorized().json(format!(
                     "Incorrect login credentials or error logging in - {:?}",
                     e
                 )),

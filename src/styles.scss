@@ -52,6 +52,8 @@ body {
     height: 100%;
     width: 100%;
     overscroll-behavior: none;
+    overflow-y: hidden;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {

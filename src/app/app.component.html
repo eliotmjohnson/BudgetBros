@@ -1,8 +1,30 @@
 @if (authService.isLoading()) {
-    <main @loaderOverlayAnimation class="bb-main-overlay">
-        <BBLogo fontSize="4rem" height="4rem" color="white" />
+    <main
+        @loaderOverlayAnimation
+        class="bb-main-overlay"
+    >
+        <BBLogo
+            class="logo"
+            fontSize="4rem"
+            height="4rem"
+            color="white"
+        />
         <mat-spinner color="accent" />
     </main>
 } @else {
     <router-outlet></router-outlet>
+}
+@if (authService.isLoggedIn) {
+    <app-tabs-bar />
+}
+
+<!-- Modals -->
+@if (mobileModalService.isAddTransactionModalOpen()) {
+    <AddTransactionMobileModal @addTransactionModalAnimation />
+}
+@if (mobileModalService.isBudgetTransactionsModalOpen()) {
+    <BudgetTransactionsCard
+        @budgetTransactionModalAnimation
+        [isMobileComponent]="true"
+    />
 }

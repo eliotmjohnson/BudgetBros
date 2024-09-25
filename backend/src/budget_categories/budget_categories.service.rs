@@ -9,7 +9,7 @@ use super::budget_categories_models::{
 
 pub async fn get_budget_categories_with_line_items(
     state: Data<AppState>,
-    user_id: i64,
+    user_id: String,
     month_number: i64,
     year: i64,
 ) -> Result<Vec<BudgetCategoryWithLineItemsRow>, sqlx::Error> {
@@ -50,8 +50,8 @@ pub async fn add_budget_category(
 
     sqlx::query_as::<_, NewBudgetCategoryId>(query)
         .bind(new_budget_category.name)
-        .bind(new_budget_category.user_id.parse::<i64>().unwrap())
-        .bind(new_budget_category.budget_id.parse::<i64>().unwrap())
+        .bind(new_budget_category.user_id)
+        .bind(new_budget_category.budget_id)
         .fetch_one(&state.db)
         .await
 }
@@ -66,7 +66,7 @@ pub async fn update_budget_category(
         SET 
             name = $1
         WHERE 
-            id = $2::int
+            id = $2
         ";
 
     sqlx::query(query)
@@ -84,7 +84,7 @@ pub async fn delete_budget_category(
         DELETE FROM 
             budget_categories
         WHERE 
-            id = $1::int
+            id = $1
         ";
 
     sqlx::query(query)

@@ -5,31 +5,42 @@
     }}"
     (click)="setSelectedLineItem()"
 >
-    <ng-content></ng-content>
     <span class="title-wrapper">
+        <ng-content></ng-content>
         <mat-icon
             class="fund-logo"
-            *ngIf="true"
+            *ngIf="fund"
             fontIcon="savings"
         />
         <input
             #lineItemTitleInput
             class="line-item-title"
             [formControl]="lineItemInputValue"
-            (focus)="enableEditMode(lineItemTitleInput)"
+            (click)="enableEditMode(lineItemTitleInput)"
             [value]="itemTitle"
         />
     </span>
     <input
         #plannedAmountInput
         type="text"
-        class="planned-amount"
+        pattern="\d*"
+        class="planned-amount {{
+            mobileModalService.showPlannedAmounts() ? 'add-planned-mobile' : ''
+        }}"
         (keydown)="checkIfValidKey($event)"
-        (focus)="enableEditMode(plannedAmountInput)"
+        (click)="enableEditMode(plannedAmountInput)"
         (input)="addValue($event)"
         [value]="plannedAmount() | currency"
     />
-    <p>{{ remainingAmount() | currency }}</p>
+    <p
+        class="{{
+            mobileModalService.showPlannedAmounts()
+                ? 'remove-remaining-mobile'
+                : ''
+        }}"
+    >
+        {{ remainingAmount() | currency }}
+    </p>
     @if (isLineItemSelected() && itemId()) {
         <mat-icon
             class="delete-icon"
@@ -44,14 +55,14 @@
             class="edit-menu-container"
         >
             <button
-                (click)="createOrUpdateLineItem(false)"
+                (click)="createOrUpdateLineItem(false, $event)"
                 color="primary"
                 mat-button
             >
                 Save
             </button>
             <button
-                (click)="cancelEditing()"
+                (click)="cancelEditing($event)"
                 color="warn"
                 mat-button
             >

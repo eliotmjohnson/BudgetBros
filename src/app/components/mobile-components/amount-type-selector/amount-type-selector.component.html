@@ -1,0 +1,17 @@
+<span class="outer-container">
+    <span class="inner-container">
+        <div (click)="mobileModalService.showPlannedAmounts.set(true)">
+            Planned
+        </div>
+        <div (click)="mobileModalService.showPlannedAmounts.set(false)">
+            Remaining
+        </div>
+        <span
+            class="selector {{
+                !mobileModalService.showPlannedAmounts()
+                    ? 'remaining-selected'
+                    : ''
+            }}"
+        ></span>
+    </span>
+</span>

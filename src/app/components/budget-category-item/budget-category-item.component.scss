@@ -19,7 +19,7 @@
 
     .title-wrapper {
         display: flex;
-        width: 50%;
+        width: 53%;
         align-items: center;
 
         .fund-logo {
@@ -41,7 +41,6 @@
             border-radius: 0.5rem;
             padding: 0.2rem;
             padding-left: 0.5rem;
-            margin-left: 0.5rem;
 
             &:hover {
                 @include line-item-input();
@@ -53,7 +52,9 @@
     }
 
     .planned-amount {
-        width: 22%;
+        all: unset;
+        cursor: text;
+        width: 21%;
         font-size: 1rem;
         font-weight: 400;
         font-family: inherit;
@@ -61,7 +62,8 @@
         background-color: transparent;
         border: none;
         border-radius: 0.5rem;
-        padding: 0.2rem;
+        padding-top: 0.2rem;
+        padding-bottom: 0.2rem;
 
         &:hover {
             @include line-item-input();
@@ -73,7 +75,7 @@
 
     p {
         margin: 0;
-        width: 22%;
+        width: 21%;
         font-size: 1rem;
         font-weight: 400;
         text-align: center;
@@ -115,7 +117,7 @@
 
 .progress-indicator {
     display: flex;
-    height: 1.7px;
+    height: 1px;
     z-index: 1;
 
     .progress {
@@ -133,4 +135,39 @@
     outline: 2px solid rgb(109, 206, 109, 0.8);
     background-color: rgb(109, 206, 109, 0.2);
     border-radius: 0.5rem;
+}
+
+@media (max-width: 1145px) {
+    .delete-icon {
+        display: none;
+    }
+
+    .budget-item-wrapper {
+        .title-wrapper {
+            width: 63%;
+
+            .line-item-title {
+                pointer-events: none;
+            }
+        }
+
+        .planned-amount {
+            display: none;
+            padding-bottom: 0.1rem;
+        }
+
+        .add-planned-mobile {
+            display: flex;
+            width: 35%;
+        }
+
+        p {
+            width: 35%;
+            margin-top: 0.1rem;
+        }
+
+        .remove-remaining-mobile {
+            display: none;
+        }
+    }
 }

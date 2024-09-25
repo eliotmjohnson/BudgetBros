@@ -1,6 +1,20 @@
 :host {
     display: flex;
     height: 100%;
+    width: 100%;
+    transition:
+        transform 0.35s,
+        border-radius 0.35s,
+        translate 0.35s;
+}
+
+:host(.modal-present) {
+    transform: scale(0.97);
+    border-radius: 0.5rem;
+}
+
+:host(.slide-body) {
+    translate: -6rem;
 }
 
 .home {
@@ -26,6 +40,23 @@
     overflow: hidden;
 }
 
+.dimmer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: black;
+    opacity: 0;
+    animation: dim 0.4s forwards;
+
+    @keyframes dim {
+        100% {
+            opacity: 0.5;
+        }
+    }
+}
+
 @keyframes onLoad {
     0% {
         opacity: 0;
@@ -35,5 +66,15 @@
     100% {
         translate: 0 0;
         opacity: 1;
+    }
+}
+
+@media (max-width: 1145px) {
+    :host {
+        background-color: #fafafa;
+    }
+
+    .main-window {
+        width: 100vw;
     }
 }

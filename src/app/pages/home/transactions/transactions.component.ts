@@ -8,12 +8,16 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { filter } from 'rxjs';
 import {
     TransactionModalComponent,
     TransactionModalData
 } from 'src/app/components/transaction-modal/transaction-modal.component';
 import { TransactionService } from 'src/app/services/transaction.service';
-import { addValueToCurrencyInput } from 'src/app/utils/currencyUtils';
+import {
+    addValueToCurrencyInput,
+    checkCurrencyInputKeyValid
+} from 'src/app/utils/currencyUtils';
 import { getTodayMidnight } from 'src/app/utils/timeUtils';
 
 @Component({
@@ -73,6 +77,10 @@ export class TransactionsComponent implements OnInit {
         });
     });
 
+    filtersHaveValue = computed(() =>
+        this.filterFields().some((filter) => filter.value)
+    );
+
     constructor() {
         effect(() => {
             if (!this.transactions().length) return;
@@ -89,6 +97,13 @@ export class TransactionsComponent implements OnInit {
         const today = getTodayMidnight();
 
         this.transactionService.getTransactionsBetweenDates(today, today);
+    }
+
+    checkIfValidKey(e: KeyboardEvent) {
+        return checkCurrencyInputKeyValid(
+            e,
+            Number(this.filterFields()[1].value)
+        );
     }
 
     updateFilters(fieldTitle: string, e?: Event) {
@@ -108,6 +123,12 @@ export class TransactionsComponent implements OnInit {
                         : filter.value
             }));
         });
+    }
+
+    clearAllFilters() {
+        this.filterFields.update((prev) =>
+            prev.map((filter) => ({ ...filter, value: '' }))
+        );
     }
 
     openAddTransactionDialog() {

@@ -54,6 +54,11 @@
                                     ? (field.value | currency)
                                     : field.value
                             "
+                            (keydown)="
+                                field.title === 'Amount'
+                                    ? checkIfValidKey($event)
+                                    : ''
+                            "
                             (input)="updateFilters(field.title, $event)"
                         />
                         @if (field.value) {
@@ -66,6 +71,15 @@
                             </button>
                         }
                     </mat-form-field>
+                }
+                @if (filtersHaveValue()) {
+                    <button
+                        mat-icon-button
+                        matTooltip="Clear all filters"
+                        (click)="clearAllFilters()"
+                    >
+                        <mat-icon>clear_all</mat-icon>
+                    </button>
                 }
             </div>
         }

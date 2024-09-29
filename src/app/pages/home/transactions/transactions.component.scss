@@ -3,31 +3,43 @@
 .transactions-container {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1rem;
     padding: 1.5rem;
+    height: calc(100vh - $bb-header-height);
 
-    .title-wrapper {
+    .upper-section-container {
         display: flex;
+        flex-direction: column;
         gap: 0.5rem;
 
-        .title {
-            margin: 0;
+        .title-wrapper {
+            display: flex;
+            gap: 0.5rem;
+
+            .title {
+                margin: 0;
+            }
+
+            .plus-button {
+                margin-top: -0.5rem;
+            }
+
+            .icon {
+                color: $bb-primary-green-text;
+            }
         }
 
-        .plus-button {
-            margin-top: -0.5rem;
+        .header-container {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
         }
 
-        .icon {
-            color: $bb-primary-green-text;
+        .filters-container {
+            display: flex;
+            gap: 0.5rem;
         }
-    }
-
-    .header-container {
-        display: flex;
-        width: 100%;
-        justify-content: space-between;
-        margin-bottom: 0.5rem;
     }
 
     .transactions-inner-container {
@@ -35,7 +47,9 @@
         flex-direction: column;
         overflow-y: scroll;
         gap: 1rem;
-        height: 800px; /* want to try to figure out how to make this calculated height dynamic to window size */
+        flex: 1;
+        height: 100%;
+        padding-bottom: 1rem;
 
         &::-webkit-scrollbar {
             display: none;

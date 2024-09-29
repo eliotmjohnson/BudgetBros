@@ -12,15 +12,13 @@ export const getYear = (dateString: string) => {
  * used to fetch data, etc. and not get messed up
  * because of timezone offsets
  */
-export const getTodayIgnoreTZ = () => {
+export const getTodayMidnight = () => {
     const now = new Date();
     const localYear = now.getFullYear();
     const localMonth = now.getMonth();
     const localDate = now.getDate();
 
-    const adjustedDate = new Date(
-        Date.UTC(localYear, localMonth, localDate, 0, 0, 0, 0)
-    );
+    const adjustedDate = new Date(localYear, localMonth, localDate, 0);
 
     return adjustedDate;
 };

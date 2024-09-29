@@ -7,14 +7,17 @@
     (ngSubmit)="submitForm()"
 >
     <mat-dialog-content class="content">
-        <mat-form-field class="fullwidth">
+        <mat-form-field
+            class="fullwidth"
+            appearance="outline"
+        >
             <mat-label> Title (optional) </mat-label>
             <input
                 matInput
                 formControlName="title"
             />
         </mat-form-field>
-        <mat-form-field>
+        <mat-form-field appearance="outline">
             <mat-label> Amount </mat-label>
             <input
                 matInput
@@ -38,7 +41,10 @@
             </mat-error>
         </mat-form-field>
         <div class="inner-fields-wrapper">
-            <mat-form-field class="fullwidth">
+            <mat-form-field
+                class="fullwidth"
+                appearance="outline"
+            >
                 <mat-label> Choose a date </mat-label>
                 <input
                     matInput
@@ -61,7 +67,10 @@
                     }}
                 </mat-error>
             </mat-form-field>
-            <mat-form-field class="fullwidth">
+            <mat-form-field
+                class="fullwidth"
+                appearance="outline"
+            >
                 <mat-label> Merchant </mat-label>
                 <input
                     matInput
@@ -78,6 +87,7 @@
             </mat-form-field>
         </div>
         <mat-form-field
+            appearance="outline"
             [matTooltip]="
                 !dropdownCategories().length
                     ? form.value.date
@@ -87,7 +97,10 @@
             "
         >
             <mat-label> Select Budget Item </mat-label>
-            <mat-select formControlName="lineItem">
+            <mat-select
+                formControlName="lineItem"
+                appearance="outline"
+            >
                 @if (dropdownCategories().length) {
                     @for (
                         category of dropdownCategories();
@@ -118,7 +131,10 @@
                 }}
             </mat-error>
         </mat-form-field>
-        <mat-form-field class="fullwidth">
+        <mat-form-field
+            class="fullwidth"
+            appearance="outline"
+        >
             <mat-label> Notes </mat-label>
             <textarea
                 matInput

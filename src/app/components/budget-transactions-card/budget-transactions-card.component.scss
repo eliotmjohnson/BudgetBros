@@ -78,6 +78,10 @@
                 margin: 0;
             }
         }
+
+        .unhappy-remaining {
+            color: $bb-error-main;
+        }
     }
 }
 
@@ -86,8 +90,12 @@
 }
 
 .transactions-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding-top: 1rem;
     padding-bottom: 0.5rem;
+    position: relative;
 
     h1 {
         font-weight: 500;
@@ -95,6 +103,59 @@
         letter-spacing: 0.05rem;
         margin: 0;
         color: $bb-secondary-title-color;
+    }
+
+    div {
+        position: absolute;
+        right: -8.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: white;
+
+        .add-transaction-label {
+            z-index: 0;
+            margin: 0;
+            padding-right: 0.5rem;
+            translate: 10rem;
+            color: $bb-primary-green-text;
+            transition: translate 0.25s;
+        }
+
+        span {
+            display: flex;
+            background-color: white;
+            width: 3rem;
+            z-index: 1;
+            -webkit-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0);
+
+            .add-transaction-button {
+                display: flex;
+                min-height: 2rem;
+                width: 2rem;
+                align-items: center;
+                justify-content: center;
+                border-radius: 100%;
+                border: none;
+                cursor: pointer;
+                background-color: $bb-primary-green-text;
+
+                mat-icon {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: white;
+                    font-size: 1.2rem;
+                    height: 1.2rem;
+                    width: 1.2rem;
+                }
+            }
+
+            &:hover ~ .add-transaction-label {
+                translate: -10rem;
+            }
+        }
     }
 }
 
@@ -170,6 +231,12 @@
             font-size: 1.2rem;
             height: 1.2rem;
             width: 1.2rem;
+        }
+    }
+
+    .transactions-banner {
+        div {
+            display: none;
         }
     }
 }

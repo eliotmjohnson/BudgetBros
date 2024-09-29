@@ -25,7 +25,14 @@
                 <span class="available">Available</span>
                 <span class="top">
                     <h1>{{ transactionService.currentSelectedLineItem() }}</h1>
-                    <h2>
+                    <h2
+                        class="{{
+                            transactionService.currentSelectedLineItemBalance() <
+                            0
+                                ? 'unhappy-remaining'
+                                : ''
+                        }}"
+                    >
                         <h3 class="dollar-sign">$</h3>
                         {{
                             transactionService.currentSelectedLineItemBalance()
@@ -45,6 +52,17 @@
             </mat-form-field>
             <span class="transactions-banner">
                 <h1>Transactions</h1>
+                <div>
+                    <span>
+                        <button
+                            (click)="openAddTransactionModal()"
+                            class="add-transaction-button"
+                        >
+                            <mat-icon fontIcon="add" />
+                        </button>
+                    </span>
+                    <p class="add-transaction-label">Add Transaction</p>
+                </div>
             </span>
         </main>
         <section class="transactions-container">
@@ -53,6 +71,7 @@
                 track $index
             ) {
                 <InlineTransaction
+                    [transactionId]="transaction.transactionId"
                     [title]="transaction.title!"
                     [amount]="transaction.amount"
                     [merchant]="transaction.merchant"

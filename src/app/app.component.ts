@@ -45,7 +45,9 @@ export class AppComponent implements OnInit {
                 if (states[1]) {
                     this.router.navigateByUrl('/mobile');
                 } else {
-                    this.router.navigateByUrl('/');
+                    if (this.router.url === '/mobile') {
+                        this.router.navigateByUrl('/');
+                    }
                 }
             });
     }

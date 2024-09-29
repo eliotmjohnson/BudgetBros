@@ -6,6 +6,19 @@
     margin-left: 1rem;
     border-bottom: 1px solid rgb(229, 229, 229);
     height: 4rem;
+    position: relative;
+
+    &:hover {
+        .transaction-amount {
+            transition: translate 0.2s;
+            translate: -1.5rem;
+        }
+
+        .delete-icon {
+            transition: opacity 0.2s 0.1s;
+            opacity: 1;
+        }
+    }
 
     .date {
         display: flex;
@@ -38,6 +51,10 @@
             font-weight: 500;
             color: $bb-primary-title-color;
             opacity: 0.9;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            max-width: 12rem;
         }
 
         .transaction-merchant {
@@ -46,6 +63,10 @@
             font-weight: 400;
             opacity: 0.7;
             color: $bb-secondary-title-color;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            max-width: 10rem;
         }
     }
 
@@ -56,5 +77,73 @@
         min-width: max-content;
         color: $bb-primary-title-color;
         margin: 0;
+        transition: translate 0.2s 0.05s;
+    }
+
+    .delete-icon {
+        cursor: pointer;
+        position: absolute;
+        right: 1rem;
+        opacity: 0;
+        font-size: 1.5rem;
+        height: 1.5rem;
+        width: 1.5rem;
+        color: $bb-error-main;
+        transition: opacity 0.2s;
+    }
+}
+
+.delete-hidden {
+    &:hover {
+        .transaction-amount {
+            translate: 0;
+        }
+
+        .delete-icon {
+            display: none;
+        }
+    }
+}
+
+@media (max-width: 1650px) {
+    .inline-transaction-wrapper {
+        .transaction-title-container {
+            .transaction-title {
+                max-width: 10rem;
+            }
+
+            .transaction-merchant {
+                max-width: 5rem;
+            }
+        }
+    }
+}
+
+@media (max-width: 1415px) {
+    .inline-transaction-wrapper {
+        .transaction-title-container {
+            flex-direction: column;
+            gap: 0;
+
+            .transaction-title {
+                max-width: none;
+                line-height: 1.6rem;
+            }
+
+            .transaction-merchant {
+                max-width: none;
+                font-size: 0.75rem;
+            }
+        }
+    }
+}
+
+@media (max-width: 1275px) {
+    .inline-transaction-wrapper {
+        .transaction-title-container {
+            .transaction-title {
+                max-width: 10rem;
+            }
+        }
     }
 }

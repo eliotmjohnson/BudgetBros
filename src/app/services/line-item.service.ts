@@ -2,7 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { BE_API_URL } from '../constants/constants';
-import { SaveLineItemPayload, UpdateLineItemPayload } from '../models/lineItem';
+import {
+    LineItem,
+    SaveLineItemPayload,
+    UpdateLineItemPayload
+} from '../models/lineItem';
 import { BudgetService } from './budget.service';
 
 @Injectable({
@@ -11,6 +15,7 @@ import { BudgetService } from './budget.service';
 export class LineItemService {
     baseUrl = `${BE_API_URL}/line_items`;
     newlyAddedLineItemId = new Subject<string>();
+    fetchedLineItem: LineItem | undefined = undefined;
 
     constructor(
         private http: HttpClient,
@@ -45,5 +50,24 @@ export class LineItemService {
                 this.budgetService.openSnagDialogAndRefresh(error);
             }
         });
+    }
+
+    fetchLineItem(lineItemId: string): LineItem | undefined {
+        if (this.fetchedLineItem?.lineItemId !== lineItemId) {
+            this.budgetService
+                .budget()
+                ?.budgetCategories.some((budgetCategory) => {
+                    const result = budgetCategory.lineItems.find(
+                        (lineItem) => lineItem.lineItemId === lineItemId
+                    );
+                    if (result) {
+                        this.fetchedLineItem = result;
+                        return true;
+                    }
+                    return false;
+                });
+        }
+
+        return this.fetchedLineItem;
     }
 }

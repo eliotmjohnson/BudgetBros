@@ -37,7 +37,7 @@
             mobileModalService.showPlannedAmounts()
                 ? 'remove-remaining-mobile'
                 : ''
-        }}"
+        }} {{ remainingAmount() < 0 ? 'unhappy-remaining' : '' }}"
     >
         {{ remainingAmount() | currency }}
     </p>
@@ -52,7 +52,9 @@
         <span
             (document:keydown.enter)="createOrUpdateLineItem(true)"
             (document:click)="checkIfOutsideParent($event, lineItemContainer)"
-            class="edit-menu-container"
+            class="edit-menu-container {{
+                !isLineItemSelected() ? 'edit-only' : ''
+            }}"
         >
             <button
                 (click)="createOrUpdateLineItem(false, $event)"

@@ -58,15 +58,25 @@ export class TransactionService {
         });
     }
 
-    addTransaction(transaction: NewTransaction) {
+    addTransaction(transaction: NewTransaction, needsRefresh = true) {
         this.http
             .post<IsolatedTransaction>(this.baseUrl, transaction)
             .subscribe({
                 next: (transaction) => {
-                    this.getTransactionsBetweenDates(
-                        new Date(transaction.date),
-                        new Date(transaction.date)
-                    );
+                    if (needsRefresh) {
+                        this.getTransactionsBetweenDates(
+                            new Date(transaction.date),
+                            new Date(transaction.date)
+                        );
+                    } else {
+                        const newEagerTransaction =
+                            this.currentBudgetTransactionData().find(
+                                (trx) => !trx.transactionId
+                            );
+                        if (newEagerTransaction) {
+                            newEagerTransaction.transactionId = transaction.id;
+                        }
+                    }
                 },
                 error: (error) => {
                     console.error(error);

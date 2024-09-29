@@ -1,4 +1,12 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    computed,
+    effect,
+    inject,
+    signal
+} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -10,6 +18,7 @@ import {
     Transaction
 } from 'src/app/models/transaction';
 import { BudgetCategoryService } from 'src/app/services/budget-category.service';
+import { LineItemService } from 'src/app/services/line-item.service';
 import { TransactionService } from 'src/app/services/transaction.service';
 import {
     addValueToCurrencyInput,
@@ -17,8 +26,9 @@ import {
 } from 'src/app/utils/currencyUtils';
 
 export interface TransactionModalData {
-    mode: 'add' | 'edit';
+    mode: 'add' | 'edit' | 'budgetTransactionsAdd';
     transaction?: IsolatedTransaction;
+    lineItemId?: string;
 }
 
 @Component({
@@ -26,11 +36,13 @@ export interface TransactionModalData {
     templateUrl: './transaction-modal.component.html',
     styleUrl: './transaction-modal.component.scss'
 })
-export class TransactionModalComponent {
+export class TransactionModalComponent implements AfterViewInit {
     readonly dialogRef = inject(MatDialogRef<TransactionModalComponent>);
     modalData = inject<TransactionModalData>(MAT_DIALOG_DATA);
     transactionService = inject(TransactionService);
     budgetCategoryService = inject(BudgetCategoryService);
+    lineItemService = inject(LineItemService);
+    changeDetector = inject(ChangeDetectorRef);
 
     today = new Date();
     prevSelectedDate = signal<Date | null>(null);
@@ -57,14 +69,18 @@ export class TransactionModalComponent {
     form = new FormGroup(
         {
             title: new FormControl<string | null>(
-                this.modalData.transaction?.title || null
+                this.modalData.transaction?.title || null,
+                [Validators.required]
             ),
-            amount: new FormControl(this.modalData.transaction?.amount || 0, [
+            amount: new FormControl<number | undefined>(undefined, [
                 Validators.min(0.01)
             ]),
-            lineItem: new FormControl<LineItemReduced | null>(
+            lineItem: new FormControl<LineItemReduced | null | string>(
                 {
-                    value: this.preSelectedLineItem() || null,
+                    value:
+                        this.preSelectedLineItem() ||
+                        this.modalData.lineItemId ||
+                        null,
                     disabled: !this.dropdownCategories().length
                 },
                 [Validators.required]
@@ -76,8 +92,7 @@ export class TransactionModalComponent {
                 [Validators.required]
             ),
             merchant: new FormControl<string | null>(
-                this.modalData.transaction?.merchant || null,
-                [Validators.required]
+                this.modalData.transaction?.merchant || null
             ),
             notes: new FormControl<string | null>(
                 this.modalData.transaction?.notes || null
@@ -101,6 +116,13 @@ export class TransactionModalComponent {
                 this.form.updateValueAndValidity({ onlySelf: true });
             }
         });
+    }
+
+    ngAfterViewInit(): void {
+        this.form.controls.amount.setValue(
+            this.modalData.transaction?.amount || 0
+        );
+        this.changeDetector.detectChanges();
     }
 
     getCategories(e: MatDatepickerInputEvent<Date>) {
@@ -140,19 +162,27 @@ export class TransactionModalComponent {
     submitForm() {
         if (this.form.invalid) return;
 
-        if (this.modalData.mode === 'add') {
+        if (this.modalData.mode !== 'edit') {
             const submittedTransaction = this.form.value;
             const newTransaction: NewTransaction = {
                 title: submittedTransaction.title || '',
                 amount: submittedTransaction.amount!,
-                lineItemId: submittedTransaction.lineItem!.lineItemId,
+                lineItemId:
+                    (submittedTransaction.lineItem! as LineItemReduced)
+                        .lineItemId || this.modalData.lineItemId!,
                 date: submittedTransaction.date!.toISOString(),
                 merchant: submittedTransaction.merchant!,
                 notes: submittedTransaction.notes || '',
                 deleted: false
             };
 
-            this.transactionService.addTransaction(newTransaction);
+            this.eagerAddTransaction(newTransaction);
+            const needsRefresh =
+                this.modalData.mode !== 'budgetTransactionsAdd';
+            this.transactionService.addTransaction(
+                newTransaction,
+                needsRefresh
+            );
         } else {
             const submittedTransaction = this.form.value;
             const updatedTransaction: Transaction = {
@@ -160,7 +190,8 @@ export class TransactionModalComponent {
                 title: submittedTransaction.title || '',
                 deleted: this.modalData.transaction!.deleted,
                 amount: submittedTransaction.amount!,
-                lineItemId: submittedTransaction.lineItem!.lineItemId,
+                lineItemId: (submittedTransaction.lineItem! as LineItemReduced)
+                    .lineItemId,
                 date: submittedTransaction.date!.toISOString(),
                 merchant: submittedTransaction.merchant!,
                 notes: submittedTransaction.notes || ''
@@ -172,5 +203,18 @@ export class TransactionModalComponent {
             );
         }
         this.closeModal();
+    }
+
+    eagerAddTransaction(transaction: NewTransaction) {
+        const foundLineItem = this.lineItemService.fetchLineItem(
+            transaction.lineItemId
+        );
+
+        if (foundLineItem) {
+            foundLineItem.transactions = [
+                ...foundLineItem.transactions,
+                { ...transaction, id: '' }
+            ];
+        }
     }
 }

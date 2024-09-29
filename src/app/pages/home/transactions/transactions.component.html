@@ -1,25 +1,90 @@
 <div class="transactions-container">
-    <div class="header-container">
-        <div class="title-wrapper">
-            <h1 class="title">Transactions</h1>
-            <button
-                mat-icon-button
-                matTooltip="Add transaction"
-                class="plus-button"
-                (click)="openAddTransactionDialog()"
+    <div class="upper-section-container">
+        <div class="header-container">
+            <div class="title-wrapper">
+                <h1 class="title">Transactions</h1>
+                <button
+                    mat-icon-button
+                    matTooltip="Add transaction"
+                    class="plus-button"
+                    (click)="openAddTransactionDialog()"
+                >
+                    <mat-icon
+                        fontIcon="add"
+                        class="icon"
+                    />
+                </button>
+            </div>
+            <div
+                [style]="{
+                    display: 'flex',
+                    gap: '1rem'
+                }"
             >
-                <mat-icon
-                    fontIcon="add"
-                    class="icon"
+                @if (transactions().length) {
+                    <button
+                        mat-icon-button
+                        matTooltip="Filter transactions"
+                        (click)="toggleFilter()"
+                    >
+                        <mat-icon
+                            fontIcon="filter_list"
+                            class="icon"
+                        />
+                    </button>
+                }
+                <TransactionsDatePicker
+                    [form]="form"
+                    (submitForm)="submitForm()"
                 />
-            </button>
+            </div>
         </div>
-        <TransactionsDatePicker
-            [form]="form"
-            (submitForm)="submitForm()"
-        />
+        @if (isFilterOpen()) {
+            <div class="filters-container">
+                @for (field of filterFields(); track field.title) {
+                    <mat-form-field
+                        class="fullwidth"
+                        appearance="outline"
+                    >
+                        <mat-label>{{ field.title }}</mat-label>
+                        <input
+                            matInput
+                            [value]="
+                                field.title === 'Amount'
+                                    ? (field.value | currency)
+                                    : field.value
+                            "
+                            (keydown)="
+                                field.title === 'Amount'
+                                    ? checkIfValidKey($event)
+                                    : ''
+                            "
+                            (input)="updateFilters(field.title, $event)"
+                        />
+                        @if (field.value) {
+                            <button
+                                matSuffix
+                                mat-icon-button
+                                (click)="updateFilters(field.title)"
+                            >
+                                <mat-icon>clear</mat-icon>
+                            </button>
+                        }
+                    </mat-form-field>
+                }
+                @if (filtersHaveValue()) {
+                    <button
+                        mat-icon-button
+                        matTooltip="Clear all filters"
+                        (click)="clearAllFilters()"
+                    >
+                        <mat-icon>clear_all</mat-icon>
+                    </button>
+                }
+            </div>
+        }
+        <mat-divider />
     </div>
-    <mat-divider />
     <div class="transactions-inner-container">
         @if (transactionService.isLoading()) {
             <mat-spinner
@@ -27,7 +92,7 @@
                 [style.align-self]="'center'"
             />
         } @else {
-            @for (transaction of transactions(); track transaction.id) {
+            @for (transaction of filteredTransactions(); track transaction.id) {
                 <TransactionCard [transaction]="transaction" />
             } @empty {
                 No Transactions Found

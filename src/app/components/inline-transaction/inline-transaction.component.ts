@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MONTHS } from 'src/app/constants/constants';
-import { BudgetCategoryService } from 'src/app/services/budget-category.service';
+import { IsolatedTransaction } from 'src/app/models/transaction';
 import { LineItemService } from 'src/app/services/line-item.service';
 import { MobileModalService } from 'src/app/services/mobile-modal.service';
 import { TransactionService } from 'src/app/services/transaction.service';
@@ -8,8 +9,6 @@ import {
     TransactionModalComponent,
     TransactionModalData
 } from '../transaction-modal/transaction-modal.component';
-import { IsolatedTransaction } from 'src/app/models/transaction';
-import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'InlineTransaction',
@@ -27,7 +26,6 @@ export class InlineTransactionComponent {
     constructor(
         private transactionService: TransactionService,
         private lineItemService: LineItemService,
-        private budgetCategoryService: BudgetCategoryService,
         private dialog: MatDialog,
         public mobileService: MobileModalService
     ) {}
@@ -40,7 +38,9 @@ export class InlineTransactionComponent {
         return foundMonth?.slice(0, 3);
     }
 
-    deleteTransaction() {
+    deleteTransaction(e: MouseEvent) {
+        e.stopPropagation();
+
         this.transactionService.softDeleteTransaction(this.transactionId!);
         const foundLineItem = this.lineItemService.fetchLineItem(
             this.transactionService.currentSelectedLineItemId()

@@ -67,7 +67,8 @@
         </main>
         <section class="transactions-container">
             @for (
-                transaction of transactionService.currentBudgetTransactionData();
+                transaction of transactionService.currentBudgetTransactionData()
+                    | sortByDate;
                 track $index
             ) {
                 <InlineTransaction

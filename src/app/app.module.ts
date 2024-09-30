@@ -57,6 +57,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { SettingsComponent } from './pages/home/settings/settings.component';
 import { TransactionsComponent } from './pages/home/transactions/transactions.component';
 import { LoginComponent } from './pages/login/login.component';
+import { SortByDatePipe } from './pipes/sort-by-date.pipe';
 
 @NgModule({
     declarations: [
@@ -86,7 +87,8 @@ import { LoginComponent } from './pages/login/login.component';
         MobileConstructionComponent,
         TabsBarComponent,
         AddTransactionMobileModalComponent,
-        AmountTypeSelectorComponent
+        AmountTypeSelectorComponent,
+        SortByDatePipe
     ],
     bootstrap: [AppComponent],
     imports: [

@@ -3,6 +3,7 @@
         !transactionId ? 'delete-hidden' : ''
     }}"
     matTooltip="Notes: {{ notes }}"
+    [matTooltipDisabled]="!notes"
     [matTooltipPosition]="mobileService.isMobileDevice() ? 'below' : 'left'"
     (click)="transactionId && editTransaction()"
 >
@@ -18,6 +19,6 @@
     <mat-icon
         class="delete-icon"
         fontIcon="delete"
-        (click)="deleteTransaction()"
+        (click)="deleteTransaction($event)"
     />
 </span>

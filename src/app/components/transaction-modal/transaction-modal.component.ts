@@ -26,7 +26,7 @@ import {
 } from 'src/app/utils/currencyUtils';
 
 export interface TransactionModalData {
-    mode: 'add' | 'edit' | 'budgetTransactionsAdd';
+    mode: 'add' | 'edit' | 'budgetTransactionsAdd' | 'budgetTransactionsEdit';
     transaction?: IsolatedTransaction;
     lineItemId?: string;
 }
@@ -46,6 +46,9 @@ export class TransactionModalComponent implements AfterViewInit {
 
     today = new Date();
     prevSelectedDate = signal<Date | null>(null);
+    isBudgetTransactionsModal =
+        this.modalData.mode === 'budgetTransactionsAdd' ||
+        this.modalData.mode === 'budgetTransactionsEdit';
 
     dropdownCategories = computed<BudgetCategoryWithLineItems[]>(() =>
         this.budgetCategoryService.budgetCategoriesWithLineItems()
@@ -111,7 +114,10 @@ export class TransactionModalComponent implements AfterViewInit {
         });
 
         effect(() => {
-            if (this.dropdownCategories().length) {
+            if (
+                this.dropdownCategories().length ||
+                this.isBudgetTransactionsModal
+            ) {
                 this.form.get('lineItem')?.enable();
                 this.form.updateValueAndValidity({ onlySelf: true });
             }
@@ -136,7 +142,7 @@ export class TransactionModalComponent implements AfterViewInit {
         const shouldFetchCategories =
             newMonth !== prevMonth || newYear !== prevYear;
 
-        if (date && shouldFetchCategories) {
+        if (date && shouldFetchCategories && !this.isBudgetTransactionsModal) {
             this.budgetCategoryService.getBudgetCategoriesWithLineItems(
                 date.getMonth() + 1,
                 date.getFullYear()
@@ -161,24 +167,31 @@ export class TransactionModalComponent implements AfterViewInit {
 
     submitForm() {
         if (this.form.invalid) return;
+        const needsRefresh = !this.isBudgetTransactionsModal;
 
-        if (this.modalData.mode !== 'edit') {
+        if (
+            this.modalData.mode !== 'edit' &&
+            this.modalData.mode !== 'budgetTransactionsEdit'
+        ) {
             const submittedTransaction = this.form.value;
             const newTransaction: NewTransaction = {
+                userId: '',
                 title: submittedTransaction.title || '',
                 amount: submittedTransaction.amount!,
                 lineItemId:
                     (submittedTransaction.lineItem! as LineItemReduced)
                         .lineItemId || this.modalData.lineItemId!,
                 date: submittedTransaction.date!.toISOString(),
-                merchant: submittedTransaction.merchant!,
+                merchant: submittedTransaction.merchant
+                    ? submittedTransaction.merchant
+                    : null,
                 notes: submittedTransaction.notes || '',
                 deleted: false
             };
 
-            this.eagerAddTransaction(newTransaction);
-            const needsRefresh =
-                this.modalData.mode !== 'budgetTransactionsAdd';
+            if (!needsRefresh) {
+                this.eagerAddTransaction(newTransaction);
+            }
             this.transactionService.addTransaction(
                 newTransaction,
                 needsRefresh
@@ -186,20 +199,27 @@ export class TransactionModalComponent implements AfterViewInit {
         } else {
             const submittedTransaction = this.form.value;
             const updatedTransaction: Transaction = {
-                id: this.modalData.transaction!.id,
+                transactionId: this.modalData.transaction!.transactionId,
                 title: submittedTransaction.title || '',
                 deleted: this.modalData.transaction!.deleted,
                 amount: submittedTransaction.amount!,
-                lineItemId: (submittedTransaction.lineItem! as LineItemReduced)
-                    .lineItemId,
+                lineItemId:
+                    (submittedTransaction.lineItem! as LineItemReduced)
+                        .lineItemId || this.modalData.lineItemId!,
                 date: submittedTransaction.date!.toISOString(),
-                merchant: submittedTransaction.merchant!,
+                merchant: submittedTransaction.merchant
+                    ? submittedTransaction.merchant
+                    : null,
                 notes: submittedTransaction.notes || ''
             };
 
+            if (!needsRefresh) {
+                this.eagerUpdateTransaction(updatedTransaction);
+            }
             this.transactionService.updateTransaction(
                 updatedTransaction,
-                this.modalData.transaction?.budgetCategoryName
+                this.modalData.transaction?.budgetCategoryName,
+                needsRefresh
             );
         }
         this.closeModal();
@@ -213,8 +233,24 @@ export class TransactionModalComponent implements AfterViewInit {
         if (foundLineItem) {
             foundLineItem.transactions = [
                 ...foundLineItem.transactions,
-                { ...transaction, id: '' }
+                { ...transaction, transactionId: '' }
             ];
+        }
+    }
+
+    eagerUpdateTransaction(transaction: Transaction) {
+        const foundLineItem = this.lineItemService.fetchLineItem(
+            transaction.lineItemId
+        );
+
+        if (foundLineItem) {
+            foundLineItem.transactions = foundLineItem.transactions.map((t) =>
+                t.transactionId === transaction.transactionId
+                    ? {
+                          ...transaction
+                      }
+                    : t
+            );
         }
     }
 }

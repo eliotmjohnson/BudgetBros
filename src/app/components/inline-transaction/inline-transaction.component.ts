@@ -1,8 +1,15 @@
 import { Component, Input } from '@angular/core';
 import { MONTHS } from 'src/app/constants/constants';
+import { BudgetCategoryService } from 'src/app/services/budget-category.service';
 import { LineItemService } from 'src/app/services/line-item.service';
 import { MobileModalService } from 'src/app/services/mobile-modal.service';
 import { TransactionService } from 'src/app/services/transaction.service';
+import {
+    TransactionModalComponent,
+    TransactionModalData
+} from '../transaction-modal/transaction-modal.component';
+import { IsolatedTransaction } from 'src/app/models/transaction';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'InlineTransaction',
@@ -13,13 +20,15 @@ export class InlineTransactionComponent {
     @Input() transactionId?: string | undefined;
     @Input() title = '';
     @Input() amount = 0;
-    @Input() merchant = '';
+    @Input() merchant: string | null = '';
     @Input() notes = '';
     @Input({ transform: (date: string) => new Date(date) }) date!: Date;
 
     constructor(
         private transactionService: TransactionService,
         private lineItemService: LineItemService,
+        private budgetCategoryService: BudgetCategoryService,
+        private dialog: MatDialog,
         public mobileService: MobileModalService
     ) {}
 
@@ -44,5 +53,30 @@ export class InlineTransactionComponent {
                 }
             );
         }
+    }
+
+    editTransaction() {
+        const transactionToUpdate = {
+            transactionId: this.transactionId,
+            amount: this.amount,
+            date: this.date.toDateString(),
+            deleted: false,
+            lineItemId: this.transactionService.currentSelectedLineItemId(),
+            merchant: this.merchant,
+            notes: this.notes,
+            title: this.title
+        } as IsolatedTransaction;
+
+        this.dialog.open<TransactionModalComponent, TransactionModalData>(
+            TransactionModalComponent,
+            {
+                data: {
+                    mode: 'budgetTransactionsEdit',
+                    transaction: transactionToUpdate,
+                    lineItemId:
+                        this.transactionService.currentSelectedLineItemId()
+                }
+            }
+        );
     }
 }

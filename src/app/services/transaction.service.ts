@@ -43,11 +43,11 @@ export class TransactionService {
             });
     }
 
-    softDeleteTransaction(transactionId: IsolatedTransaction['id']) {
+    softDeleteTransaction(transactionId: IsolatedTransaction['transactionId']) {
         const currentTransactions = this.transactions();
 
         this.transactions.update((transactions) =>
-            transactions.filter((t) => t.id !== transactionId)
+            transactions.filter((t) => t.transactionId !== transactionId)
         );
 
         this.http.delete(`${this.baseUrl}/soft/${transactionId}`).subscribe({
@@ -59,6 +59,8 @@ export class TransactionService {
     }
 
     addTransaction(transaction: NewTransaction, needsRefresh = true) {
+        transaction.userId = this.authService.userId!;
+
         this.http
             .post<IsolatedTransaction>(this.baseUrl, transaction)
             .subscribe({
@@ -74,7 +76,8 @@ export class TransactionService {
                                 (trx) => !trx.transactionId
                             );
                         if (newEagerTransaction) {
-                            newEagerTransaction.transactionId = transaction.id;
+                            newEagerTransaction.transactionId =
+                                transaction.transactionId;
                         }
                     }
                 },
@@ -84,33 +87,40 @@ export class TransactionService {
             });
     }
 
-    updateTransaction(transaction: Transaction, budgetCategoryName?: string) {
+    updateTransaction(
+        transaction: Transaction,
+        budgetCategoryName?: string,
+        needsRefresh = true
+    ) {
         this.http.put<string>(this.baseUrl, transaction).subscribe({
             next: () => {
-                const prevTransaction = this.transactions().find(
-                    (t) => t.id === transaction.id
-                );
+                if (needsRefresh) {
+                    const prevTransaction = this.transactions().find(
+                        (t) => t.transactionId === transaction.transactionId
+                    );
 
-                if (
-                    !prevTransaction ||
-                    new Date(transaction.date).getMonth() !==
-                        new Date(prevTransaction!.date).getMonth()
-                ) {
-                    this.getTransactionsBetweenDates(
-                        new Date(transaction.date),
-                        new Date(transaction.date)
-                    );
-                } else {
-                    this.transactions.update((transactions) =>
-                        transactions.map((t) =>
-                            t.id === transaction.id
-                                ? {
-                                      ...transaction,
-                                      budgetCategoryName: budgetCategoryName!
-                                  }
-                                : t
-                        )
-                    );
+                    if (
+                        !prevTransaction ||
+                        new Date(transaction.date).getMonth() !==
+                            new Date(prevTransaction!.date).getMonth()
+                    ) {
+                        this.getTransactionsBetweenDates(
+                            new Date(transaction.date),
+                            new Date(transaction.date)
+                        );
+                    } else {
+                        this.transactions.update((transactions) =>
+                            transactions.map((t) =>
+                                t.transactionId === transaction.transactionId
+                                    ? {
+                                          ...transaction,
+                                          budgetCategoryName:
+                                              budgetCategoryName!
+                                      }
+                                    : t
+                            )
+                        );
+                    }
                 }
             },
             error: (error) => {

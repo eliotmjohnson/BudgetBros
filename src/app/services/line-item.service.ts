@@ -15,7 +15,6 @@ import { BudgetService } from './budget.service';
 export class LineItemService {
     baseUrl = `${BE_API_URL}/line_items`;
     newlyAddedLineItemId = new Subject<string>();
-    fetchedLineItem: LineItem | undefined = undefined;
 
     constructor(
         private http: HttpClient,
@@ -53,21 +52,19 @@ export class LineItemService {
     }
 
     fetchLineItem(lineItemId: string): LineItem | undefined {
-        if (this.fetchedLineItem?.lineItemId !== lineItemId) {
-            this.budgetService
-                .budget()
-                ?.budgetCategories.some((budgetCategory) => {
-                    const result = budgetCategory.lineItems.find(
-                        (lineItem) => lineItem.lineItemId === lineItemId
-                    );
-                    if (result) {
-                        this.fetchedLineItem = result;
-                        return true;
-                    }
-                    return false;
-                });
-        }
+        let fetchedLineItem: LineItem | undefined = undefined;
 
-        return this.fetchedLineItem;
+        this.budgetService.budget()?.budgetCategories.some((budgetCategory) => {
+            const result = budgetCategory.lineItems.find(
+                (lineItem) => lineItem.lineItemId === lineItemId
+            );
+            if (result) {
+                fetchedLineItem = result;
+                return true;
+            }
+            return false;
+        });
+
+        return fetchedLineItem;
     }
 }

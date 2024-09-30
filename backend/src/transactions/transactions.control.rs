@@ -17,7 +17,7 @@ use serde::Deserialize;
 
 use crate::{
     transactions::transactions_models::{
-        IsolatedTransactionResponse, NewTransaction, Transaction
+        IsolatedTransactionResponse, NewTransaction, UpdatedTransaction
     }, 
     AppState
 };
@@ -77,12 +77,12 @@ pub async fn get_all_transactions_between_dates_handler(
                 .into_iter()
                 .map(|transaction| IsolatedTransactionResponse {
                     line_item_id: transaction.line_item_id,
-                    id: transaction.id,
+                    transaction_id: transaction.id,
                     title: transaction.title,
                     amount: transaction.amount,
                     notes: transaction.notes,
                     date: transaction.date,
-                    merchant: transaction.merchant,
+                    merchant: Some(transaction.merchant).unwrap_or_default(),
                     budget_category_name: transaction.budget_category_name,
                     deleted: transaction.deleted
                 })
@@ -110,12 +110,12 @@ pub async fn add_transaction_handler(
         Ok(transaction) => {
             let newly_added_transaction = IsolatedTransactionResponse {
                 line_item_id: transaction.line_item_id,
-                id: transaction.id,
+                transaction_id: transaction.id,
                 title: transaction.title,
                 amount: transaction.amount,
                 notes: transaction.notes,
                 date: transaction.date,
-                merchant: transaction.merchant,
+                merchant: Some(transaction.merchant).unwrap_or_default(),
                 budget_category_name: transaction.budget_category_name,
                 deleted: transaction.deleted
             };
@@ -131,7 +131,7 @@ pub async fn add_transaction_handler(
 #[put("")]
 pub async fn update_transaction_handler(
     state: Data<AppState>,
-    body: Json<Transaction>
+    body: Json<UpdatedTransaction>
 ) -> impl Responder {
     let updated_transaction = body.into_inner();
 

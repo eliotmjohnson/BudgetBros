@@ -92,7 +92,10 @@
                 [style.align-self]="'center'"
             />
         } @else {
-            @for (transaction of filteredTransactions(); track transaction.id) {
+            @for (
+                transaction of filteredTransactions();
+                track transaction.transactionId
+            ) {
                 <TransactionCard [transaction]="transaction" />
             } @empty {
                 No Transactions Found

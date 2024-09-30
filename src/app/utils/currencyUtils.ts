@@ -25,6 +25,7 @@ export const checkCurrencyInputKeyValid = (
     return (
         !!(
             (e.key === 'Backspace' && valueToCheck) ||
+            (e.key === 'Enter' && valueToCheck) ||
             e.key.includes('Arrow')
         ) ||
         !(

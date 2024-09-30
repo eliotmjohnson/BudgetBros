@@ -7,6 +7,7 @@
     border-bottom: 1px solid rgb(229, 229, 229);
     height: 4rem;
     position: relative;
+    cursor: pointer;
 
     &:hover {
         .transaction-amount {

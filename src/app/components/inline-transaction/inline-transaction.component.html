@@ -4,6 +4,7 @@
     }}"
     matTooltip="Notes: {{ notes }}"
     [matTooltipPosition]="mobileService.isMobileDevice() ? 'below' : 'left'"
+    (click)="transactionId && editTransaction()"
 >
     <div class="date">
         <h3>{{ getMonth() }}</h3>

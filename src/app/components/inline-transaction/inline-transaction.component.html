@@ -1,7 +1,11 @@
 <span
-    class="inline-transaction-wrapper"
+    class="inline-transaction-wrapper {{
+        !transactionId ? 'delete-hidden' : ''
+    }}"
     matTooltip="Notes: {{ notes }}"
-    matTooltipPosition="left"
+    [matTooltipDisabled]="!notes"
+    [matTooltipPosition]="mobileService.isMobileDevice() ? 'below' : 'left'"
+    (click)="transactionId && editTransaction()"
 >
     <div class="date">
         <h3>{{ getMonth() }}</h3>
@@ -12,4 +16,9 @@
         <p class="transaction-merchant">{{ merchant }}</p>
     </span>
     <p class="transaction-amount">-${{ amount | number: "1.2-2" }}</p>
+    <mat-icon
+        class="delete-icon"
+        fontIcon="delete"
+        (click)="deleteTransaction($event)"
+    />
 </span>

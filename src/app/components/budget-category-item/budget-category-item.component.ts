@@ -2,6 +2,8 @@ import {
     AfterViewChecked,
     Component,
     computed,
+    effect,
+    untracked,
     ElementRef,
     EventEmitter,
     input,
@@ -64,7 +66,16 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
         private transactionService: TransactionService,
         private lineItemService: LineItemService,
         public mobileModalService: MobileModalService
-    ) {}
+    ) {
+        effect(() => {
+            if (
+                this.transactions() &&
+                untracked(() => transactionService.currentSelectedLineItemId())
+            ) {
+                untracked(() => this.setTransactionData());
+            }
+        });
+    }
 
     ngOnInit(): void {
         this.lineItemInputValue.setValue(this.itemTitle);

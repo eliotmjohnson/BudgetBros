@@ -1,5 +1,9 @@
 <h2 mat-dialog-title>
-    {{ modalData.mode === "add" ? "Add " : "Update" }}
+    {{
+        modalData.mode !== "edit" && modalData.mode !== "budgetTransactionsEdit"
+            ? "Add "
+            : "Update"
+    }}
     Transaction
 </h2>
 <form
@@ -8,14 +12,21 @@
 >
     <mat-dialog-content class="content">
         <mat-form-field
-            class="fullwidth"
+            class="fullwidth top-margin"
             appearance="outline"
         >
-            <mat-label> Title (optional) </mat-label>
+            <mat-label> Title </mat-label>
             <input
                 matInput
                 formControlName="title"
             />
+            <mat-error>
+                {{
+                    form.get("title")?.errors && form.get("title")?.touched
+                        ? "Title is required"
+                        : ""
+                }}
+            </mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline">
             <mat-label> Amount </mat-label>
@@ -71,66 +82,60 @@
                 class="fullwidth"
                 appearance="outline"
             >
-                <mat-label> Merchant </mat-label>
+                <mat-label> Merchant (optional) </mat-label>
                 <input
                     matInput
                     formControlName="merchant"
                 />
+            </mat-form-field>
+        </div>
+        @if (!isBudgetTransactionsModal) {
+            <mat-form-field
+                appearance="outline"
+                [matTooltip]="
+                    !dropdownCategories().length
+                        ? form.value.date
+                            ? 'There are no budget items for this month. Please choose another month'
+                            : 'Please pick a date to show budget items'
+                        : ''
+                "
+            >
+                <mat-label> Select Budget Item </mat-label>
+                <mat-select
+                    formControlName="lineItem"
+                    appearance="outline"
+                >
+                    @if (dropdownCategories().length) {
+                        @for (
+                            category of dropdownCategories();
+                            track category.budgetCategoryId
+                        ) {
+                            <mat-optgroup
+                                [label]="category.budgetCategoryName"
+                                style="font-weight: bold"
+                            >
+                                @for (
+                                    lineItem of category.lineItems;
+                                    track lineItem.lineItemId
+                                ) {
+                                    <mat-option [value]="lineItem">
+                                        {{ lineItem.lineItemName }}
+                                    </mat-option>
+                                }
+                            </mat-optgroup>
+                        }
+                    }
+                </mat-select>
                 <mat-error>
                     {{
-                        form.get("merchant")?.errors &&
-                        form.get("merchant")?.touched
-                            ? "Merchant is required"
+                        form.get("lineItem")?.errors &&
+                        form.get("lineItem")?.touched
+                            ? "Budget item is required"
                             : ""
                     }}
                 </mat-error>
             </mat-form-field>
-        </div>
-        <mat-form-field
-            appearance="outline"
-            [matTooltip]="
-                !dropdownCategories().length
-                    ? form.value.date
-                        ? 'There are no budget items for this month. Please choose another month'
-                        : 'Please pick a date to show budget items'
-                    : ''
-            "
-        >
-            <mat-label> Select Budget Item </mat-label>
-            <mat-select
-                formControlName="lineItem"
-                appearance="outline"
-            >
-                @if (dropdownCategories().length) {
-                    @for (
-                        category of dropdownCategories();
-                        track category.budgetCategoryId
-                    ) {
-                        <mat-optgroup
-                            [label]="category.budgetCategoryName"
-                            style="font-weight: bold"
-                        >
-                            @for (
-                                lineItem of category.lineItems;
-                                track lineItem.lineItemId
-                            ) {
-                                <mat-option [value]="lineItem">
-                                    {{ lineItem.lineItemName }}
-                                </mat-option>
-                            }
-                        </mat-optgroup>
-                    }
-                }
-            </mat-select>
-            <mat-error>
-                {{
-                    form.get("lineItem")?.errors &&
-                    form.get("lineItem")?.touched
-                        ? "Budget item is required"
-                        : ""
-                }}
-            </mat-error>
-        </mat-form-field>
+        }
         <mat-form-field
             class="fullwidth"
             appearance="outline"
@@ -163,7 +168,12 @@
                 !(form.valid && form.dirty && form.get('lineItem')?.valid)
             "
         >
-            {{ modalData.mode === "add" ? "Add" : "Update" }}
+            {{
+                modalData.mode !== "edit" &&
+                modalData.mode !== "budgetTransactionsEdit"
+                    ? "Add"
+                    : "Update"
+            }}
         </button>
     </mat-dialog-actions>
 </form>

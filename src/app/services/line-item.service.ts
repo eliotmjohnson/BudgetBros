@@ -2,7 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { BE_API_URL } from '../constants/constants';
-import { SaveLineItemPayload, UpdateLineItemPayload } from '../models/lineItem';
+import {
+    LineItem,
+    SaveLineItemPayload,
+    UpdateLineItemPayload
+} from '../models/lineItem';
 import { BudgetService } from './budget.service';
 
 @Injectable({
@@ -45,5 +49,22 @@ export class LineItemService {
                 this.budgetService.openSnagDialogAndRefresh(error);
             }
         });
+    }
+
+    fetchLineItem(lineItemId: string): LineItem | undefined {
+        let fetchedLineItem: LineItem | undefined = undefined;
+
+        this.budgetService.budget()?.budgetCategories.some((budgetCategory) => {
+            const result = budgetCategory.lineItems.find(
+                (lineItem) => lineItem.lineItemId === lineItemId
+            );
+            if (result) {
+                fetchedLineItem = result;
+                return true;
+            }
+            return false;
+        });
+
+        return fetchedLineItem;
     }
 }

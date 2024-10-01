@@ -4,7 +4,7 @@ use sqlx::postgres::PgQueryResult;
 
 use crate::AppState;
 
-use super::transactions_models::{IsolatedTransaction, NewTransaction, Transaction};
+use super::transactions_models::{IsolatedTransaction, NewTransaction, Transaction, UpdatedTransaction};
 
 pub async fn get_line_item_transactions(state: Data<AppState>, line_item_id: String) -> Result<Vec<Transaction>, sqlx::Error> {
     let query = 
@@ -59,8 +59,8 @@ pub async fn add_transaction(state: Data<AppState>, new_transaction: NewTransact
     let query = 
         "WITH inserted_transaction AS (
             INSERT INTO transactions 
-            (title, merchant, amount, notes, date, line_item_id, deleted) 
-            VALUES ($1, $2, $3, $4, $5, $6, $7)
+            (user_id, title, merchant, amount, notes, date, line_item_id, deleted) 
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
             RETURNING *
         )
         SELECT 
@@ -76,6 +76,7 @@ pub async fn add_transaction(state: Data<AppState>, new_transaction: NewTransact
             budgets b ON bc.budget_id = b.id";
 
     sqlx::query_as::<_, IsolatedTransaction>(query)
+        .bind(new_transaction.user_id)
         .bind(new_transaction.title)   
         .bind(new_transaction.merchant)   
         .bind(new_transaction.amount)   
@@ -87,7 +88,7 @@ pub async fn add_transaction(state: Data<AppState>, new_transaction: NewTransact
         .await
 }
 
-pub async fn update_transaction(state: Data<AppState>, new_transaction: Transaction) -> Result<PgQueryResult, sqlx::Error> {
+pub async fn update_transaction(state: Data<AppState>, new_transaction: UpdatedTransaction) -> Result<PgQueryResult, sqlx::Error> {
     let query = 
         "UPDATE 
             transactions 
@@ -108,7 +109,7 @@ pub async fn update_transaction(state: Data<AppState>, new_transaction: Transact
         .bind(new_transaction.notes)   
         .bind(new_transaction.date)   
         .bind(new_transaction.line_item_id)
-        .bind(new_transaction.id)   
+        .bind(new_transaction.transaction_id)   
         .execute(&state.db)
         .await
 }

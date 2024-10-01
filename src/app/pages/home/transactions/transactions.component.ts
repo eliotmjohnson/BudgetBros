@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { filter } from 'rxjs';
 import {
     TransactionModalComponent,
     TransactionModalData
@@ -69,7 +68,7 @@ export class TransactionsComponent implements OnInit {
 
             const merchantFilter = merchantField.value
                 ? transaction.merchant
-                      .toLowerCase()
+                      ?.toLowerCase()
                       .includes(merchantField.value.toLowerCase())
                 : true;
 

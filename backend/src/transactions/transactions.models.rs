@@ -7,11 +7,12 @@ use sqlx::{self, FromRow};
 pub struct Transaction {
     pub id: String,
     pub title: String,
-    pub merchant: String,
+    pub merchant: Option<String>,
     pub amount: f64,
     pub notes: String,
     pub date: DateTime<Local>,
     pub line_item_id: String,
+    pub user_id: String,
     pub deleted: bool
 }
 
@@ -19,7 +20,7 @@ pub struct Transaction {
 pub struct IsolatedTransaction {
     pub id: String,
     pub title: String,
-    pub merchant: String,
+    pub merchant: Option<String>,
     pub amount: f64,
     pub notes: String,
     pub date: DateTime<Local>,
@@ -31,9 +32,9 @@ pub struct IsolatedTransaction {
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct IsolatedTransactionResponse {
-    pub id: String,
+    pub transaction_id: String,
     pub title: String,
-    pub merchant: String,
+    pub merchant: Option<String>,
     pub amount: f64,
     pub notes: String,
     pub date: DateTime<Local>,
@@ -45,11 +46,25 @@ pub struct IsolatedTransactionResponse {
 #[derive(Serialize, Deserialize, FromRow, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct NewTransaction {
+    pub user_id: String,
     pub title: String,
-    pub merchant: String,
+    pub merchant: Option<String>,
     pub amount: f64,
     pub notes: String,
     pub date: String,
+    pub line_item_id: String,
+    pub deleted: bool
+}
+
+#[derive(Serialize, Deserialize, FromRow, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct UpdatedTransaction {
+    pub transaction_id: String,
+    pub title: String,
+    pub merchant: Option<String>,
+    pub amount: f64,
+    pub notes: String,
+    pub date: DateTime<Local>,
     pub line_item_id: String,
     pub deleted: bool
 }

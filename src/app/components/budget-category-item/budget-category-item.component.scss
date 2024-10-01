@@ -31,6 +31,8 @@
         }
 
         .line-item-title {
+            all: unset;
+            cursor: text;
             width: calc(100% - 2rem);
             font-family: inherit;
             font-size: 1.1rem;
@@ -41,6 +43,7 @@
             border-radius: 0.5rem;
             padding: 0.2rem;
             padding-left: 0.5rem;
+            margin-right: 0.5rem;
 
             &:hover {
                 @include line-item-input();
@@ -115,6 +118,10 @@
     }
 }
 
+.edit-only {
+    border: 1px solid rgb(81, 189, 81);
+}
+
 .progress-indicator {
     display: flex;
     height: 1px;
@@ -135,6 +142,10 @@
     outline: 2px solid rgb(109, 206, 109, 0.8);
     background-color: rgb(109, 206, 109, 0.2);
     border-radius: 0.5rem;
+}
+
+.unhappy-remaining {
+    color: $bb-error-main;
 }
 
 @media (max-width: 1145px) {

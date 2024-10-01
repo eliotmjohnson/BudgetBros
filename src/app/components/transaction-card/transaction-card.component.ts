@@ -26,7 +26,7 @@ export class TransactionCardComponent {
         this.areNotesOpen.set(!this.areNotesOpen());
     }
 
-    deleteTransaction(transactionId: IsolatedTransaction['id']) {
+    deleteTransaction(transactionId: IsolatedTransaction['transactionId']) {
         this.transactionService.softDeleteTransaction(transactionId);
     }
 

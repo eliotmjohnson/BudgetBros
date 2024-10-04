@@ -1,4 +1,10 @@
-import { style, animate, trigger, transition } from '@angular/animations';
+import {
+    style,
+    animate,
+    trigger,
+    transition,
+    state
+} from '@angular/animations';
 
 export const addTransactionModalAnimation = trigger(
     'addTransactionModalAnimation',
@@ -16,3 +22,18 @@ export const budgetTransactionModalAnimation = trigger(
         ])
     ]
 );
+
+export const dimmerAnimation = trigger('dimmerAnimation', [
+    state('lightDim', style({ opacity: 0.15 })),
+    state('darkDim', style({ opacity: 0.5 })),
+    transition('* => lightDim', [
+        style({ opacity: 0 }),
+        animate('0.4s ease', style({ opacity: 0.15 }))
+    ]),
+    transition('* => darkDim', [
+        style({ opacity: 0 }),
+        animate('.4s ease', style({ opacity: 0.5 }))
+    ]),
+    transition('darkDim => void', style({ opacity: 0 })),
+    transition(':leave', [animate('0.4s ease', style({ opacity: 0 }))])
+]);

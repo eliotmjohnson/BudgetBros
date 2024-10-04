@@ -58,6 +58,7 @@ import { SettingsComponent } from './pages/home/settings/settings.component';
 import { TransactionsComponent } from './pages/home/transactions/transactions.component';
 import { LoginComponent } from './pages/login/login.component';
 import { SortByDatePipe } from './pipes/sort-by-date.pipe';
+import { SlideToDeleteComponent } from './mobile-components/slide-to-delete/slide-to-delete.component';
 
 @NgModule({
     declarations: [
@@ -88,7 +89,8 @@ import { SortByDatePipe } from './pipes/sort-by-date.pipe';
         TabsBarComponent,
         AddTransactionMobileModalComponent,
         AmountTypeSelectorComponent,
-        SortByDatePipe
+        SortByDatePipe,
+        SlideToDeleteComponent
     ],
     bootstrap: [AppComponent],
     imports: [

@@ -1,7 +1,6 @@
 <span
-    class="inline-transaction-wrapper {{
-        !transactionId ? 'delete-hidden' : ''
-    }}"
+    class="inline-transaction-wrapper"
+    [class.delete-hidden]="!transactionId || mobileService.isMobileDevice()"
     matTooltip="Notes: {{ notes }}"
     [matTooltipDisabled]="!notes"
     [matTooltipPosition]="mobileService.isMobileDevice() ? 'below' : 'left'"

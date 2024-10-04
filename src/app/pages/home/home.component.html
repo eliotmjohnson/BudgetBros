@@ -10,6 +10,18 @@
         </main>
     </section>
 </main>
-@if (mobileModalService.isBudgetTransactionsModalOpen()) {
-    <div class="dimmer"></div>
+@if (
+    mobileModalService.isBudgetTransactionsModalOpen() ||
+    mobileModalService.isAddTransactionModalOpen()
+) {
+    <div
+        [@dimmerAnimation]="
+            mobileModalService.isAddTransactionModalOpen()
+                ? 'lightDim'
+                : mobileModalService.isBudgetTransactionsModalOpen()
+                  ? 'darkDim'
+                  : 'noDim'
+        "
+        class="dimmer"
+    ></div>
 }

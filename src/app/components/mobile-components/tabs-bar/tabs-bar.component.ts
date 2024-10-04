@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MobileModalService } from 'src/app/services/mobile-modal.service';
+import { TransactionService } from 'src/app/services/transaction.service';
 
 @Component({
     selector: 'app-tabs-bar',
@@ -11,5 +12,25 @@ import { MobileModalService } from 'src/app/services/mobile-modal.service';
     }
 })
 export class TabsBarComponent {
-    constructor(public mobileModalService: MobileModalService) {}
+    constructor(
+        public mobileModalService: MobileModalService,
+        private transactionService: TransactionService
+    ) {}
+
+    openAddTransactionModal() {
+        if (this.mobileModalService.isBudgetTransactionsModalOpen()) {
+            this.mobileModalService.mobileModalData = {
+                mode: 'budgetTransactionsAdd',
+                lineItemId:
+                    this.transactionService.currentSelectedLineItem()
+                        ?.lineItemId
+            };
+        } else {
+            this.mobileModalService.mobileModalData = {
+                mode: 'budgetTransactionsAddMobile'
+            };
+        }
+
+        this.mobileModalService.isAddTransactionModalOpen.set(true);
+    }
 }

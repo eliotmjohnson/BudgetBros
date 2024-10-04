@@ -9,6 +9,10 @@ export interface LineItem {
     transactions: Transaction[];
 }
 
+export type SelectedLineItem = Omit<LineItem, 'startingBalance'> & {
+    remainingAmount: number;
+};
+
 export interface SaveLineItemPayload {
     name: string;
     isFund: boolean;

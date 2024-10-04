@@ -47,14 +47,7 @@
     height: 100%;
     width: 100%;
     background-color: black;
-    opacity: 0;
-    animation: dim 0.4s forwards;
-
-    @keyframes dim {
-        100% {
-            opacity: 0.5;
-        }
-    }
+    opacity: 0.5;
 }
 
 @keyframes onLoad {

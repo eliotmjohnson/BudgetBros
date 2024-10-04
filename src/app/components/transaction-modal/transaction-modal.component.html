@@ -1,6 +1,7 @@
 <h2 mat-dialog-title>
     {{
-        modalData.mode !== "edit" && modalData.mode !== "budgetTransactionsEdit"
+        (modalData || mobileModalData).mode !== "edit" &&
+        (modalData || mobileModalData).mode !== "budgetTransactionsEdit"
             ? "Add "
             : "Update"
     }}
@@ -18,6 +19,9 @@
             <mat-label> Title </mat-label>
             <input
                 matInput
+                #titleInput
+                class="title-input"
+                [class.ios-focus]="!isMobileModalFocused"
                 formControlName="title"
             />
             <mat-error>
@@ -31,23 +35,22 @@
         <mat-form-field appearance="outline">
             <mat-label> Amount </mat-label>
             <input
+                #amountInput
                 matInput
                 type="text"
+                pattern="\d*"
                 formControlName="amount"
-                [required]="true"
                 (keydown)="checkIfValidKey($event)"
                 (input)="addValue($event)"
+                (click)="amountInput.select()"
                 [value]="form.value.amount | currency"
             />
             <mat-error>
                 {{
-                    form.get("amount")?.hasError("required") &&
+                    form.get("amount")?.hasError("min") &&
                     form.get("amount")?.touched
-                        ? "Amount is required"
-                        : form.get("amount")?.hasError("min") &&
-                            form.get("amount")?.touched
-                          ? "Amount must be more than 0"
-                          : ""
+                        ? "Amount must be more than 0"
+                        : ""
                 }}
             </mat-error>
         </mat-form-field>
@@ -151,16 +154,23 @@
             ></textarea>
         </mat-form-field>
     </mat-dialog-content>
-    <mat-dialog-actions align="end">
+    <mat-dialog-actions
+        class="modal-buttons"
+        align="end"
+    >
         <button
+            class="cancel-button"
             mat-flat-button
+            [disableRipple]="mobileService.isMobileDevice()"
             type="button"
             (click)="closeModal()"
         >
-            cancel
+            Cancel
         </button>
         <button
             mat-flat-button
+            [disableRipple]="mobileService.isMobileDevice()"
+            class="submit-button"
             color="primary"
             style="color: white"
             type="submit"
@@ -169,8 +179,8 @@
             "
         >
             {{
-                modalData.mode !== "edit" &&
-                modalData.mode !== "budgetTransactionsEdit"
+                (modalData || mobileModalData).mode !== "edit" &&
+                (modalData || mobileModalData).mode !== "budgetTransactionsEdit"
                     ? "Add"
                     : "Update"
             }}

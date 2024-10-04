@@ -3,7 +3,6 @@ import {
     Component,
     computed,
     effect,
-    untracked,
     ElementRef,
     EventEmitter,
     input,
@@ -11,12 +10,15 @@ import {
     model,
     OnInit,
     Output,
+    Renderer2,
+    untracked,
     ViewChild
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { filter, take } from 'rxjs';
 import {
     SaveLineItemPayload,
+    SelectedLineItem,
     UpdateLineItemPayload
 } from 'src/app/models/lineItem';
 import { Transaction } from 'src/app/models/transaction';
@@ -31,7 +33,11 @@ import {
 @Component({
     selector: 'BudgetCategoryItem',
     templateUrl: './budget-category-item.component.html',
-    styleUrls: ['./budget-category-item.component.scss']
+    styleUrls: ['./budget-category-item.component.scss'],
+    host: {
+        '(scroll)': 'setSlideToDelete()',
+        '[class.overflow-visible]': 'isEditModeEnabled'
+    }
 })
 export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     @ViewChild('lineItemTitleInput') lineItemTitleInput!: ElementRef;
@@ -52,27 +58,50 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     initialPlannedAmount = 0;
     isEditModeEnabled = false;
     isNewLineItem = false;
+    isDeleteMoved = false;
+    isDeletingLineItem = false;
+    touchlistener: (() => void) | null = null;
     remainingAmount = computed(() => this.calculateRemainingAmount());
-    progressPercentage = computed(
-        () => (this.remainingAmount() / this.plannedAmount()) * 100 || 0
-    );
+    progressPercentage = computed(() => {
+        const calculation =
+            (this.remainingAmount() / this.plannedAmount()) * 100;
+        return calculation ? (calculation < 0 ? 0 : calculation) : 0;
+    });
     isLineItemSelected = computed(
         () =>
             this.itemId() ===
-            this.transactionService.currentSelectedLineItemId()
+            this.transactionService.currentSelectedLineItem()?.lineItemId
     );
 
     constructor(
         private transactionService: TransactionService,
         private lineItemService: LineItemService,
-        public mobileModalService: MobileModalService
+        public mobileModalService: MobileModalService,
+        private renderer: Renderer2,
+        private host: ElementRef<HTMLElement>
     ) {
         effect(() => {
             if (
                 this.transactions() &&
-                untracked(() => transactionService.currentSelectedLineItemId())
+                untracked(
+                    () =>
+                        transactionService.currentSelectedLineItem()?.lineItemId
+                )
             ) {
                 untracked(() => this.setTransactionData());
+            }
+        });
+
+        effect(() => {
+            if (
+                transactionService.currentSelectedLineItem() &&
+                untracked(() => mobileModalService.isMobileDevice())
+            ) {
+                console.log('what');
+                this.host.nativeElement.scrollTo({
+                    left: 0,
+                    behavior: 'smooth'
+                });
             }
         });
     }
@@ -118,16 +147,15 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     }
 
     setTransactionData() {
-        this.transactionService.currentSelectedLineItemBalance.set(
-            this.remainingAmount()
-        );
-        this.transactionService.currentSelectedLineItem.set(
-            this.lineItemInputValue.value ?? ''
-        );
-        this.transactionService.currentSelectedLineItemId.set(this.itemId());
-        this.transactionService.currentBudgetTransactionData.set(
-            this.transactions()
-        );
+        const selectedLineItem: SelectedLineItem = {
+            name: this.lineItemInputValue.value ?? '',
+            plannedAmount: this.plannedAmount(),
+            remainingAmount: this.remainingAmount(),
+            lineItemId: this.itemId(),
+            isFund: this.fund,
+            transactions: this.transactions()
+        };
+        this.transactionService.currentSelectedLineItem.set(selectedLineItem);
     }
 
     checkIfValidKey(e: KeyboardEvent): boolean {
@@ -248,6 +276,54 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
         if (this.plannedAmountInput && this.lineItemTitleInput) {
             this.plannedAmountInput.nativeElement.blur();
             this.lineItemTitleInput.nativeElement.blur();
+        }
+    }
+
+    setSlideToDelete(isSlideEnd = false) {
+        const elementWidth = this.host.nativeElement.clientWidth;
+        const scrollPosition = this.host.nativeElement.scrollLeft;
+
+        if (isSlideEnd) {
+            this.isDeletingLineItem = false;
+            this.touchlistener!();
+            this.touchlistener = null;
+
+            if (scrollPosition < elementWidth * 0.11 && scrollPosition >= 0) {
+                this.host.nativeElement.scrollTo({
+                    left: 0,
+                    behavior: 'smooth'
+                });
+            } else if (
+                scrollPosition >= elementWidth * 0.11 &&
+                scrollPosition < elementWidth * 0.7
+            ) {
+                this.host.nativeElement.scrollTo({
+                    left: elementWidth * 0.23,
+                    behavior: 'smooth'
+                });
+            } else if (scrollPosition >= elementWidth * 0.7) {
+                this.host.nativeElement.scrollTo({
+                    left: elementWidth,
+                    behavior: 'smooth'
+                });
+
+                this.isDeletingLineItem = true;
+                setTimeout(() => this.deleteLineItem(), 300);
+            }
+        } else {
+            if (!this.touchlistener) {
+                this.touchlistener = this.renderer.listen(
+                    'document',
+                    'touchend',
+                    () => this.setSlideToDelete(true)
+                );
+            }
+
+            if (scrollPosition > elementWidth * 0.7) {
+                this.isDeleteMoved = true;
+            } else {
+                this.isDeleteMoved = false;
+            }
         }
     }
 }

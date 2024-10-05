@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { BudgetCategoryService } from 'src/app/services/budget-category.service';
 import { MobileModalService } from 'src/app/services/mobile-modal.service';
 import { TransactionService } from 'src/app/services/transaction.service';
 
@@ -14,7 +15,8 @@ import { TransactionService } from 'src/app/services/transaction.service';
 export class TabsBarComponent {
     constructor(
         public mobileModalService: MobileModalService,
-        private transactionService: TransactionService
+        private transactionService: TransactionService,
+        private budgetCategoryService: BudgetCategoryService
     ) {}
 
     openAddTransactionModal() {

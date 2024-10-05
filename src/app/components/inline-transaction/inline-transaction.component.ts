@@ -38,8 +38,8 @@ export class InlineTransactionComponent {
         return foundMonth?.slice(0, 3);
     }
 
-    deleteTransaction(e: MouseEvent) {
-        e.stopPropagation();
+    deleteTransaction(e?: MouseEvent) {
+        if (e) e.stopPropagation();
 
         this.transactionService.softDeleteTransaction(this.transactionId!);
         const foundLineItem = this.lineItemService.fetchLineItem(

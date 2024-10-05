@@ -50,6 +50,7 @@
         (cdkDropListDropped)="handleDrop($event)"
     >
         <BudgetCategoryItem
+            @deleteItemAnimation
             class="budget-item"
             *ngFor="let item of lineItems"
             [itemId]="item.lineItemId"

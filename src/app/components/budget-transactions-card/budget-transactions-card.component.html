@@ -75,9 +75,10 @@
             @for (
                 transaction of transactionService.currentSelectedLineItem()
                     ?.transactions || [] | sortByDate;
-                track $index
+                track transaction.transactionId
             ) {
                 <InlineTransaction
+                    @deleteItemAnimation
                     [transactionId]="transaction.transactionId"
                     [title]="transaction.title!"
                     [amount]="transaction.amount"

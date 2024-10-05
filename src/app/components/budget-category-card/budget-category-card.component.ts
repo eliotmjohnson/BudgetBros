@@ -10,6 +10,7 @@ import {
     ViewChild
 } from '@angular/core';
 import { take } from 'rxjs';
+import { deleteItemAnimation } from 'src/app/animations/mobile-item-animations';
 import {
     BudgetCategory,
     UpdateBudgetCategoryPayload
@@ -26,6 +27,7 @@ import { TransactionService } from 'src/app/services/transaction.service';
     selector: 'BudgetCategoryCard',
     templateUrl: './budget-category-card.component.html',
     styleUrls: ['./budget-category-card.component.scss'],
+    animations: [deleteItemAnimation],
     host: {
         '[class.add-animation]': 'isNewBudgetCategory',
         '[class.deleting-category]': 'isDeletingBudgetCategory',

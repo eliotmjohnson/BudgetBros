@@ -10,7 +10,6 @@ import {
     model,
     OnInit,
     Output,
-    Renderer2,
     untracked,
     ViewChild
 } from '@angular/core';
@@ -33,11 +32,7 @@ import {
 @Component({
     selector: 'BudgetCategoryItem',
     templateUrl: './budget-category-item.component.html',
-    styleUrls: ['./budget-category-item.component.scss'],
-    host: {
-        '(scroll)': 'setSlideToDelete()',
-        '[class.overflow-visible]': 'isEditModeEnabled'
-    }
+    styleUrls: ['./budget-category-item.component.scss']
 })
 export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     @ViewChild('lineItemTitleInput') lineItemTitleInput!: ElementRef;
@@ -58,9 +53,6 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     initialPlannedAmount = 0;
     isEditModeEnabled = false;
     isNewLineItem = false;
-    isDeleteMoved = false;
-    isDeletingLineItem = false;
-    touchlistener: (() => void) | null = null;
     remainingAmount = computed(() => this.calculateRemainingAmount());
     progressPercentage = computed(() => {
         const calculation =
@@ -74,11 +66,9 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     );
 
     constructor(
-        private transactionService: TransactionService,
+        public transactionService: TransactionService,
         private lineItemService: LineItemService,
-        public mobileModalService: MobileModalService,
-        private renderer: Renderer2,
-        private host: ElementRef<HTMLElement>
+        public mobileModalService: MobileModalService
     ) {
         effect(() => {
             if (
@@ -89,19 +79,6 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
                 )
             ) {
                 untracked(() => this.setTransactionData());
-            }
-        });
-
-        effect(() => {
-            if (
-                transactionService.currentSelectedLineItem() &&
-                untracked(() => mobileModalService.isMobileDevice())
-            ) {
-                console.log('what');
-                this.host.nativeElement.scrollTo({
-                    left: 0,
-                    behavior: 'smooth'
-                });
             }
         });
     }
@@ -213,6 +190,7 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
         };
 
         this.saveNewLineItem.emit(saveLineItemPayload);
+        this.isEditModeEnabled = false;
 
         this.lineItemService.newlyAddedLineItemId
             .pipe(
@@ -222,7 +200,6 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
             .subscribe((id) => {
                 this.updateNewLineItemId.emit(id);
                 this.itemId.set(id);
-                this.isEditModeEnabled = false;
 
                 if (!this.mobileModalService.isMobileDevice()) {
                     this.setTransactionData();
@@ -276,54 +253,6 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
         if (this.plannedAmountInput && this.lineItemTitleInput) {
             this.plannedAmountInput.nativeElement.blur();
             this.lineItemTitleInput.nativeElement.blur();
-        }
-    }
-
-    setSlideToDelete(isSlideEnd = false) {
-        const elementWidth = this.host.nativeElement.clientWidth;
-        const scrollPosition = this.host.nativeElement.scrollLeft;
-
-        if (isSlideEnd) {
-            this.isDeletingLineItem = false;
-            this.touchlistener!();
-            this.touchlistener = null;
-
-            if (scrollPosition < elementWidth * 0.11 && scrollPosition >= 0) {
-                this.host.nativeElement.scrollTo({
-                    left: 0,
-                    behavior: 'smooth'
-                });
-            } else if (
-                scrollPosition >= elementWidth * 0.11 &&
-                scrollPosition < elementWidth * 0.7
-            ) {
-                this.host.nativeElement.scrollTo({
-                    left: elementWidth * 0.23,
-                    behavior: 'smooth'
-                });
-            } else if (scrollPosition >= elementWidth * 0.7) {
-                this.host.nativeElement.scrollTo({
-                    left: elementWidth,
-                    behavior: 'smooth'
-                });
-
-                this.isDeletingLineItem = true;
-                setTimeout(() => this.deleteLineItem(), 300);
-            }
-        } else {
-            if (!this.touchlistener) {
-                this.touchlistener = this.renderer.listen(
-                    'document',
-                    'touchend',
-                    () => this.setSlideToDelete(true)
-                );
-            }
-
-            if (scrollPosition > elementWidth * 0.7) {
-                this.isDeleteMoved = true;
-            } else {
-                this.isDeleteMoved = false;
-            }
         }
     }
 }

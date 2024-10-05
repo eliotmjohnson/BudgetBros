@@ -6,6 +6,7 @@ import {
     effect,
     ElementRef,
     inject,
+    OnInit,
     signal,
     ViewChild
 } from '@angular/core';
@@ -44,7 +45,7 @@ export interface TransactionModalData {
     templateUrl: './transaction-modal.component.html',
     styleUrl: './transaction-modal.component.scss'
 })
-export class TransactionModalComponent implements AfterViewInit {
+export class TransactionModalComponent implements AfterViewInit, OnInit {
     @ViewChild('titleInput') titleInput!: ElementRef;
     readonly dialogRef = inject(MatDialogRef<TransactionModalComponent>, {
         optional: true
@@ -113,7 +114,7 @@ export class TransactionModalComponent implements AfterViewInit {
                               this.modalData || this.mobileModalData
                           ).transaction!.date
                       )
-                    : null,
+                    : new Date(),
                 [Validators.required]
             ),
             merchant: new FormControl<string | null>(
@@ -146,6 +147,18 @@ export class TransactionModalComponent implements AfterViewInit {
                 this.form.updateValueAndValidity({ onlySelf: true });
             }
         });
+    }
+    ngOnInit(): void {
+        if (
+            (this.modalData || this.mobileModalData).mode === 'add' ||
+            (this.modalData || this.mobileModalData).mode ===
+                'budgetTransactionsAddMobile'
+        ) {
+            this.budgetCategoryService.getBudgetCategoriesWithLineItems(
+                this.today.getMonth() + 1,
+                this.today.getFullYear()
+            );
+        }
     }
 
     ngAfterViewInit(): void {

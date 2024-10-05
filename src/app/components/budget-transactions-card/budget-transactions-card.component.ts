@@ -6,11 +6,13 @@ import {
     TransactionModalComponent,
     TransactionModalData
 } from '../transaction-modal/transaction-modal.component';
+import { deleteItemAnimation } from 'src/app/animations/mobile-item-animations';
 
 @Component({
     selector: 'BudgetTransactionsCard',
     templateUrl: './budget-transactions-card.component.html',
     styleUrl: './budget-transactions-card.component.scss',
+    animations: [deleteItemAnimation],
     host: {
         '[class.open-budget-transactions-modal]': 'isMobileComponent'
     }

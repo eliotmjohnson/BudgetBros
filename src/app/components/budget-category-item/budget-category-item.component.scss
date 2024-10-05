@@ -6,15 +6,11 @@
     border-radius: 0.5rem;
 }
 
-:host {
+.slide-to-delete-content {
     display: flex;
-    width: 100%;
-    position: relative;
-    overscroll-behavior: none;
-
-    &::-webkit-scrollbar {
-        display: none;
-    }
+    flex-direction: column;
+    min-width: 100%;
+    background-color: white;
 }
 
 .budget-item-wrapper {
@@ -22,6 +18,7 @@
     align-items: center;
     height: 3rem;
     position: relative;
+    border-top-right-radius: 0.5rem;
 
     .title-wrapper {
         display: flex;
@@ -158,52 +155,7 @@
     color: $bb-error-main;
 }
 
-.slide-to-delete-content {
-    display: flex;
-    flex-direction: column;
-    min-width: 100%;
-}
-
-.slide-to-delete-button {
-    background-color: $bb-error-main;
-    display: none;
-    align-items: center;
-    min-width: 200%;
-
-    mat-icon {
-        position: sticky;
-        left: 85%;
-        color: white;
-        transition: left 0.3s;
-    }
-
-    .move-delete {
-        left: 0;
-    }
-
-    .animate-delete {
-        animation: deleteAni 0.3s forwards;
-
-        @keyframes deleteAni {
-            100% {
-                scale: 2.5;
-                opacity: 0;
-            }
-        }
-    }
-}
-
 @media (max-width: 1145px) {
-    :host {
-        overflow-x: scroll;
-        overflow-y: hidden;
-    }
-
-    :host(.overflow-visible) {
-        overflow-x: visible;
-        overflow-y: visible;
-    }
-
     .delete-icon {
         display: none;
     }
@@ -235,9 +187,5 @@
         .remove-remaining-mobile {
             display: none;
         }
-    }
-
-    .slide-to-delete-button {
-        display: flex;
     }
 }

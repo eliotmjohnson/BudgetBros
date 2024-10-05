@@ -14,29 +14,35 @@
                 Back
             </span>
             <div class="icon-wrapper">
-                <mat-icon
-                    class="icon"
-                    fontIcon="savings"
-                />
+                <div
+                    class="progress-circle"
+                    [style]="{ background: getProgressStyle() }"
+                >
+                    <mat-icon
+                        class="icon"
+                        [class.negative]="progress() < 0"
+                        fontIcon="savings"
+                    />
+                </div>
             </div>
         </section>
         <main class="main-content-container">
             <section class="title-section">
                 <span class="available">Available</span>
                 <span class="top">
-                    <h1>{{ transactionService.currentSelectedLineItem() }}</h1>
+                    <h1>
+                        {{ transactionService.currentSelectedLineItem()?.name }}
+                    </h1>
                     <h2
-                        class="{{
-                            transactionService.currentSelectedLineItemBalance() <
-                            0
-                                ? 'unhappy-remaining'
-                                : ''
-                        }}"
+                        [class.unhappy-remaining]="
+                            transactionService.currentSelectedLineItem()!
+                                .remainingAmount < 0
+                        "
                     >
                         <h3 class="dollar-sign">$</h3>
                         {{
-                            transactionService.currentSelectedLineItemBalance()
-                                | number: "1.2-2"
+                            transactionService.currentSelectedLineItem()
+                                ?.remainingAmount | number: "1.2-2"
                         }}
                     </h2>
                 </span>
@@ -67,11 +73,12 @@
         </main>
         <section class="transactions-container">
             @for (
-                transaction of transactionService.currentBudgetTransactionData()
-                    | sortByDate;
-                track $index
+                transaction of transactionService.currentSelectedLineItem()
+                    ?.transactions || [] | sortByDate;
+                track transaction.transactionId
             ) {
                 <InlineTransaction
+                    @deleteItemAnimation
                     [transactionId]="transaction.transactionId"
                     [title]="transaction.title!"
                     [amount]="transaction.amount"

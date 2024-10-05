@@ -1,0 +1,12 @@
+<ng-content />
+@if (!disabled) {
+    <div class="slide-to-delete-button">
+        <mat-icon
+            [style.left.%]="deleteButtonPosition"
+            [class.move-delete]="isDeleteMoved"
+            [class.animate-delete]="isDeletingLineItem"
+            fontIcon="delete"
+            (click)="deleteItem.emit()"
+        />
+    </div>
+}

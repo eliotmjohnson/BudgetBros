@@ -3,7 +3,6 @@ import {
     Component,
     computed,
     effect,
-    untracked,
     ElementRef,
     EventEmitter,
     input,
@@ -11,12 +10,14 @@ import {
     model,
     OnInit,
     Output,
+    untracked,
     ViewChild
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { filter, take } from 'rxjs';
 import {
     SaveLineItemPayload,
+    SelectedLineItem,
     UpdateLineItemPayload
 } from 'src/app/models/lineItem';
 import { Transaction } from 'src/app/models/transaction';
@@ -53,24 +54,29 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     isEditModeEnabled = false;
     isNewLineItem = false;
     remainingAmount = computed(() => this.calculateRemainingAmount());
-    progressPercentage = computed(
-        () => (this.remainingAmount() / this.plannedAmount()) * 100 || 0
-    );
+    progressPercentage = computed(() => {
+        const calculation =
+            (this.remainingAmount() / this.plannedAmount()) * 100;
+        return calculation ? (calculation < 0 ? 0 : calculation) : 0;
+    });
     isLineItemSelected = computed(
         () =>
             this.itemId() ===
-            this.transactionService.currentSelectedLineItemId()
+            this.transactionService.currentSelectedLineItem()?.lineItemId
     );
 
     constructor(
-        private transactionService: TransactionService,
+        public transactionService: TransactionService,
         private lineItemService: LineItemService,
         public mobileModalService: MobileModalService
     ) {
         effect(() => {
             if (
                 this.transactions() &&
-                untracked(() => transactionService.currentSelectedLineItemId())
+                untracked(
+                    () =>
+                        transactionService.currentSelectedLineItem()?.lineItemId
+                )
             ) {
                 untracked(() => this.setTransactionData());
             }
@@ -118,16 +124,15 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     }
 
     setTransactionData() {
-        this.transactionService.currentSelectedLineItemBalance.set(
-            this.remainingAmount()
-        );
-        this.transactionService.currentSelectedLineItem.set(
-            this.lineItemInputValue.value ?? ''
-        );
-        this.transactionService.currentSelectedLineItemId.set(this.itemId());
-        this.transactionService.currentBudgetTransactionData.set(
-            this.transactions()
-        );
+        const selectedLineItem: SelectedLineItem = {
+            name: this.lineItemInputValue.value ?? '',
+            plannedAmount: this.plannedAmount(),
+            remainingAmount: this.remainingAmount(),
+            lineItemId: this.itemId(),
+            isFund: this.fund,
+            transactions: this.transactions()
+        };
+        this.transactionService.currentSelectedLineItem.set(selectedLineItem);
     }
 
     checkIfValidKey(e: KeyboardEvent): boolean {
@@ -185,6 +190,7 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
         };
 
         this.saveNewLineItem.emit(saveLineItemPayload);
+        this.isEditModeEnabled = false;
 
         this.lineItemService.newlyAddedLineItemId
             .pipe(
@@ -194,7 +200,6 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
             .subscribe((id) => {
                 this.updateNewLineItemId.emit(id);
                 this.itemId.set(id);
-                this.isEditModeEnabled = false;
 
                 if (!this.mobileModalService.isMobileDevice()) {
                     this.setTransactionData();

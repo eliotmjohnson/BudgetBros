@@ -1,0 +1,63 @@
+@import "bb-core";
+
+:host {
+    display: flex;
+    width: 100%;
+    position: relative;
+    overscroll-behavior: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.slide-to-delete-button {
+    background-color: $bb-error-main;
+    display: none;
+    align-items: center;
+    min-width: 200%;
+
+    mat-icon {
+        position: sticky;
+        color: white;
+        translate: -50%;
+        margin-left: 1rem;
+        transition:
+            left 0.3s,
+            margin-left 0s 0.3s;
+    }
+
+    .move-delete {
+        margin-left: 2rem;
+        transition:
+            left 0.3s,
+            margin-left 0s 0s;
+    }
+
+    .animate-delete {
+        animation: deleteAni 0.3s forwards;
+
+        @keyframes deleteAni {
+            100% {
+                scale: 2.5;
+                opacity: 0;
+            }
+        }
+    }
+}
+
+@media (max-width: 1145px) {
+    :host {
+        overflow-x: scroll;
+        overflow-y: hidden;
+    }
+
+    :host(.overflow-visible) {
+        overflow-x: visible;
+        overflow-y: visible;
+    }
+
+    .slide-to-delete-button {
+        display: flex;
+    }
+}

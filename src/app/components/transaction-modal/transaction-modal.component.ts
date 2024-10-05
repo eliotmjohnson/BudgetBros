@@ -4,8 +4,11 @@ import {
     Component,
     computed,
     effect,
+    ElementRef,
     inject,
-    signal
+    OnInit,
+    signal,
+    ViewChild
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
@@ -19,6 +22,7 @@ import {
 } from 'src/app/models/transaction';
 import { BudgetCategoryService } from 'src/app/services/budget-category.service';
 import { LineItemService } from 'src/app/services/line-item.service';
+import { MobileModalService } from 'src/app/services/mobile-modal.service';
 import { TransactionService } from 'src/app/services/transaction.service';
 import {
     addValueToCurrencyInput,
@@ -26,7 +30,12 @@ import {
 } from 'src/app/utils/currencyUtils';
 
 export interface TransactionModalData {
-    mode: 'add' | 'edit' | 'budgetTransactionsAdd' | 'budgetTransactionsEdit';
+    mode:
+        | 'add'
+        | 'edit'
+        | 'budgetTransactionsAdd'
+        | 'budgetTransactionsAddMobile'
+        | 'budgetTransactionsEdit';
     transaction?: IsolatedTransaction;
     lineItemId?: string;
 }
@@ -36,19 +45,29 @@ export interface TransactionModalData {
     templateUrl: './transaction-modal.component.html',
     styleUrl: './transaction-modal.component.scss'
 })
-export class TransactionModalComponent implements AfterViewInit {
-    readonly dialogRef = inject(MatDialogRef<TransactionModalComponent>);
-    modalData = inject<TransactionModalData>(MAT_DIALOG_DATA);
+export class TransactionModalComponent implements AfterViewInit, OnInit {
+    @ViewChild('titleInput') titleInput!: ElementRef;
+    readonly dialogRef = inject(MatDialogRef<TransactionModalComponent>, {
+        optional: true
+    });
+    modalData = inject<TransactionModalData>(MAT_DIALOG_DATA, {
+        optional: true
+    });
     transactionService = inject(TransactionService);
     budgetCategoryService = inject(BudgetCategoryService);
     lineItemService = inject(LineItemService);
     changeDetector = inject(ChangeDetectorRef);
+    mobileService = inject(MobileModalService);
 
     today = new Date();
     prevSelectedDate = signal<Date | null>(null);
+    mobileModalData = this.mobileService.mobileModalData;
+    isMobileModalFocused = !this.mobileService.isMobileDevice();
     isBudgetTransactionsModal =
-        this.modalData.mode === 'budgetTransactionsAdd' ||
-        this.modalData.mode === 'budgetTransactionsEdit';
+        (this.modalData || this.mobileModalData).mode ===
+            'budgetTransactionsAdd' ||
+        (this.modalData || this.mobileModalData).mode ===
+            'budgetTransactionsEdit';
 
     dropdownCategories = computed<BudgetCategoryWithLineItems[]>(() =>
         this.budgetCategoryService.budgetCategoriesWithLineItems()
@@ -63,7 +82,8 @@ export class TransactionModalComponent implements AfterViewInit {
             .find(
                 (lineItem) =>
                     lineItem.lineItemId ===
-                    this.modalData.transaction?.lineItemId
+                    (this.modalData || this.mobileModalData).transaction
+                        ?.lineItemId
             );
 
         return lineItem;
@@ -72,33 +92,38 @@ export class TransactionModalComponent implements AfterViewInit {
     form = new FormGroup(
         {
             title: new FormControl<string | null>(
-                this.modalData.transaction?.title || null,
+                (this.modalData || this.mobileModalData).transaction?.title ||
+                    null,
                 [Validators.required]
             ),
-            amount: new FormControl<number | undefined>(undefined, [
-                Validators.min(0.01)
-            ]),
+            amount: new FormControl<number | undefined>(undefined),
             lineItem: new FormControl<LineItemReduced | null | string>(
                 {
                     value:
                         this.preSelectedLineItem() ||
-                        this.modalData.lineItemId ||
+                        (this.modalData || this.mobileModalData).lineItemId ||
                         null,
                     disabled: !this.dropdownCategories().length
                 },
                 [Validators.required]
             ),
             date: new FormControl<Date | null>(
-                this.modalData.transaction?.date
-                    ? new Date(this.modalData.transaction?.date)
-                    : null,
+                (this.modalData || this.mobileModalData).transaction?.date
+                    ? new Date(
+                          (
+                              this.modalData || this.mobileModalData
+                          ).transaction!.date
+                      )
+                    : new Date(),
                 [Validators.required]
             ),
             merchant: new FormControl<string | null>(
-                this.modalData.transaction?.merchant || null
+                (this.modalData || this.mobileModalData).transaction
+                    ?.merchant || null
             ),
             notes: new FormControl<string | null>(
-                this.modalData.transaction?.notes || null
+                (this.modalData || this.mobileModalData).transaction?.notes ||
+                    null
             )
         },
         {}
@@ -123,11 +148,34 @@ export class TransactionModalComponent implements AfterViewInit {
             }
         });
     }
+    ngOnInit(): void {
+        if (
+            (this.modalData || this.mobileModalData).mode === 'add' ||
+            (this.modalData || this.mobileModalData).mode ===
+                'budgetTransactionsAddMobile'
+        ) {
+            this.budgetCategoryService.getBudgetCategoriesWithLineItems(
+                this.today.getMonth() + 1,
+                this.today.getFullYear()
+            );
+        }
+    }
 
     ngAfterViewInit(): void {
+        if (this.mobileService.isMobileDevice()) {
+            const valueLength = this.titleInput.nativeElement.value.length;
+            this.titleInput.nativeElement.focus();
+            this.titleInput.nativeElement.setSelectionRange(
+                valueLength,
+                valueLength
+            );
+            setTimeout(() => (this.isMobileModalFocused = true), 400);
+        }
         this.form.controls.amount.setValue(
-            this.modalData.transaction?.amount || 0
+            (this.modalData || this.mobileModalData).transaction?.amount || 0
         );
+        this.form.controls.amount.setValidators(Validators.min(0.01));
+        this.form.controls.amount.updateValueAndValidity();
         this.changeDetector.detectChanges();
     }
 
@@ -161,17 +209,26 @@ export class TransactionModalComponent implements AfterViewInit {
     }
 
     closeModal() {
-        this.dialogRef.close();
+        if (this.dialogRef) {
+            this.dialogRef.close();
+        } else {
+            this.mobileService.isAddTransactionModalOpen.set(false);
+        }
+
         this.budgetCategoryService.budgetCategoriesWithLineItems.set([]);
     }
 
     submitForm() {
         if (this.form.invalid) return;
-        const needsRefresh = !this.isBudgetTransactionsModal;
+        const needsRefresh =
+            (this.modalData || this.mobileModalData).mode !==
+                'budgetTransactionsAddMobile' &&
+            !this.isBudgetTransactionsModal;
 
         if (
-            this.modalData.mode !== 'edit' &&
-            this.modalData.mode !== 'budgetTransactionsEdit'
+            (this.modalData || this.mobileModalData).mode !== 'edit' &&
+            (this.modalData || this.mobileModalData).mode !==
+                'budgetTransactionsEdit'
         ) {
             const submittedTransaction = this.form.value;
             const newTransaction: NewTransaction = {
@@ -180,7 +237,8 @@ export class TransactionModalComponent implements AfterViewInit {
                 amount: submittedTransaction.amount!,
                 lineItemId:
                     (submittedTransaction.lineItem! as LineItemReduced)
-                        .lineItemId || this.modalData.lineItemId!,
+                        .lineItemId ||
+                    (this.modalData || this.mobileModalData).lineItemId!,
                 date: submittedTransaction.date!.toISOString(),
                 merchant: submittedTransaction.merchant
                     ? submittedTransaction.merchant
@@ -191,7 +249,9 @@ export class TransactionModalComponent implements AfterViewInit {
 
             if (!needsRefresh) {
                 this.eagerAddTransaction(newTransaction);
+                this.updateEagerTransactionId(newTransaction);
             }
+
             this.transactionService.addTransaction(
                 newTransaction,
                 needsRefresh
@@ -199,13 +259,16 @@ export class TransactionModalComponent implements AfterViewInit {
         } else {
             const submittedTransaction = this.form.value;
             const updatedTransaction: Transaction = {
-                transactionId: this.modalData.transaction!.transactionId,
+                transactionId: (this.modalData || this.mobileModalData)
+                    .transaction!.transactionId,
                 title: submittedTransaction.title || '',
-                deleted: this.modalData.transaction!.deleted,
+                deleted: (this.modalData || this.mobileModalData).transaction!
+                    .deleted,
                 amount: submittedTransaction.amount!,
                 lineItemId:
                     (submittedTransaction.lineItem! as LineItemReduced)
-                        .lineItemId || this.modalData.lineItemId!,
+                        .lineItemId ||
+                    (this.modalData || this.mobileModalData).lineItemId!,
                 date: submittedTransaction.date!.toISOString(),
                 merchant: submittedTransaction.merchant
                     ? submittedTransaction.merchant
@@ -218,7 +281,8 @@ export class TransactionModalComponent implements AfterViewInit {
             }
             this.transactionService.updateTransaction(
                 updatedTransaction,
-                this.modalData.transaction?.budgetCategoryName,
+                (this.modalData || this.mobileModalData).transaction
+                    ?.budgetCategoryName,
                 needsRefresh
             );
         }
@@ -236,6 +300,18 @@ export class TransactionModalComponent implements AfterViewInit {
                 { ...transaction, transactionId: '' }
             ];
         }
+    }
+
+    updateEagerTransactionId(newTransaction: NewTransaction) {
+        this.transactionService.newlyCreatedTransactionId.subscribe((id) => {
+            const newEagerTransaction = this.lineItemService
+                .fetchLineItem(newTransaction.lineItemId)
+                ?.transactions.find((trx) => !trx.transactionId);
+
+            if (newEagerTransaction) {
+                newEagerTransaction.transactionId = id;
+            }
+        });
     }
 
     eagerUpdateTransaction(transaction: Transaction) {

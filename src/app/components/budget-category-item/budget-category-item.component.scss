@@ -6,9 +6,11 @@
     border-radius: 0.5rem;
 }
 
-:host {
+.slide-to-delete-content {
     display: flex;
     flex-direction: column;
+    min-width: 100%;
+    background-color: white;
 }
 
 .budget-item-wrapper {
@@ -16,6 +18,7 @@
     align-items: center;
     height: 3rem;
     position: relative;
+    border-top-right-radius: 0.5rem;
 
     .title-wrapper {
         display: flex;
@@ -135,6 +138,10 @@
     .non-progress {
         height: 100%;
         background-color: rgb(221, 221, 221);
+    }
+
+    .negative-progress {
+        background-color: $bb-error-main;
     }
 }
 

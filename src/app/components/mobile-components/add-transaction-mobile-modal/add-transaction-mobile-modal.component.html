@@ -1,16 +1,1 @@
-<header class="modal-header">
-    <button
-        class="cancel-button"
-        (click)="mobileModalService.isAddTransactionModalOpen.set(false)"
-    >
-        Cancel
-    </button>
-    Add Transaction
-    <button
-        class="done-button"
-        [disabled]="true"
-        (click)="mobileModalService.isAddTransactionModalOpen.set(false)"
-    >
-        Done
-    </button>
-</header>
+<app-transaction-modal />

@@ -1,12 +1,14 @@
-import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable, inject, signal } from '@angular/core';
+import { Subject } from 'rxjs';
 import { BE_API_URL } from '../constants/constants';
-import { AuthService } from './auth.service';
+import { SelectedLineItem } from '../models/lineItem';
 import {
     IsolatedTransaction,
     NewTransaction,
     Transaction
 } from '../models/transaction';
+import { AuthService } from './auth.service';
 
 @Injectable({
     providedIn: 'root'
@@ -14,14 +16,12 @@ import {
 export class TransactionService {
     http = inject(HttpClient);
     authService = inject(AuthService);
-
     baseUrl = `${BE_API_URL}/transactions`;
-    currentSelectedLineItem = signal('');
-    currentSelectedLineItemId = signal('');
-    currentSelectedLineItemBalance = signal(0);
-    currentBudgetTransactionData = signal<Transaction[]>([]);
+
+    currentSelectedLineItem = signal<SelectedLineItem | null>(null);
     transactions = signal<IsolatedTransaction[]>([]);
     isLoading = signal(false);
+    newlyCreatedTransactionId = new Subject<string>();
 
     getTransactionsBetweenDates(date1: Date, date2: Date) {
         this.isLoading.set(true);
@@ -71,14 +71,9 @@ export class TransactionService {
                             new Date(transaction.date)
                         );
                     } else {
-                        const newEagerTransaction =
-                            this.currentBudgetTransactionData().find(
-                                (trx) => !trx.transactionId
-                            );
-                        if (newEagerTransaction) {
-                            newEagerTransaction.transactionId =
-                                transaction.transactionId;
-                        }
+                        this.newlyCreatedTransactionId.next(
+                            transaction.transactionId
+                        );
                     }
                 },
                 error: (error) => {
@@ -131,14 +126,11 @@ export class TransactionService {
 
     clearSelectedTransactionData() {
         if (!this.isTransactionDataEmpty || this.currentSelectedLineItem()) {
-            this.currentSelectedLineItem.set('');
-            this.currentSelectedLineItemId.set('');
-            this.currentSelectedLineItemBalance.set(0);
-            this.currentBudgetTransactionData.set([]);
+            this.currentSelectedLineItem.set(null);
         }
     }
 
     isTransactionDataEmpty() {
-        return this.currentBudgetTransactionData().length === 0;
+        return this.currentSelectedLineItem()?.transactions.length === 0;
     }
 }

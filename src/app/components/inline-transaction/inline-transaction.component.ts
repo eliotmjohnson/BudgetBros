@@ -38,12 +38,12 @@ export class InlineTransactionComponent {
         return foundMonth?.slice(0, 3);
     }
 
-    deleteTransaction(e: MouseEvent) {
-        e.stopPropagation();
+    deleteTransaction(e?: MouseEvent) {
+        if (e) e.stopPropagation();
 
         this.transactionService.softDeleteTransaction(this.transactionId!);
         const foundLineItem = this.lineItemService.fetchLineItem(
-            this.transactionService.currentSelectedLineItemId()
+            this.transactionService.currentSelectedLineItem()?.lineItemId || ''
         );
 
         if (foundLineItem) {
@@ -61,22 +61,35 @@ export class InlineTransactionComponent {
             amount: this.amount,
             date: this.date.toDateString(),
             deleted: false,
-            lineItemId: this.transactionService.currentSelectedLineItemId(),
+            lineItemId:
+                this.transactionService.currentSelectedLineItem()?.lineItemId,
             merchant: this.merchant,
             notes: this.notes,
             title: this.title
         } as IsolatedTransaction;
 
-        this.dialog.open<TransactionModalComponent, TransactionModalData>(
-            TransactionModalComponent,
-            {
-                data: {
-                    mode: 'budgetTransactionsEdit',
-                    transaction: transactionToUpdate,
-                    lineItemId:
-                        this.transactionService.currentSelectedLineItemId()
+        if (!this.mobileService.isMobileDevice()) {
+            this.dialog.open<TransactionModalComponent, TransactionModalData>(
+                TransactionModalComponent,
+                {
+                    data: {
+                        mode: 'budgetTransactionsEdit',
+                        transaction: transactionToUpdate,
+                        lineItemId:
+                            this.transactionService.currentSelectedLineItem()
+                                ?.lineItemId
+                    }
                 }
-            }
-        );
+            );
+        } else {
+            this.mobileService.mobileModalData = {
+                mode: 'budgetTransactionsEdit',
+                transaction: transactionToUpdate,
+                lineItemId:
+                    this.transactionService.currentSelectedLineItem()
+                        ?.lineItemId
+            };
+            this.mobileService.isAddTransactionModalOpen.set(true);
+        }
     }
 }

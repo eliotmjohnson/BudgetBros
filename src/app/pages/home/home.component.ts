@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ChildrenOutletContexts } from '@angular/router';
+import { dimmerAnimation } from 'src/app/animations/mobile-modal-animations';
 import { routerAnimations } from 'src/app/animations/router-animations';
 import { MobileModalService } from 'src/app/services/mobile-modal.service';
 
@@ -7,7 +8,7 @@ import { MobileModalService } from 'src/app/services/mobile-modal.service';
     selector: 'Home',
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss'],
-    animations: [routerAnimations],
+    animations: [routerAnimations, dimmerAnimation],
     host: {
         '[class.modal-present]': `this.mobileModalService.isAddTransactionModalOpen()
             && !this.mobileModalService.isBudgetTransactionsModalOpen()`,

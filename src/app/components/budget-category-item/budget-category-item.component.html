@@ -1,88 +1,99 @@
-<span
-    #lineItemContainer
-    class="budget-item-wrapper {{
-        isLineItemSelected() && 'line-item-selected'
-    }}"
-    (click)="setSelectedLineItem()"
+<slide-to-delete
+    [disabled]="isEditModeEnabled || !itemId()"
+    [closed]="!!transactionService.currentSelectedLineItem()"
+    (deleteItem)="deleteLineItem()"
+    [deleteButtonPosition]="90"
+    [deleteDistance]="70"
 >
-    <span class="title-wrapper">
-        <ng-content></ng-content>
-        <mat-icon
-            class="fund-logo"
-            *ngIf="fund"
-            fontIcon="savings"
-        />
-        <input
-            #lineItemTitleInput
-            class="line-item-title"
-            [formControl]="lineItemInputValue"
-            (click)="enableEditMode(lineItemTitleInput)"
-            [value]="itemTitle"
-        />
-    </span>
-    <input
-        #plannedAmountInput
-        type="text"
-        pattern="\d*"
-        class="planned-amount {{
-            mobileModalService.showPlannedAmounts() ? 'add-planned-mobile' : ''
-        }}"
-        (keydown)="checkIfValidKey($event)"
-        (click)="enableEditMode(plannedAmountInput)"
-        (input)="addValue($event)"
-        [value]="plannedAmount() | currency"
-    />
-    <p
-        class="{{
-            mobileModalService.showPlannedAmounts()
-                ? 'remove-remaining-mobile'
-                : ''
-        }} {{ remainingAmount() < 0 ? 'unhappy-remaining' : '' }}"
-    >
-        {{ remainingAmount() | currency }}
-    </p>
-    @if (isLineItemSelected() && itemId()) {
-        <mat-icon
-            class="delete-icon"
-            (click)="deleteLineItem()"
-            fontIcon="delete"
-        ></mat-icon>
-    }
-    @if (isEditModeEnabled) {
+    <span class="slide-to-delete-content">
         <span
-            (document:keydown.enter)="createOrUpdateLineItem(true)"
-            (document:click)="checkIfOutsideParent($event, lineItemContainer)"
-            class="edit-menu-container {{
-                !isLineItemSelected() ? 'edit-only' : ''
-            }}"
+            #lineItemContainer
+            class="budget-item-wrapper"
+            [class.line-item-selected]="isLineItemSelected()"
+            (click)="setSelectedLineItem()"
         >
-            <button
-                (click)="createOrUpdateLineItem(false, $event)"
-                color="primary"
-                mat-button
+            <span class="title-wrapper">
+                <ng-content></ng-content>
+                <mat-icon
+                    class="fund-logo"
+                    *ngIf="fund"
+                    fontIcon="savings"
+                />
+                <input
+                    #lineItemTitleInput
+                    class="line-item-title"
+                    [formControl]="lineItemInputValue"
+                    (click)="enableEditMode(lineItemTitleInput)"
+                    [value]="itemTitle"
+                />
+            </span>
+            <input
+                #plannedAmountInput
+                type="text"
+                pattern="\d*"
+                class="planned-amount"
+                [class.add-planned-mobile]="
+                    mobileModalService.showPlannedAmounts()
+                "
+                (keydown)="checkIfValidKey($event)"
+                (click)="enableEditMode(plannedAmountInput)"
+                (input)="addValue($event)"
+                [value]="plannedAmount() | currency"
+            />
+            <p
+                [class.remove-remaining-mobile]="
+                    mobileModalService.showPlannedAmounts()
+                "
+                [class.unhappy-remaining]="remainingAmount() < 0"
             >
-                Save
-            </button>
-            <button
-                (click)="cancelEditing($event)"
-                color="warn"
-                mat-button
-            >
-                Cancel
-            </button>
+                {{ remainingAmount() | currency }}
+            </p>
+            @if (isLineItemSelected() && itemId()) {
+                <mat-icon
+                    class="delete-icon"
+                    (click)="deleteLineItem()"
+                    fontIcon="delete"
+                ></mat-icon>
+            }
+            @if (isEditModeEnabled) {
+                <span
+                    (document:keydown.enter)="createOrUpdateLineItem(true)"
+                    (document:click)="
+                        checkIfOutsideParent($event, lineItemContainer)
+                    "
+                    class="edit-menu-container"
+                    [class.edit-only]="!isLineItemSelected()"
+                >
+                    <button
+                        (click)="createOrUpdateLineItem(false, $event)"
+                        color="primary"
+                        mat-button
+                    >
+                        Save
+                    </button>
+                    <button
+                        (click)="cancelEditing($event)"
+                        color="warn"
+                        mat-button
+                    >
+                        Cancel
+                    </button>
+                </span>
+            }
         </span>
-    }
-</span>
-<div
-    [style.visibility]="isLineItemSelected() ? 'hidden' : 'visible'"
-    class="progress-indicator"
->
-    <span
-        [style.width]="progressPercentage() + '%'"
-        class="progress"
-    ></span>
-    <span
-        [style.width]="100 - progressPercentage() + '%'"
-        class="non-progress"
-    ></span>
-</div>
+        <div
+            [style.visibility]="isLineItemSelected() ? 'hidden' : 'visible'"
+            class="progress-indicator"
+        >
+            <span
+                [style.width]="progressPercentage() + '%'"
+                class="progress"
+            ></span>
+            <span
+                [style.width]="100 - progressPercentage() + '%'"
+                class="non-progress"
+                [class.negative-progress]="remainingAmount() < 0"
+            ></span>
+        </div>
+    </span>
+</slide-to-delete>

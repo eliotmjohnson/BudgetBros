@@ -1,24 +1,30 @@
-<span
-    class="inline-transaction-wrapper {{
-        !transactionId ? 'delete-hidden' : ''
-    }}"
-    matTooltip="Notes: {{ notes }}"
-    [matTooltipDisabled]="!notes"
-    [matTooltipPosition]="mobileService.isMobileDevice() ? 'below' : 'left'"
-    (click)="transactionId && editTransaction()"
+<slide-to-delete
+    [deleteButtonPosition]="90"
+    [deleteDistance]="55"
+    [disabled]="!transactionId"
+    (deleteItem)="deleteTransaction()"
 >
-    <div class="date">
-        <h3>{{ getMonth() }}</h3>
-        <h3>{{ date.getDate() }}</h3>
-    </div>
-    <span class="transaction-title-container">
-        <h1 class="transaction-title">{{ title }}</h1>
-        <p class="transaction-merchant">{{ merchant }}</p>
+    <span
+        class="inline-transaction-wrapper"
+        [class.delete-hidden]="!transactionId || mobileService.isMobileDevice()"
+        matTooltip="Notes: {{ notes }}"
+        [matTooltipDisabled]="!notes || mobileService.isMobileDevice()"
+        [matTooltipPosition]="mobileService.isMobileDevice() ? 'below' : 'left'"
+        (click)="transactionId && editTransaction()"
+    >
+        <div class="date">
+            <h3>{{ getMonth() }}</h3>
+            <h3>{{ date.getDate() }}</h3>
+        </div>
+        <span class="transaction-title-container">
+            <h1 class="transaction-title">{{ title }}</h1>
+            <p class="transaction-merchant">{{ merchant }}</p>
+        </span>
+        <p class="transaction-amount">-${{ amount | number: "1.2-2" }}</p>
+        <mat-icon
+            class="delete-icon"
+            fontIcon="delete"
+            (click)="deleteTransaction($event)"
+        />
     </span>
-    <p class="transaction-amount">-${{ amount | number: "1.2-2" }}</p>
-    <mat-icon
-        class="delete-icon"
-        fontIcon="delete"
-        (click)="deleteTransaction($event)"
-    />
-</span>
+</slide-to-delete>

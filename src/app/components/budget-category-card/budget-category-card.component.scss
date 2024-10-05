@@ -158,4 +158,8 @@
     .delete-icon {
         right: -1.8rem;
     }
+
+    .cdk-drag-preview {
+        overflow: hidden;
+    }
 }

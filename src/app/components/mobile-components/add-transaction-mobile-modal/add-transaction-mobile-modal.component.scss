@@ -17,7 +17,7 @@
 }
 
 :host(.sheet-modal) {
-    animation: loadModal 0.6s cubic-bezier(0.22, 1, 0.22, 1) forwards;
+    animation: loadModal 0.65s cubic-bezier(0.22, 1, 0.22, 1) forwards;
 
     @keyframes loadModal {
         100% {
@@ -27,7 +27,7 @@
 }
 
 :host(.full-screen-modal) {
-    animation: loadFullScreenModal 0.6s cubic-bezier(0.22, 1, 0.22, 1) forwards;
+    animation: loadFullScreenModal 0.65s cubic-bezier(0.22, 1, 0.22, 1) forwards;
 
     @keyframes loadFullScreenModal {
         100% {

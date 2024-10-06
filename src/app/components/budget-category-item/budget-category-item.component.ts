@@ -10,10 +10,12 @@ import {
     model,
     OnInit,
     Output,
+    signal,
     untracked,
     ViewChild
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { MatMenuTrigger } from '@angular/material/menu';
 import { filter, take } from 'rxjs';
 import {
     SaveLineItemPayload,
@@ -37,6 +39,7 @@ import {
 export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     @ViewChild('lineItemTitleInput') lineItemTitleInput!: ElementRef;
     @ViewChild('plannedAmountInput') plannedAmountInput!: ElementRef;
+    @ViewChild(MatMenuTrigger) itemMenu?: MatMenuTrigger;
     @Input() itemTitle = '';
     @Input() startingBalance = 0;
     @Input() fund = false;
@@ -51,7 +54,7 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     lineItemInputValue = new FormControl('');
     initialLineItemTitle = '';
     initialPlannedAmount = 0;
-    isEditModeEnabled = false;
+    isEditModeEnabled = signal(false);
     isNewLineItem = false;
     remainingAmount = computed(() => this.calculateRemainingAmount());
     progressPercentage = computed(() => {
@@ -63,6 +66,12 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
         () =>
             this.itemId() ===
             this.transactionService.currentSelectedLineItem()?.lineItemId
+    );
+    editConfig = computed(
+        () =>
+            this.isEditModeEnabled() &&
+            (!this.mobileModalService.isMobileDevice() ||
+                (this.mobileModalService.isMobileDevice() && !this.itemId()))
     );
 
     constructor(
@@ -113,7 +122,7 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
         if (!this.isLineItemSelected()) {
             if (
                 this.mobileModalService.isMobileDevice() &&
-                !this.isEditModeEnabled
+                !this.isEditModeEnabled()
             ) {
                 this.setTransactionData();
                 this.mobileModalService.isBudgetTransactionsModalOpen.set(true);
@@ -143,10 +152,15 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
         this.plannedAmount.set(addValueToCurrencyInput(e));
     }
 
-    enableEditMode(targetInput?: HTMLInputElement) {
+    enableEditMode(targetInput?: HTMLInputElement, e?: MouseEvent) {
+        if (e) e.stopPropagation();
+        if (this.itemMenu) this.itemMenu.closeMenu();
+
+        targetInput?.focus();
         targetInput?.select();
-        if (!this.isEditModeEnabled) {
-            this.isEditModeEnabled = true;
+
+        if (!this.isEditModeEnabled()) {
+            this.isEditModeEnabled.set(true);
             this.initialLineItemTitle = this.lineItemInputValue.value ?? '';
             this.initialPlannedAmount = this.plannedAmount();
 
@@ -164,21 +178,31 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
         } else {
             this.lineItemInputValue.setValue(this.initialLineItemTitle);
             this.plannedAmount.set(this.initialPlannedAmount);
-            this.isEditModeEnabled = false;
+            this.isEditModeEnabled.set(false);
         }
     }
 
-    createOrUpdateLineItem(blurInputs: boolean, e?: MouseEvent) {
+    createOrUpdateLineItem(
+        blurInputs: boolean,
+        e?: MouseEvent,
+        blur?: FocusEvent
+    ) {
         if (e) e.stopPropagation();
         if (blurInputs) this.blurInputs();
-
-        if (this.isNotValidLineItemValues()) {
-            this.cancelEditing();
-        } else if (!this.itemId()) {
-            this.saveLineItem();
-        } else {
-            this.updateLineItem();
-        }
+        if (
+            (blur &&
+                this.mobileModalService.isMobileDevice() &&
+                this.itemId()) ||
+            (!blur &&
+                (!this.mobileModalService.isMobileDevice() || !this.itemId()))
+        )
+            if (this.isNotValidLineItemValues()) {
+                this.cancelEditing();
+            } else if (!this.itemId()) {
+                this.saveLineItem();
+            } else {
+                this.updateLineItem();
+            }
     }
 
     saveLineItem() {
@@ -190,7 +214,7 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
         };
 
         this.saveNewLineItem.emit(saveLineItemPayload);
-        this.isEditModeEnabled = false;
+        this.isEditModeEnabled.set(false);
 
         this.lineItemService.newlyAddedLineItemId
             .pipe(
@@ -217,7 +241,7 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
         };
 
         this.lineItemService.updateLineItem(updateLineItemPayload);
-        this.isEditModeEnabled = false;
+        this.isEditModeEnabled.set(false);
 
         if (!this.mobileModalService.isMobileDevice()) {
             this.setTransactionData();

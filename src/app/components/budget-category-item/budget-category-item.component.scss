@@ -35,7 +35,7 @@
 
         .line-item-title {
             all: unset;
-            cursor: text;
+            cursor: pointer;
             width: calc(100% - 2rem);
             font-family: inherit;
             font-size: 1.1rem;
@@ -47,6 +47,7 @@
             padding: 0.2rem;
             padding-left: 0.5rem;
             margin-right: 0.5rem;
+            pointer-events: none;
 
             &:hover {
                 @include line-item-input();
@@ -55,11 +56,16 @@
                 @include line-item-input();
             }
         }
+
+        .edit-enabled-title {
+            cursor: text;
+            pointer-events: all;
+        }
     }
 
     .planned-amount {
         all: unset;
-        cursor: text;
+        cursor: pointer;
         width: 21%;
         font-size: 1rem;
         font-weight: 400;
@@ -70,6 +76,7 @@
         border-radius: 0.5rem;
         padding-top: 0.2rem;
         padding-bottom: 0.2rem;
+        pointer-events: none;
 
         &:hover {
             @include line-item-input();
@@ -77,6 +84,11 @@
         &:focus {
             @include line-item-input();
         }
+    }
+
+    .edit-enabled-planned {
+        cursor: text;
+        pointer-events: all;
     }
 
     p {
@@ -88,15 +100,13 @@
     }
 }
 
-.delete-icon {
+.item-menu {
     position: absolute;
-    right: 0.5rem;
-    top: 0;
-    translate: 0% 47%;
-    font-size: 1.5rem;
-    height: 1.5rem;
-    width: 1.5rem;
-    color: $bb-error-main;
+    right: 0rem;
+
+    mat-icon {
+        color: $bb-secondary-title-color;
+    }
 }
 
 .edit-menu-container {
@@ -156,22 +166,26 @@
 }
 
 @media (max-width: 1145px) {
-    .delete-icon {
+    .item-menu {
         display: none;
     }
 
     .budget-item-wrapper {
         .title-wrapper {
             width: 63%;
-
-            .line-item-title {
-                pointer-events: none;
-            }
         }
 
         .planned-amount {
             display: none;
             padding-bottom: 0.1rem;
+            pointer-events: all;
+
+            &:hover {
+                outline: none;
+            }
+            &:focus {
+                @include line-item-input();
+            }
         }
 
         .add-planned-mobile {

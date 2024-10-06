@@ -51,6 +51,7 @@
     >
         <BudgetCategoryItem
             @deleteItemAnimation
+            [@.disabled]="!mobileModalService.isMobileDevice()"
             class="budget-item"
             *ngFor="let item of lineItems"
             [itemId]="item.lineItemId"

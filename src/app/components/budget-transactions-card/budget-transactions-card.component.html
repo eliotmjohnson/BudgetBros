@@ -79,6 +79,7 @@
             ) {
                 <InlineTransaction
                     @deleteItemAnimation
+                    [@.disabled]="!isMobileComponent"
                     [transactionId]="transaction.transactionId"
                     [title]="transaction.title!"
                     [amount]="transaction.amount"

@@ -35,7 +35,7 @@ export class BudgetTransactionsCardComponent {
             : this.progress()
               ? `conic-gradient(
                     rgb(109, 206, 109) ${this.progress()}%,
-                    rgb(223, 223, 223) ${100 - this.progress()}%
+                    rgb(223, 223, 223) 0%
                 )`
               : 'rgb(223, 223, 223)';
     });

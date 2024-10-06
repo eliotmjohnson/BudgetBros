@@ -1,5 +1,5 @@
 <slide-to-delete
-    [disabled]="isEditModeEnabled || !itemId()"
+    [disabled]="isEditModeEnabled() || !itemId()"
     [closed]="!!transactionService.currentSelectedLineItem()"
     (deleteItem)="deleteLineItem()"
     [deleteButtonPosition]="90"
@@ -22,6 +22,7 @@
                 <input
                     #lineItemTitleInput
                     class="line-item-title"
+                    [class.edit-enabled-title]="editConfig()"
                     [formControl]="lineItemInputValue"
                     (click)="enableEditMode(lineItemTitleInput)"
                     [value]="itemTitle"
@@ -32,12 +33,14 @@
                 type="text"
                 pattern="\d*"
                 class="planned-amount"
+                [class.edit-enabled-planned]="editConfig()"
                 [class.add-planned-mobile]="
                     mobileModalService.showPlannedAmounts()
                 "
                 (keydown)="checkIfValidKey($event)"
                 (click)="enableEditMode(plannedAmountInput)"
                 (input)="addValue($event)"
+                (blur)="createOrUpdateLineItem(false, undefined, $event)"
                 [value]="plannedAmount() | currency"
             />
             <p
@@ -49,13 +52,31 @@
                 {{ remainingAmount() | currency }}
             </p>
             @if (isLineItemSelected() && itemId()) {
-                <mat-icon
-                    class="delete-icon"
-                    (click)="deleteLineItem()"
-                    fontIcon="delete"
-                ></mat-icon>
+                <button
+                    class="item-menu"
+                    mat-icon-button
+                    [matMenuTriggerFor]="itemMenu"
+                >
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #itemMenu="matMenu">
+                    <button
+                        (click)="enableEditMode(lineItemTitleInput, $event)"
+                        mat-menu-item
+                    >
+                        <mat-icon>edit</mat-icon>
+                        <span>Edit</span>
+                    </button>
+                    <button
+                        (click)="deleteLineItem()"
+                        mat-menu-item
+                    >
+                        <mat-icon>delete</mat-icon>
+                        <span>Delete</span>
+                    </button>
+                </mat-menu>
             }
-            @if (isEditModeEnabled) {
+            @if (editConfig()) {
                 <span
                     (document:keydown.enter)="createOrUpdateLineItem(true)"
                     (document:click)="

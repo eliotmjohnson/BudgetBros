@@ -4,5 +4,6 @@ export interface Budget {
     budgetId?: string;
     monthNumber: number;
     year: number;
+    categoryOrder: string[];
     budgetCategories: BudgetCategory[];
 }

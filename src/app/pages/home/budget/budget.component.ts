@@ -3,12 +3,14 @@ import {
     AfterViewChecked,
     Component,
     computed,
+    effect,
     OnInit,
     ViewChild
 } from '@angular/core';
 import { MatCalendar, MatCalendarView } from '@angular/material/datepicker';
 import { MONTHS } from 'src/app/constants/constants';
 import { BudgetCategory } from 'src/app/models/budgetCategory';
+import { BudgetCategoryService } from 'src/app/services/budget-category.service';
 import { BudgetService } from 'src/app/services/budget.service';
 import { MobileModalService } from 'src/app/services/mobile-modal.service';
 import { TransactionService } from 'src/app/services/transaction.service';
@@ -37,8 +39,15 @@ export class BudgetComponent implements OnInit, AfterViewChecked {
     constructor(
         public transactionService: TransactionService,
         public budgetService: BudgetService,
-        public mobileModalService: MobileModalService
-    ) {}
+        public mobileModalService: MobileModalService,
+        private budgetCategoryService: BudgetCategoryService
+    ) {
+        effect(() => {
+            if (this.budget()?.budgetCategories) {
+                this.sortBudgetCategories();
+            }
+        });
+    }
 
     ngOnInit(): void {
         if (!this.budget()?.budgetId) {
@@ -61,6 +70,8 @@ export class BudgetComponent implements OnInit, AfterViewChecked {
             event.previousIndex,
             event.currentIndex
         );
+
+        this.budgetCategoryService.updateBudgetCategoryOrder();
     }
 
     getNewBudget(calendarSelection: Date | null) {
@@ -136,6 +147,25 @@ export class BudgetComponent implements OnInit, AfterViewChecked {
             this.isRefreshing = true;
             this.budgetService.refreshBudget();
             setTimeout(() => (this.isRefreshing = false), 1000);
+        }
+    }
+
+    sortBudgetCategories() {
+        const currentBudget = this.budget();
+
+        if (currentBudget) {
+            const budgetCategoryOrder = currentBudget.categoryOrder;
+
+            currentBudget.budgetCategories =
+                currentBudget.budgetCategories.sort((a, b) => {
+                    const indexA = budgetCategoryOrder.indexOf(
+                        a.budgetCategoryId
+                    );
+                    const indexB = budgetCategoryOrder.indexOf(
+                        b.budgetCategoryId
+                    );
+                    return indexA - indexB;
+                });
         }
     }
 }

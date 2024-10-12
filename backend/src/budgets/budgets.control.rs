@@ -7,7 +7,9 @@ use crate::{
     AppState,
 };
 use actix_web::{
-    delete, get, post, web::{Data, Json, Path, Query}, HttpResponse, Responder
+    delete, get, post,
+    web::{Data, Json, Path, Query},
+    HttpResponse, Responder,
 };
 use serde::Deserialize;
 
@@ -42,6 +44,7 @@ async fn get_budget_data_handler(
                     budget_id: None,
                     month_number: query_params.month_number,
                     year: query_params.year,
+                    category_order: vec![],
                     budget_categories: [].to_vec(),
                 }),
                 _ => {
@@ -50,6 +53,7 @@ async fn get_budget_data_handler(
                         budget_id: Some(rows[0].budget_id.clone()),
                         month_number: query_params.month_number,
                         year: query_params.year,
+                        category_order: rows[0].category_order.clone(),
                         budget_categories: if is_new_budget {
                             [].to_vec()
                         } else {
@@ -81,10 +85,7 @@ pub async fn add_budget_handler(
 }
 
 #[delete("/{budget_id}")]
-pub async fn delete_budget_handler(
-    state: Data<AppState>,
-    params: Path<String>
-) -> impl Responder {
+pub async fn delete_budget_handler(state: Data<AppState>, params: Path<String>) -> impl Responder {
     let budget_id = params.into_inner();
 
     let delete_budget_result = delete_budget(state, budget_id).await;

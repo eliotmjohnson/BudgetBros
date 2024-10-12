@@ -77,7 +77,7 @@ export class SlideToDeleteComponent implements OnInit {
                             behavior: 'smooth'
                         });
                     }
-                }, 25);
+                }, 50);
             } else if (
                 scrollPosition < elementButtonSize &&
                 scrollPosition > 0

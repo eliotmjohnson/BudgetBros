@@ -201,6 +201,10 @@
         .negative {
             color: $bb-error-main;
         }
+
+        .positive {
+            color: $bb-primary-green-text;
+        }
     }
 }
 
@@ -227,14 +231,14 @@
     .banner {
         border-top-left-radius: 0;
         border-top-right-radius: 0;
-        min-height: 6rem;
+        min-height: calc(6rem + min(2.5rem, env(safe-area-inset-top)));
     }
 
     .back-button {
         display: flex;
         align-items: center;
         position: absolute;
-        top: 1.5rem;
+        top: calc(1.5rem + min(2.5rem, env(safe-area-inset-top)));
         left: 1rem;
         font-weight: 500;
         font-size: 1rem;

@@ -21,6 +21,7 @@
                     <mat-icon
                         class="icon"
                         [class.negative]="progress() < 0"
+                        [class.positive]="progress() > 0"
                         fontIcon="savings"
                     />
                 </div>
@@ -79,7 +80,6 @@
             ) {
                 <InlineTransaction
                     @deleteItemAnimation
-                    [@.disabled]="!isMobileComponent"
                     [transactionId]="transaction.transactionId"
                     [title]="transaction.title!"
                     [amount]="transaction.amount"

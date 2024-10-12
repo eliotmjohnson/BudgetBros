@@ -10,7 +10,7 @@ export const addTransactionModalAnimation = trigger(
     'addTransactionModalAnimation',
     [
         transition(':leave', [
-            animate('0.25s', style({ translate: '0rem 96vh' }))
+            animate('0.25s', style({ translate: '0rem 100vh' }))
         ])
     ]
 );

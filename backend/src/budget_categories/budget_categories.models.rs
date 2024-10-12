@@ -18,10 +18,18 @@ pub struct UpdatedBudgetCategory {
 
 #[derive(Serialize, Deserialize, FromRow, Debug)]
 #[serde(rename_all = "camelCase")]
+pub struct BudgetCategoryDeleteRequest {
+    pub budget_id: String,
+    pub category_order: Vec<String>,
+}
+
+#[derive(Serialize, Deserialize, FromRow, Debug, Clone)]
+#[serde(rename_all = "camelCase")]
 pub struct NewBudgetCategory {
     pub name: String,
     pub user_id: String,
     pub budget_id: String,
+    pub category_order: Vec<String>,
 }
 
 #[derive(Serialize, FromRow, Debug)]
@@ -43,4 +51,10 @@ pub struct BudgetCategoryWithLineItems {
     pub budget_category_id: String,
     pub budget_category_name: String,
     pub line_items: Vec<LineItemReduced>,
+}
+
+#[derive(Serialize, FromRow)]
+#[serde(rename_all = "camelCase")]
+pub struct ReturnedBudgetCategoryOrder {
+    pub category_order: Vec<String>,
 }

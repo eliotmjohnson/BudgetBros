@@ -1,0 +1,17 @@
+{
+    "name": "BudgetBros",
+    "start_url": "/",
+    "display": "standalone",
+    "icons": [
+        {
+            "src": "icons/BB_Icon.jpg",
+            "sizes": "180x180",
+            "type": "image/jpg"
+        },
+        {
+            "src": "icons/BB_Icon_Png.png",
+            "sizes": "180x180",
+            "type": "image/png"
+        }
+    ]
+}

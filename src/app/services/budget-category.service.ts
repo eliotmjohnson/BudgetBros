@@ -59,25 +59,39 @@ export class BudgetCategoryService {
                     .pipe(take(1))
                     .subscribe((budgetId) => {
                         if (budgetId) {
-                            this.executeBudgetCategorySave(budgetId, name);
+                            this.executeBudgetCategorySave(
+                                budgetId,
+                                name,
+                                currentBudget.categoryOrder
+                            );
                         }
                     });
             } else {
-                this.executeBudgetCategorySave(currentBudget.budgetId, name);
+                this.executeBudgetCategorySave(
+                    currentBudget.budgetId,
+                    name,
+                    currentBudget.categoryOrder
+                );
             }
         }
     }
 
-    private executeBudgetCategorySave(budgetCategoryId: string, name: string) {
+    private executeBudgetCategorySave(
+        budgetId: string,
+        name: string,
+        categoryOrder: string[]
+    ) {
         this.http
             .post<string>(`${this.baseUrl}`, {
                 name,
                 userId: this.authService.userId,
-                budgetId: budgetCategoryId
+                budgetId: budgetId,
+                categoryOrder: categoryOrder
             })
             .subscribe({
                 next: (budgetCategoryId) => {
                     this.newlyCreatedBudgetCategoryId.next(budgetCategoryId);
+                    categoryOrder.push(budgetCategoryId);
                 },
                 error: (error) => {
                     this.newlyCreatedBudgetCategoryId.next('');
@@ -90,16 +104,31 @@ export class BudgetCategoryService {
         const currentBudget = this.budgetService.budget();
         const shouldDeleteBudget = currentBudget?.budgetCategories.length === 1;
 
-        this.http.delete(`${this.baseUrl}/${budgetCategoryId}`).subscribe({
-            next: () => {
-                if (currentBudget?.budgetId && shouldDeleteBudget) {
-                    this.budgetService.deleteBudget(currentBudget.budgetId);
-                }
-            },
-            error: (error) => {
-                this.budgetService.openSnagDialogAndRefresh(error);
-            }
-        });
+        if (currentBudget) {
+            this.http
+                .delete(`${this.baseUrl}/${budgetCategoryId}`, {
+                    body: {
+                        categoryOrder: currentBudget.categoryOrder,
+                        budgetId: currentBudget.budgetId
+                    }
+                })
+                .subscribe({
+                    next: () => {
+                        if (currentBudget.budgetId && shouldDeleteBudget) {
+                            this.budgetService.deleteBudget(
+                                currentBudget.budgetId
+                            );
+                        }
+                    },
+                    error: (error) => {
+                        this.budgetService.openSnagDialogAndRefresh(error);
+                    }
+                });
+
+            currentBudget.categoryOrder = currentBudget.categoryOrder.filter(
+                (categoryId) => categoryId !== budgetCategoryId
+            );
+        }
     }
 
     updateBudgetCategory(
@@ -112,5 +141,28 @@ export class BudgetCategoryService {
                     this.budgetService.openSnagDialogAndRefresh(error);
                 }
             });
+    }
+
+    updateBudgetCategoryOrder() {
+        const currentBudget = this.budgetService.budget();
+        if (currentBudget) {
+            const budgetCategoryIds = currentBudget.budgetCategories.map(
+                (category) => category.budgetCategoryId
+            );
+            const isEqual = !currentBudget.categoryOrder.some(
+                (categoryId, i) => categoryId !== budgetCategoryIds[i]
+            );
+
+            if (!isEqual) {
+                this.http
+                    .post(
+                        `${this.baseUrl}/reorder/${currentBudget.budgetId}`,
+                        budgetCategoryIds
+                    )
+                    .subscribe();
+
+                currentBudget.categoryOrder = budgetCategoryIds;
+            }
+        }
     }
 }

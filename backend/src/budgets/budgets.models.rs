@@ -26,6 +26,7 @@ pub struct BudgetRowData {
     pub user_id: String,
     pub month_number: i64,
     pub year: i64,
+    pub category_order: Vec<String>,
     pub budget_category_id: Option<String>,
     pub budget_category_name: Option<String>,
     pub line_item_id: Option<String>,
@@ -83,6 +84,7 @@ pub struct BudgetResponseData {
     pub budget_id: Option<String>,
     pub month_number: i64,
     pub year: i64,
+    pub category_order: Vec<String>,
     pub budget_categories: Vec<BudgetCategoryDataConverted>,
 }
 

@@ -12,11 +12,12 @@
     transition: translate 0.4s;
     animation: slideUp 1s;
     z-index: 2;
+    margin-bottom: min(1rem, env(safe-area-inset-bottom));
 }
 
 :host(.modal-open) {
     transition: translate 0.25s;
-    translate: 0 5rem;
+    translate: 0 calc(5rem + min(2vh, env(safe-area-inset-bottom)));
 }
 
 .tab-bar {
@@ -59,8 +60,8 @@
     position: absolute;
     height: 3.5rem;
     width: 3.5rem;
-    top: -4.5rem;
-    right: 1rem;
+    top: -5rem;
+    right: 1.5rem;
     display: none;
     align-items: center;
     justify-content: center;

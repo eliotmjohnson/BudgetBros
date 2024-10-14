@@ -93,3 +93,10 @@ body {
         height: 0.5rem;
     }
 }
+
+@media (max-width: 1145px) and (display-mode: standalone) {
+    html,
+    body {
+        height: 100vh;
+    }
+}

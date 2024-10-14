@@ -17,6 +17,7 @@ pub async fn get_budget(
             b.user_id,
             b.month_number,
             b.year,
+            b.category_order,
             bc.id AS budget_category_id,
             bc.name AS budget_category_name,
             li.id AS line_item_id,
@@ -83,8 +84,5 @@ pub async fn delete_budget(
             id = $1
         ";
 
-    sqlx::query(query)
-        .bind(budget_id)
-        .execute(&state.db)
-        .await
+    sqlx::query(query).bind(budget_id).execute(&state.db).await
 }

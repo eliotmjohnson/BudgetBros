@@ -1,12 +1,14 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import {
     AfterViewChecked,
+    ChangeDetectorRef,
     Component,
     ElementRef,
     EventEmitter,
     Input,
     OnInit,
     Output,
+    signal,
     ViewChild
 } from '@angular/core';
 import { take } from 'rxjs';
@@ -50,6 +52,7 @@ export class BudgetCategoryCardComponent implements OnInit, AfterViewChecked {
     isDeletingBudgetCategory = false;
     isSavingBudgetCategory = false;
     isTitleNameHovered = false;
+    isDeletingLineItem = signal(false);
     hostHeight = 'auto';
 
     constructor(
@@ -58,7 +61,8 @@ export class BudgetCategoryCardComponent implements OnInit, AfterViewChecked {
         private budgetService: BudgetService,
         private budgetCategoryService: BudgetCategoryService,
         private hostElement: ElementRef<HTMLElement>,
-        public mobileModalService: MobileModalService
+        public mobileModalService: MobileModalService,
+        private cdr: ChangeDetectorRef
     ) {}
 
     ngOnInit(): void {
@@ -66,7 +70,7 @@ export class BudgetCategoryCardComponent implements OnInit, AfterViewChecked {
             this.isNewBudgetCategory = true;
             this.enableEditMode();
 
-            if (!this.mobileModalService.isMobileDevice()) {
+            if (!this.mobileModalService.isIOSDevice()) {
                 setTimeout(() => this.focusTitleInput(), 400);
             }
         }
@@ -75,18 +79,17 @@ export class BudgetCategoryCardComponent implements OnInit, AfterViewChecked {
     ngAfterViewChecked(): void {
         if (this.titleInput && this.isEditingName) {
             if (
-                this.mobileModalService.isMobileDevice() ||
-                (!this.mobileModalService.isMobileDevice() &&
-                    !this.isNewBudgetCategory)
+                this.mobileModalService.isIOSDevice() ||
+                !this.isNewBudgetCategory
             ) {
                 this.focusTitleInput();
+            }
 
-                if (
-                    this.budgetService.budget()!.budgetCategories.length > 1 &&
-                    this.mobileModalService.isMobileDevice()
-                ) {
-                    this.centerNewCategory();
-                }
+            if (
+                this.budgetService.budget()!.budgetCategories.length > 1 &&
+                this.mobileModalService.isMobileDevice()
+            ) {
+                this.centerNewCategory();
             }
         }
     }
@@ -252,19 +255,26 @@ export class BudgetCategoryCardComponent implements OnInit, AfterViewChecked {
     }
 
     deleteSavedLineItem(lineItemId: string) {
+        this.isDeletingLineItem.set(true);
+        this.cdr.detectChanges();
         const foundIndex = this.lineItems.findIndex(
             (lineItem) => lineItem.lineItemId === lineItemId
         );
 
         this.lineItems.splice(foundIndex, 1);
+        this.isDeletingLineItem.set(false);
     }
 
     removeNewLineItem() {
+        this.isDeletingLineItem.set(true);
+        this.cdr.detectChanges();
         const foundIndex = this.lineItems.findIndex(
             (lineItem) => !lineItem.lineItemId
         );
 
         this.lineItems.splice(foundIndex, 1);
+        this.isDeletingLineItem.set(false);
+
         this.isAddingLineItem = false;
     }
 

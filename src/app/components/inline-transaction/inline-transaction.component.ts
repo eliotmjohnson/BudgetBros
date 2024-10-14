@@ -13,7 +13,10 @@ import {
 @Component({
     selector: 'InlineTransaction',
     templateUrl: './inline-transaction.component.html',
-    styleUrl: './inline-transaction.component.scss'
+    styleUrl: './inline-transaction.component.scss',
+    host: {
+        '[@.disabled]': '!isDeletingTransaction'
+    }
 })
 export class InlineTransactionComponent {
     @Input() transactionId?: string | undefined;
@@ -22,6 +25,7 @@ export class InlineTransactionComponent {
     @Input() merchant: string | null = '';
     @Input() notes = '';
     @Input({ transform: (date: string) => new Date(date) }) date!: Date;
+    isDeletingTransaction = false;
 
     constructor(
         private transactionService: TransactionService,
@@ -39,6 +43,7 @@ export class InlineTransactionComponent {
     }
 
     deleteTransaction(e?: MouseEvent) {
+        this.isDeletingTransaction = true;
         if (e) e.stopPropagation();
 
         this.transactionService.softDeleteTransaction(this.transactionId!);

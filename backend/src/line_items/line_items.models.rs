@@ -21,13 +21,21 @@ pub struct UpdatedLineItem {
     pub starting_balance: f64,
 }
 
-#[derive(Serialize, Deserialize, FromRow, Debug)]
+#[derive(Serialize, Deserialize, FromRow, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct NewLineItem {
     pub name: String,
     pub is_fund: bool,
     pub planned_amount: f64,
     pub starting_balance: f64,
+    pub budget_category_id: String,
+    pub line_item_order: Vec<String>,
+}
+
+#[derive(Serialize, Deserialize, FromRow, Debug, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct LineItemDeleteRequest {
+    pub line_item_order: Vec<String>,
     pub budget_category_id: String,
 }
 

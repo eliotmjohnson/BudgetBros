@@ -44,6 +44,7 @@ export class BudgetCategoryCardComponent implements OnInit, AfterViewChecked {
     @Input() budgetCategoryId = '';
     @Input() lineItems: LineItem[] = [];
     @Input() name = '';
+    @Input() order: string[] = [];
     @Output() isAddingBudgetCategory = new EventEmitter<boolean>();
     @Output() hideCategoryButton = new EventEmitter();
     isEditingName = false;
@@ -74,6 +75,8 @@ export class BudgetCategoryCardComponent implements OnInit, AfterViewChecked {
                 setTimeout(() => this.focusTitleInput(), 400);
             }
         }
+
+        this.sortLineItems();
     }
 
     ngAfterViewChecked(): void {
@@ -212,6 +215,20 @@ export class BudgetCategoryCardComponent implements OnInit, AfterViewChecked {
             event.previousIndex,
             event.currentIndex
         );
+
+        const lineItemIds = this.lineItems.map((item) => item.lineItemId);
+        const isEqual = !this.order.some(
+            (lineItemId, i) => lineItemId !== lineItemIds[i]
+        );
+
+        if (!isEqual) {
+            this.lineItemService.updateLineItemOrder(
+                lineItemIds,
+                this.budgetCategoryId
+            );
+        }
+
+        this.order = lineItemIds;
     }
 
     addNewLineItemPlaceholder(event: MouseEvent) {
@@ -235,6 +252,7 @@ export class BudgetCategoryCardComponent implements OnInit, AfterViewChecked {
 
     saveNewLineItem(saveLineItemPayload: SaveLineItemPayload) {
         saveLineItemPayload.budgetCategoryId = this.budgetCategoryId;
+        saveLineItemPayload.lineItemOrder = this.order;
 
         this.lineItemService.saveNewLineItem(saveLineItemPayload);
         this.lineItemService.newlyAddedLineItemId
@@ -242,6 +260,7 @@ export class BudgetCategoryCardComponent implements OnInit, AfterViewChecked {
             .subscribe((id) => {
                 if (id) {
                     this.isAddingLineItem = false;
+                    this.order.push(id);
                 }
             });
     }
@@ -255,13 +274,23 @@ export class BudgetCategoryCardComponent implements OnInit, AfterViewChecked {
     }
 
     deleteSavedLineItem(lineItemId: string) {
+        this.lineItemService.deleteLineItem(
+            lineItemId,
+            this.order,
+            this.budgetCategoryId
+        );
+
         this.isDeletingLineItem.set(true);
         this.cdr.detectChanges();
+
         const foundIndex = this.lineItems.findIndex(
             (lineItem) => lineItem.lineItemId === lineItemId
         );
-
         this.lineItems.splice(foundIndex, 1);
+
+        this.order = this.order.filter(
+            (lineItemOrderId) => lineItemOrderId !== lineItemId
+        );
         this.isDeletingLineItem.set(false);
     }
 
@@ -299,6 +328,14 @@ export class BudgetCategoryCardComponent implements OnInit, AfterViewChecked {
         window.scrollTo({
             top: categoryLocation.top - 275,
             behavior: 'smooth'
+        });
+    }
+
+    sortLineItems() {
+        this.lineItems.sort((a, b) => {
+            const indexA = this.order.indexOf(a.lineItemId);
+            const indexB = this.order.indexOf(b.lineItemId);
+            return indexA - indexB;
         });
     }
 }

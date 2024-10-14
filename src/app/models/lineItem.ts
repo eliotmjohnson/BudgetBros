@@ -19,6 +19,7 @@ export interface SaveLineItemPayload {
     plannedAmount: number;
     startingBalance: number;
     budgetCategoryId?: string;
+    lineItemOrder?: string[];
 }
 
 export type UpdateLineItemPayload = Omit<

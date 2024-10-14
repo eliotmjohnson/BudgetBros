@@ -64,3 +64,20 @@ pub async fn delete_line_item(
         .execute(&state.db)
         .await
 }
+
+pub async fn update_line_item_order(
+    state: Data<AppState>,
+    new_line_item_order: Vec<String>,
+    budget_category_id: String,
+) -> Result<PgQueryResult, sqlx::Error> {
+    let query = "UPDATE budget_categories
+        SET line_item_order = $1
+        WHERE id = $2
+        ";
+
+    sqlx::query(query)
+        .bind(new_line_item_order)
+        .bind(budget_category_id)
+        .execute(&state.db)
+        .await
+}

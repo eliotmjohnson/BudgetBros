@@ -15,6 +15,7 @@ pub fn get_compiled_budget_data(rows: Vec<BudgetRowData>) -> Vec<BudgetCategoryD
                 .or_insert_with(|| BudgetCategoryDataMap {
                     budget_category_id,
                     name: row.budget_category_name.unwrap_or_default(),
+                    line_item_order: Some(row.line_item_order.unwrap_or_default()),
                     budget_line_items: HashMap::new(),
                 });
 
@@ -50,6 +51,7 @@ pub fn get_compiled_budget_data(rows: Vec<BudgetRowData>) -> Vec<BudgetCategoryD
         .map(|category| BudgetCategoryDataConverted {
             budget_category_id: category.budget_category_id,
             name: category.name,
+            line_item_order: category.line_item_order,
             line_items: category.budget_line_items.into_values().collect(),
         })
         .collect()

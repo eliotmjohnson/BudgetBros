@@ -20,6 +20,7 @@ pub async fn get_budget(
             b.category_order,
             bc.id AS budget_category_id,
             bc.name AS budget_category_name,
+            bc.line_item_order AS line_item_order,
             li.id AS line_item_id,
             li.name AS line_item_name,
             li.is_fund,

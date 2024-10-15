@@ -249,7 +249,6 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     }
 
     deleteLineItem() {
-        this.lineItemService.deleteLineItem(this.itemId());
         this.transactionService.clearSelectedTransactionData();
         this.deleteSavedLineItem.emit(this.itemId());
     }

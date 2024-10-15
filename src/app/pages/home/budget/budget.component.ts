@@ -110,6 +110,7 @@ export class BudgetComponent implements OnInit, AfterViewChecked {
         const newBudgetCategoryPlaceholder: BudgetCategory = {
             budgetCategoryId: '',
             name: 'Category Name',
+            lineItemOrder: [],
             lineItems: []
         };
 

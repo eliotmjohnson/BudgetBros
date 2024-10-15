@@ -50,12 +50,20 @@ export class LineItemService {
         });
     }
 
-    deleteLineItem(lineItemId: string) {
-        this.http.delete(`${this.baseUrl}/${lineItemId}`).subscribe({
-            error: (error) => {
-                this.budgetService.openSnagDialogAndRefresh(error);
-            }
-        });
+    deleteLineItem(
+        lineItemId: string,
+        lineItemOrder: string[],
+        budgetCategoryId: string
+    ) {
+        this.http
+            .delete(`${this.baseUrl}/${lineItemId}`, {
+                body: { lineItemOrder, budgetCategoryId }
+            })
+            .subscribe({
+                error: (error) => {
+                    this.budgetService.openSnagDialogAndRefresh(error);
+                }
+            });
     }
 
     fetchLineItem(lineItemId: string): LineItem | undefined {
@@ -78,5 +86,11 @@ export class LineItemService {
         }
 
         return this.fetchedLineItem;
+    }
+
+    updateLineItemOrder(lineItemIds: string[], budgetCategoryId: string) {
+        this.http
+            .post(`${this.baseUrl}/reorder/${budgetCategoryId}`, lineItemIds)
+            .subscribe();
     }
 }

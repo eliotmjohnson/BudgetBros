@@ -29,6 +29,7 @@ pub struct BudgetRowData {
     pub category_order: Vec<String>,
     pub budget_category_id: Option<String>,
     pub budget_category_name: Option<String>,
+    pub line_item_order: Option<Vec<String>>,
     pub line_item_id: Option<String>,
     pub line_item_name: Option<String>,
     pub is_fund: Option<bool>,
@@ -67,6 +68,7 @@ pub struct LineItemData {
 pub struct BudgetCategoryDataMap {
     pub budget_category_id: String,
     pub name: String,
+    pub line_item_order: Option<Vec<String>>,
     pub budget_line_items: HashMap<String, LineItemData>,
 }
 
@@ -75,6 +77,7 @@ pub struct BudgetCategoryDataMap {
 pub struct BudgetCategoryDataConverted {
     pub budget_category_id: String,
     pub name: String,
+    pub line_item_order: Option<Vec<String>>,
     pub line_items: Vec<LineItemData>,
 }
 

@@ -41,9 +41,7 @@
             color="primary"
             type="submit"
             [disabled]="
-                !form.valid ||
-                !budgetService.budget()?.budgetId ||
-                !form.touched
+                !form.valid || !budgetService.budget()?.budgetId || !form.dirty
             "
         >
             Save

@@ -70,7 +70,7 @@ export class IncomeDrawerComponent implements AfterViewInit {
     openDrawer() {
         this.slideTranslate = null;
         if (!this.isDrawerOpen) {
-            this.form.markAsUntouched();
+            this.form.markAsPristine();
             this.closeListener = this.renderer.listen(
                 'document',
                 'mousedown',

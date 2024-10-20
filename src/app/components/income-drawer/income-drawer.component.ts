@@ -34,6 +34,7 @@ export class IncomeDrawerComponent implements AfterViewInit {
         paycheck: [this.currencyPipe.transform(0)],
         additionalIncome: [this.currencyPipe.transform(0)]
     });
+
     closeListener!: () => void;
     touchmoveListener: (() => void) | null = null;
     touchendListener: (() => void) | null = null;

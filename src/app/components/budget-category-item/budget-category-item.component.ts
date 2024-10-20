@@ -119,14 +119,11 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     }
 
     setSelectedLineItem() {
-        if (!this.isLineItemSelected()) {
-            if (
-                this.mobileModalService.isMobileDevice() &&
-                !this.isEditModeEnabled()
-            ) {
+        if (!this.isLineItemSelected() && !this.isEditModeEnabled()) {
+            if (this.mobileModalService.isMobileDevice()) {
                 this.setTransactionData();
                 this.mobileModalService.isBudgetTransactionsModalOpen.set(true);
-            } else if (!this.mobileModalService.isMobileDevice()) {
+            } else {
                 this.setTransactionData();
             }
         }
@@ -157,7 +154,11 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
         if (this.itemMenu) this.itemMenu.closeMenu();
 
         targetInput?.focus();
-        targetInput?.select();
+        if (this.mobileModalService.isIOSDevice()) {
+            setTimeout(() => targetInput?.select(), 50);
+        } else {
+            targetInput?.select();
+        }
 
         if (!this.isEditModeEnabled()) {
             this.isEditModeEnabled.set(true);
@@ -214,6 +215,7 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
         };
 
         this.saveNewLineItem.emit(saveLineItemPayload);
+        this.updateLineItemPlannedAmountState(saveLineItemPayload);
         this.isEditModeEnabled.set(false);
 
         this.lineItemService.newlyAddedLineItemId
@@ -241,6 +243,7 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
         };
 
         this.lineItemService.updateLineItem(updateLineItemPayload);
+        this.updateLineItemPlannedAmountState(updateLineItemPayload);
         this.isEditModeEnabled.set(false);
 
         if (!this.mobileModalService.isMobileDevice()) {
@@ -251,6 +254,17 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     deleteLineItem() {
         this.transactionService.clearSelectedTransactionData();
         this.deleteSavedLineItem.emit(this.itemId());
+    }
+
+    updateLineItemPlannedAmountState(
+        payload: UpdateLineItemPayload | SaveLineItemPayload
+    ) {
+        const fetchedLineItem = this.lineItemService.fetchLineItem(
+            this.itemId()
+        );
+        if (fetchedLineItem) {
+            fetchedLineItem.plannedAmount = payload.plannedAmount;
+        }
     }
 
     isNotValidLineItemValues() {

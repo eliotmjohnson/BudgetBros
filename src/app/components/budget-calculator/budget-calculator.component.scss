@@ -1,0 +1,39 @@
+@import "bb-core";
+
+:host {
+    display: flex;
+    width: 100%;
+    z-index: 5;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 2rem;
+    background-color: $bb-primary-green-text;
+    transform: translate3d(0, 0, 0);
+    animation: enter 0.25s forwards;
+
+    .title {
+        margin: 0;
+        color: white;
+        font-weight: 500;
+
+        .amount {
+            font-weight: 900;
+            color: white;
+        }
+    }
+
+    @keyframes enter {
+        0% {
+            overflow-y: hidden;
+            height: 0rem;
+        }
+        100% {
+            height: 2rem;
+        }
+    }
+}

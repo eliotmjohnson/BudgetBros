@@ -22,7 +22,6 @@ import { TransactionService } from 'src/app/services/transaction.service';
 })
 export class BudgetComponent implements OnInit, AfterViewChecked {
     @ViewChild('calendarSelector') calendarSelector!: MatCalendar<Date>;
-
     months = MONTHS;
     selectedMonth = computed(() => {
         return MONTHS[(this.budget()?.monthNumber ?? 1) - 1];
@@ -35,6 +34,7 @@ export class BudgetComponent implements OnInit, AfterViewChecked {
     isAddingBudgetCategory = false;
     isAddCategoryButtonHidden = false;
     isRefreshing = false;
+    isBudgetBrosBudget = true;
 
     constructor(
         public transactionService: TransactionService,
@@ -168,5 +168,9 @@ export class BudgetComponent implements OnInit, AfterViewChecked {
                     return indexA - indexB;
                 });
         }
+    }
+
+    setBudgetPanelExpansion(isBudgetBrosBudget: boolean) {
+        this.isBudgetBrosBudget = isBudgetBrosBudget;
     }
 }

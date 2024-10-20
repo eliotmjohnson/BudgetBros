@@ -159,7 +159,11 @@ export class BudgetCategoryService {
                         `${this.baseUrl}/reorder/${currentBudget.budgetId}`,
                         budgetCategoryIds
                     )
-                    .subscribe();
+                    .subscribe({
+                        error: (error) => {
+                            this.budgetService.openSnagDialogAndRefresh(error);
+                        }
+                    });
 
                 currentBudget.categoryOrder = budgetCategoryIds;
             }

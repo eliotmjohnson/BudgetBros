@@ -1,0 +1,61 @@
+<section
+    class="income-container"
+    [formGroup]="form"
+>
+    <h1 class="title">Add Income</h1>
+    <form
+        (submit)="handleIncomeFormSubmit($event)"
+        class="income-form"
+    >
+        <mat-form-field appearance="outline">
+            <mat-label>Paycheck</mat-label>
+            <input
+                #paycheckInput
+                matInput
+                pattern="\d*"
+                formControlName="paycheck"
+                (input)="handleCurrencyInput($event, 'paycheck')"
+                (click)="selectInputText(paycheckInput)"
+            />
+            @if (form.controls.paycheck.errors) {
+                <mat-error>Amount is required</mat-error>
+            }
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Additional Income</mat-label>
+            <input
+                #additionalIncomeInput
+                matInput
+                pattern="\d*"
+                formControlName="additionalIncome"
+                (input)="handleCurrencyInput($event, 'additionalIncome')"
+                (click)="selectInputText(additionalIncomeInput)"
+            />
+            @if (form.controls.additionalIncome.errors) {
+                <mat-error>Amount is required</mat-error>
+            }
+        </mat-form-field>
+        <button
+            mat-raised-button
+            style="color: white"
+            color="primary"
+            type="submit"
+            [disabled]="
+                !form.valid ||
+                !budgetService.budget()?.budgetId ||
+                !form.touched
+            "
+        >
+            Save
+        </button>
+    </form>
+</section>
+<span
+    #drawerHandle
+    (click)="openDrawer()"
+    class="drawer-open-button"
+    (touchstart)="setUpDrawerSlide($event)"
+>
+    Income
+    <mat-icon fontIcon="arrow_forward_ios" />
+</span>

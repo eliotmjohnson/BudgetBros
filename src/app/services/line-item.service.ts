@@ -91,6 +91,10 @@ export class LineItemService {
     updateLineItemOrder(lineItemIds: string[], budgetCategoryId: string) {
         this.http
             .post(`${this.baseUrl}/reorder/${budgetCategoryId}`, lineItemIds)
-            .subscribe();
+            .subscribe({
+                error: (error) => {
+                    this.budgetService.openSnagDialogAndRefresh(error);
+                }
+            });
     }
 }

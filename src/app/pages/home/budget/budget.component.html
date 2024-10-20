@@ -1,3 +1,4 @@
+<BudgetCalculator #budgetCalculator />
 <header class="header">
     <div class="title-wrapper">
         <span>
@@ -48,8 +49,14 @@
         }
     </span>
     <AmountTypeSelector />
+    <IncomeDrawer />
 </header>
-<section class="budget-dashboard-wrapper">
+<section
+    class="budget-dashboard-wrapper"
+    [class.expand-dashboard-wrapper]="
+        budgetCalculator.calculatedBudgetAmount !== 0
+    "
+>
     <div
         #budgets
         class="budgets"

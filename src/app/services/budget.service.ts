@@ -2,10 +2,11 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { BE_API_URL } from '../constants/constants';
-import { Budget } from '../models/budget';
+import { Budget, UpdateBudgetIncomePayload } from '../models/budget';
 import { AuthService } from './auth.service';
 import { BBSnagService } from './bb-snag.service';
 import { TransactionService } from './transaction.service';
+import { isEqual } from 'lodash';
 
 @Injectable({
     providedIn: 'root'
@@ -17,7 +18,7 @@ export class BudgetService {
     snagDialogService = inject(BBSnagService);
 
     baseUrl = `${BE_API_URL}/budgets`;
-    budget = signal<Budget | undefined>(undefined);
+    budget = signal<Budget | undefined>(undefined, { equal: isEqual });
     isLoading = signal(false);
     budgetError = signal(false);
     newlyCreatedBudgetId = new Subject<string>();
@@ -75,6 +76,16 @@ export class BudgetService {
                 this.openSnagDialogAndRefresh(error);
             }
         });
+    }
+
+    updateBudgetIncome(payload: UpdateBudgetIncomePayload) {
+        this.http
+            .patch(`${this.baseUrl}/${this.budget()?.budgetId}`, payload)
+            .subscribe({
+                error: (error) => {
+                    this.openSnagDialogAndRefresh(error);
+                }
+            });
     }
 
     clearBudget() {

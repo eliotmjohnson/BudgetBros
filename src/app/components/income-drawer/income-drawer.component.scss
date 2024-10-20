@@ -1,0 +1,134 @@
+@import "bb-core";
+
+$animation-timing: cubic-bezier(0.4, 1, 0.4, 1);
+
+:host {
+    width: 59%;
+    height: 21rem;
+    top: 0;
+    left: 0;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fafafa;
+    translate: 0 -14rem;
+    transform: translateZ(-10px);
+    transition:
+        translate 0.45s $animation-timing,
+        box-shadow 0.45s $animation-timing,
+        border-radius 0.45s $animation-timing;
+    transform-style: preserve-3d;
+}
+
+:host(.drawer-open) {
+    translate: 0 7rem;
+    box-shadow: 0 0.3rem 0.2rem -0.2rem rgb(0, 0, 0, 0.15);
+    border-radius: 2rem;
+}
+
+:host(.is-sliding) {
+    box-shadow: 0 0.3rem 0.2rem -0.2rem rgb(0, 0, 0, 0.15);
+    border-radius: 2rem;
+    transition: translate 0.1s $animation-timing;
+}
+
+.income-container {
+    padding-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .title {
+        margin: 0;
+        font-style: italic;
+        font-size: 1.5rem;
+        color: rgb(170, 170, 170);
+    }
+
+    .income-form {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-top: 1rem;
+
+        mat-label {
+            cursor: text;
+        }
+    }
+}
+
+.drawer-open-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    height: 1.8rem;
+    width: 7rem;
+    background-color: #fafafa;
+    position: absolute;
+    bottom: -1.8rem;
+    right: 50%;
+    translate: 50%;
+    font-style: italic;
+    padding-top: 0.1rem;
+    padding-bottom: 0.2rem;
+    transform: translateZ(10px);
+    line-height: 0.9rem;
+    color: $bb-secondary-title-color;
+    border-bottom-right-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+    box-shadow: 0 0.2rem 0.2rem -0.1rem rgb(0, 0, 0, 0.15);
+
+    mat-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 2rem;
+        width: 2rem;
+        font-size: 0.7rem;
+        rotate: 90deg;
+        transform: scaleX(0.8);
+    }
+
+    &::after {
+        content: "";
+        position: absolute;
+        height: 1.3rem;
+        width: 1.3rem;
+        right: -1.22rem;
+        top: 0;
+        background: radial-gradient(
+            circle at bottom right,
+            transparent,
+            transparent 1.3rem,
+            #fafafa 1.3rem,
+            #fafafa 1.3rem
+        );
+    }
+
+    &::before {
+        content: "";
+        position: absolute;
+        height: 1.3rem;
+        width: 1.3rem;
+        background-color: #fafafa;
+        background-color: $bb-error-main;
+        left: -1.22rem;
+        top: 0;
+        background: radial-gradient(
+            circle at bottom left,
+            transparent,
+            transparent 1.3rem,
+            #fafafa 1.3rem,
+            #fafafa 1.3rem
+        );
+    }
+}
+
+@media (max-width: 1145px) {
+    :host {
+        width: 100%;
+    }
+}

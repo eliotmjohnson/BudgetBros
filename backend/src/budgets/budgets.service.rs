@@ -3,7 +3,7 @@ use sqlx::postgres::PgQueryResult;
 
 use crate::AppState;
 
-use super::budgets_models::{BudgetId, BudgetRowData};
+use super::budgets_models::{BudgetId, BudgetRowData, UpdateBudgetIncomeRequest};
 
 pub async fn get_budget(
     state: Data<AppState>,
@@ -18,6 +18,8 @@ pub async fn get_budget(
             b.month_number,
             b.year,
             b.category_order,
+            b.paycheck_amount,
+            b.additional_income_amount,
             bc.id AS budget_category_id,
             bc.name AS budget_category_name,
             bc.line_item_order AS line_item_order,
@@ -86,4 +88,27 @@ pub async fn delete_budget(
         ";
 
     sqlx::query(query).bind(budget_id).execute(&state.db).await
+}
+
+pub async fn update_budget_income(
+    state: Data<AppState>,
+    budget_id: String,
+    body: UpdateBudgetIncomeRequest,
+) -> Result<PgQueryResult, sqlx::Error> {
+    let query = "
+        UPDATE 
+            budgets
+        SET 
+            paycheck_amount = $1,
+            additional_income_amount = $2
+        WHERE 
+            id = $3
+        ";
+
+    sqlx::query(query)
+        .bind(body.paycheck_amount)
+        .bind(body.additional_income_amount)
+        .bind(budget_id)
+        .execute(&state.db)
+        .await
 }

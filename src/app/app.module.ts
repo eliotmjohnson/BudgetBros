@@ -59,6 +59,8 @@ import { TransactionsComponent } from './pages/home/transactions/transactions.co
 import { LoginComponent } from './pages/login/login.component';
 import { SortByDatePipe } from './pipes/sort-by-date.pipe';
 import { SlideToDeleteComponent } from './components/mobile-components/slide-to-delete/slide-to-delete.component';
+import { IncomeDrawerComponent } from './components/income-drawer/income-drawer.component';
+import { BudgetCalculatorComponent } from './components/budget-calculator/budget-calculator.component';
 
 @NgModule({
     declarations: [
@@ -90,7 +92,9 @@ import { SlideToDeleteComponent } from './components/mobile-components/slide-to-
         AddTransactionMobileModalComponent,
         AmountTypeSelectorComponent,
         SortByDatePipe,
-        SlideToDeleteComponent
+        SlideToDeleteComponent,
+        IncomeDrawerComponent,
+        BudgetCalculatorComponent
     ],
     bootstrap: [AppComponent],
     imports: [

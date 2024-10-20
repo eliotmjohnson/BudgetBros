@@ -27,6 +27,8 @@ pub struct BudgetRowData {
     pub month_number: i64,
     pub year: i64,
     pub category_order: Vec<String>,
+    pub paycheck_amount: Option<f64>,
+    pub additional_income_amount: Option<f64>,
     pub budget_category_id: Option<String>,
     pub budget_category_name: Option<String>,
     pub line_item_order: Option<Vec<String>>,
@@ -88,7 +90,16 @@ pub struct BudgetResponseData {
     pub month_number: i64,
     pub year: i64,
     pub category_order: Vec<String>,
+    pub paycheck_amount: Option<f64>,
+    pub additional_income_amount: Option<f64>,
     pub budget_categories: Vec<BudgetCategoryDataConverted>,
+}
+
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct UpdateBudgetIncomeRequest {
+    pub paycheck_amount: f64,
+    pub additional_income_amount: Option<f64>,
 }
 
 #[derive(Serialize, Deserialize, FromRow)]

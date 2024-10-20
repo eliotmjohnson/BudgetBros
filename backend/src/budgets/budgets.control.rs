@@ -2,16 +2,18 @@ use crate::{
     budgets::{
         budgets_helper::get_compiled_budget_data,
         budgets_models::{BudgetResponseData, NewBudget},
-        budgets_services::{add_budget, delete_budget, get_budget},
+        budgets_services::{add_budget, delete_budget, get_budget, update_budget_income},
     },
     AppState,
 };
 use actix_web::{
-    delete, get, post,
+    delete, get, patch, post,
     web::{Data, Json, Path, Query},
     HttpResponse, Responder,
 };
 use serde::Deserialize;
+
+use super::budgets_models::UpdateBudgetIncomeRequest;
 
 #[derive(Deserialize)]
 pub struct QueryParams {
@@ -45,6 +47,8 @@ async fn get_budget_data_handler(
                     month_number: query_params.month_number,
                     year: query_params.year,
                     category_order: vec![],
+                    paycheck_amount: None,
+                    additional_income_amount: None,
                     budget_categories: [].to_vec(),
                 }),
                 _ => {
@@ -53,6 +57,8 @@ async fn get_budget_data_handler(
                         budget_id: Some(rows[0].budget_id.clone()),
                         month_number: query_params.month_number,
                         year: query_params.year,
+                        paycheck_amount: rows[0].paycheck_amount,
+                        additional_income_amount: rows[0].additional_income_amount,
                         category_order: rows[0].category_order.clone(),
                         budget_categories: if is_new_budget {
                             [].to_vec()
@@ -92,6 +98,23 @@ pub async fn delete_budget_handler(state: Data<AppState>, params: Path<String>) 
 
     match delete_budget_result {
         Ok(_) => HttpResponse::Ok().json("Budget deleted successfully"),
+        Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
+    }
+}
+
+#[patch("/{budget_id}")]
+pub async fn update_budget_income_handler(
+    state: Data<AppState>,
+    params: Path<String>,
+    body: Json<UpdateBudgetIncomeRequest>,
+) -> impl Responder {
+    let budget_id = params.into_inner();
+    let body = body.into_inner();
+
+    let update_budget_income_result = update_budget_income(state.clone(), budget_id, body).await;
+
+    match update_budget_income_result {
+        Ok(_) => HttpResponse::Ok().json("Successfully updated budget income"),
         Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
     }
 }

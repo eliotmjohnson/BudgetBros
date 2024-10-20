@@ -1,4 +1,4 @@
-import { FormGroup } from '@angular/forms';
+import { AbstractControl, FormGroup } from '@angular/forms';
 
 /**
  * Checks key inputs to only allow
@@ -78,4 +78,16 @@ export function addValueToCurrencyInput(
     }
 
     return reConvertedValue;
+}
+
+export function stripCurrency(field: string, form: FormGroup) {
+    return Number(form.get(field)?.value.replace(/[^\d]/g, '')) / 100;
+}
+
+export function currencyRequiredValidator(control: AbstractControl) {
+    if (control.value === '$0.00') {
+        return {
+            required: true
+        };
+    } else return null;
 }

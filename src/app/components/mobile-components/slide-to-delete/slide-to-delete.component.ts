@@ -57,6 +57,15 @@ export class SlideToDeleteComponent implements OnInit {
         this.initialDeletePosition = this.deleteButtonPosition;
     }
 
+    deleteItemEmit() {
+        this.host.nativeElement.scrollTo({
+            left: this.host.nativeElement.clientWidth,
+            behavior: 'smooth'
+        });
+
+        setTimeout(() => this.deleteItem.emit(), 300);
+    }
+
     setSlideToDelete(isSlideEnd = false) {
         const elementWidth = this.host.nativeElement.clientWidth;
         const scrollPosition = this.host.nativeElement.scrollLeft;

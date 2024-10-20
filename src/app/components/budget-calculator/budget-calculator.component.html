@@ -1,0 +1,22 @@
+@if (calculatedBudgetAmount !== 0) {
+    <span
+        @deleteItemAnimation
+        class="container"
+    >
+        <p class="title">
+            @if (calculatedBudgetAmount > 0) {
+                You have
+                <strong class="amount">{{
+                    calculatedBudgetAmount | currency
+                }}</strong>
+                left to budget
+            } @else {
+                You are
+                <strong class="amount">{{
+                    calculatedBudgetAmount | currency
+                }}</strong>
+                over budget
+            }
+        </p>
+    </span>
+}

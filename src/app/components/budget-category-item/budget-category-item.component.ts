@@ -112,7 +112,10 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     calculateRemainingAmount() {
         return this.transactions().length
             ? this.transactions().reduce(
-                  (balance, transaction) => balance - transaction.amount,
+                  (balance, transaction) =>
+                      transaction.isIncomeTransaction
+                          ? balance + transaction.amount
+                          : balance - transaction.amount,
                   this.startingBalance + this.plannedAmount()
               )
             : this.startingBalance + this.plannedAmount();

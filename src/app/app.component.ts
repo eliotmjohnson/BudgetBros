@@ -8,6 +8,7 @@ import {
 } from './animations/mobile-modal-animations';
 import { AuthService } from './services/auth.service';
 import { MobileModalService } from './services/mobile-modal.service';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'app-root',
@@ -20,11 +21,14 @@ import { MobileModalService } from './services/mobile-modal.service';
     ]
 })
 export class AppComponent implements OnInit {
+    animationEnd = false;
+
     constructor(
         public authService: AuthService,
         private layout: BreakpointObserver,
         private router: Router,
-        public mobileModalService: MobileModalService
+        public mobileModalService: MobileModalService,
+        private dialogService: MatDialog
     ) {}
 
     ngOnInit(): void {
@@ -43,6 +47,7 @@ export class AppComponent implements OnInit {
                 }
 
                 if (states[1]) {
+                    this.closeAllModals();
                     this.router.navigateByUrl('/mobile');
                 } else {
                     if (this.router.url === '/mobile') {
@@ -50,5 +55,11 @@ export class AppComponent implements OnInit {
                     }
                 }
             });
+    }
+
+    closeAllModals() {
+        this.dialogService.closeAll();
+        this.mobileModalService.isAddTransactionModalOpen.set(false);
+        this.mobileModalService.isBudgetTransactionsModalOpen.set(false);
     }
 }

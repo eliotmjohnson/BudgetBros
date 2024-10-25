@@ -33,7 +33,8 @@ pub async fn get_budget(
             tr.merchant,
             tr.amount,
             tr.notes,
-            tr.date
+            tr.date,
+            tr.is_income_transaction
         FROM 
             budgets b
         LEFT JOIN 

@@ -24,6 +24,7 @@ export class InlineTransactionComponent {
     @Input() amount = 0;
     @Input() merchant: string | null = '';
     @Input() notes = '';
+    @Input() isIncomeTransaction = false;
     @Input({ transform: (date: string) => new Date(date) }) date!: Date;
     isDeletingTransaction = false;
 
@@ -70,7 +71,8 @@ export class InlineTransactionComponent {
                 this.transactionService.currentSelectedLineItem()?.lineItemId,
             merchant: this.merchant,
             notes: this.notes,
-            title: this.title
+            title: this.title,
+            isIncomeTransaction: this.isIncomeTransaction
         } as IsolatedTransaction;
 
         if (!this.mobileService.isMobileDevice()) {

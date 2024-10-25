@@ -82,6 +82,10 @@
         transition: translate 0.2s 0.05s;
     }
 
+    .is-income-transaction {
+        color: $bb-primary-green-text;
+    }
+
     .delete-icon {
         cursor: pointer;
         position: absolute;

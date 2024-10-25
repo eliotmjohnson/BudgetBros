@@ -41,6 +41,12 @@ mat-label {
     padding-top: 0;
 }
 
+.income-radios {
+    position: absolute;
+    top: 1.5rem;
+    right: 3rem;
+}
+
 @media (max-width: 1145px) {
     ::ng-deep {
         .modal-buttons {
@@ -115,5 +121,9 @@ mat-label {
         &:disabled {
             opacity: 0.6;
         }
+    }
+
+    .income-radios {
+        display: none;
     }
 }

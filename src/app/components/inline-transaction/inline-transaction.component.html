@@ -20,7 +20,12 @@
             <h1 class="transaction-title">{{ title }}</h1>
             <p class="transaction-merchant">{{ merchant }}</p>
         </span>
-        <p class="transaction-amount">-${{ amount | number: "1.2-2" }}</p>
+        <p
+            class="transaction-amount"
+            [class.is-income-transaction]="isIncomeTransaction"
+        >
+            {{ isIncomeTransaction ? "+" : "-" }}${{ amount | number: "1.2-2" }}
+        </p>
         <mat-icon
             class="delete-icon"
             fontIcon="delete"

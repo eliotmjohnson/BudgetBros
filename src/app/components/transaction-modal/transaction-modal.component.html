@@ -7,6 +7,13 @@
     }}
     Transaction
 </h2>
+<IncomeExpenseSelector
+    [isIncomeSelected]="
+        (this.modalData || this.mobileModalData).transaction
+            ?.isIncomeTransaction || false
+    "
+    (setIncomeSelectedValue)="setIsIncomeSelectedValue($event)"
+/>
 <form
     [formGroup]="form"
     (ngSubmit)="submitForm()"
@@ -153,6 +160,14 @@
                 cdkAutosizeMaxRows="10"
             ></textarea>
         </mat-form-field>
+        <mat-radio-group
+            class="income-radios"
+            color="primary"
+            formControlName="isIncomeTransaction"
+        >
+            <mat-radio-button [value]="false">Expense</mat-radio-button>
+            <mat-radio-button [value]="true">Income</mat-radio-button>
+        </mat-radio-group>
     </mat-dialog-content>
     <mat-dialog-actions
         class="modal-buttons"

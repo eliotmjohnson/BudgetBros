@@ -1,6 +1,7 @@
-@if (authService.isLoading()) {
+@if (authService.isLoading() || !animationEnd) {
     <main
         @loaderOverlayAnimation
+        (animationend)="animationEnd = true"
         class="bb-main-overlay"
     >
         <BBLogo

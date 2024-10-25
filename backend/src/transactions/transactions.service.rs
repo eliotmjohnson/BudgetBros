@@ -59,8 +59,8 @@ pub async fn add_transaction(state: Data<AppState>, new_transaction: NewTransact
     let query = 
         "WITH inserted_transaction AS (
             INSERT INTO transactions 
-            (user_id, title, merchant, amount, notes, date, line_item_id, deleted) 
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+            (user_id, title, merchant, amount, notes, date, line_item_id, deleted, is_income_transaction) 
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
             RETURNING *
         )
         SELECT 
@@ -84,6 +84,7 @@ pub async fn add_transaction(state: Data<AppState>, new_transaction: NewTransact
         .bind(new_transaction.date)   
         .bind(new_transaction.line_item_id)   
         .bind(new_transaction.deleted)
+        .bind(new_transaction.is_income_transaction)
         .fetch_one(&state.db)
         .await
 }
@@ -98,8 +99,9 @@ pub async fn update_transaction(state: Data<AppState>, new_transaction: UpdatedT
             amount = $3,
             notes = $4,
             date = $5,
-            line_item_id = $6      
-        WHERE id = $7
+            line_item_id = $6,
+            is_income_transaction = $7      
+        WHERE id = $8
     ";
 
     sqlx::query(query)
@@ -109,7 +111,8 @@ pub async fn update_transaction(state: Data<AppState>, new_transaction: UpdatedT
         .bind(new_transaction.notes)   
         .bind(new_transaction.date)   
         .bind(new_transaction.line_item_id)
-        .bind(new_transaction.transaction_id)   
+        .bind(new_transaction.is_income_transaction) 
+        .bind(new_transaction.transaction_id)  
         .execute(&state.db)
         .await
 }

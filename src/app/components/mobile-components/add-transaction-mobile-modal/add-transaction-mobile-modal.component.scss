@@ -1,10 +1,10 @@
 @import "bb-core";
 
 :host {
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
-    display: flex;
     flex-direction: column;
     align-items: center;
     background-color: $bb-primary-green-text;
@@ -34,5 +34,11 @@
         100% {
             translate: 0 0;
         }
+    }
+}
+
+@media (max-width: 1145px) {
+    :host {
+        display: flex;
     }
 }

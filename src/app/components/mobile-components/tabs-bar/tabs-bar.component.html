@@ -37,6 +37,9 @@
     </button>
     <button
         class="add-transaction-button"
+        [class.move-transaction-button]="
+            mobileModalService.isBudgetTransactionsModalOpen()
+        "
         (click)="openAddTransactionModal()"
     >
         <mat-icon fontIcon="add" />

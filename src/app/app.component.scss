@@ -9,11 +9,26 @@
     left: 0;
     height: 100%;
     width: 100%;
-    background-color: rgb(81, 156, 81);
+    background-color: white;
     z-index: 9999;
+    animation: fadeIn 0.5s forwards;
 
     .logo {
         translate: 1rem;
+        opacity: 0;
+        animation: fadeInLogo 0.75s forwards;
+    }
+
+    @keyframes fadeIn {
+        100% {
+            background-color: rgb(81, 156, 81);
+        }
+    }
+
+    @keyframes fadeInLogo {
+        100% {
+            opacity: 1;
+        }
     }
 }
 
@@ -23,5 +38,11 @@
         width: 100vw;
         height: 100vh;
         background-color: black;
+    }
+}
+
+@media (display-mode: standalone) {
+    .bb-main-overlay {
+        height: 100vh;
     }
 }

@@ -23,6 +23,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
@@ -33,16 +34,20 @@ import { AppComponent } from './app.component';
 import { AuthFormComponent } from './components/auth-form/auth-form.component';
 import { BBLogoComponent } from './components/bb-logo/bb-logo.component';
 import { BBSnagComponent } from './components/bb-snag/bb-snag.component';
+import { BudgetCalculatorComponent } from './components/budget-calculator/budget-calculator.component';
 import { BudgetCategoryCardComponent } from './components/budget-category-card/budget-category-card.component';
 import { BudgetCategoryItemComponent } from './components/budget-category-item/budget-category-item.component';
 import { BudgetTransactionsCardComponent } from './components/budget-transactions-card/budget-transactions-card.component';
 import { CardComponent } from './components/card/card.component';
 import { FieldErrorComponent } from './components/field-error/field-error.component';
 import { HomeHeaderComponent } from './components/home-header/home-header.component';
+import { IncomeDrawerComponent } from './components/income-drawer/income-drawer.component';
 import { InlineTransactionComponent } from './components/inline-transaction/inline-transaction.component';
 import { LinkButtonComponent } from './components/link-button/link-button.component';
 import { AddTransactionMobileModalComponent } from './components/mobile-components/add-transaction-mobile-modal/add-transaction-mobile-modal.component';
 import { AmountTypeSelectorComponent } from './components/mobile-components/amount-type-selector/amount-type-selector.component';
+import { IncomeExpenseSelectorComponent } from './components/mobile-components/income-expense-selector/income-expense-selector.component';
+import { SlideToDeleteComponent } from './components/mobile-components/slide-to-delete/slide-to-delete.component';
 import { TabsBarComponent } from './components/mobile-components/tabs-bar/tabs-bar.component';
 import { MobileConstructionComponent } from './components/mobile-construction/mobile-construction.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
@@ -58,9 +63,6 @@ import { SettingsComponent } from './pages/home/settings/settings.component';
 import { TransactionsComponent } from './pages/home/transactions/transactions.component';
 import { LoginComponent } from './pages/login/login.component';
 import { SortByDatePipe } from './pipes/sort-by-date.pipe';
-import { SlideToDeleteComponent } from './components/mobile-components/slide-to-delete/slide-to-delete.component';
-import { IncomeDrawerComponent } from './components/income-drawer/income-drawer.component';
-import { BudgetCalculatorComponent } from './components/budget-calculator/budget-calculator.component';
 
 @NgModule({
     declarations: [
@@ -94,7 +96,8 @@ import { BudgetCalculatorComponent } from './components/budget-calculator/budget
         SortByDatePipe,
         SlideToDeleteComponent,
         IncomeDrawerComponent,
-        BudgetCalculatorComponent
+        BudgetCalculatorComponent,
+        IncomeExpenseSelectorComponent
     ],
     bootstrap: [AppComponent],
     imports: [
@@ -120,7 +123,8 @@ import { BudgetCalculatorComponent } from './components/budget-calculator/budget
         MatTooltipModule,
         MatSelectModule,
         OverlayModule,
-        LayoutModule
+        LayoutModule,
+        MatRadioModule
     ],
     providers: [
         provideHttpClient(withInterceptors([httpInterceptor])),

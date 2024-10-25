@@ -1,5 +1,7 @@
 @import "bb-core";
 
+$hidden-tab-distance: calc(5rem + min(2vh, env(safe-area-inset-bottom)));
+
 :host {
     display: none;
     position: fixed;
@@ -17,7 +19,7 @@
 
 :host(.modal-open) {
     transition: translate 0.25s;
-    translate: 0 calc(5rem + min(2vh, env(safe-area-inset-bottom)));
+    translate: 0 $hidden-tab-distance;
 }
 
 .tab-bar {
@@ -84,11 +86,11 @@
 
 @keyframes slideUp {
     0% {
-        translate: 0 5rem;
+        translate: 0 $hidden-tab-distance;
     }
 
     50% {
-        translate: 0 5rem;
+        translate: 0 $hidden-tab-distance;
     }
 
     100% {

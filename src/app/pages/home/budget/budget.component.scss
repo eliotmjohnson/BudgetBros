@@ -96,6 +96,7 @@
 }
 
 .budget-dashboard-wrapper {
+    position: relative;
     display: flex;
     height: calc(100% - 7rem);
     width: 100%;
@@ -249,6 +250,25 @@
     translate: 0 -10rem;
 }
 
+.pull-refresh-icon-container {
+    display: none;
+    position: absolute;
+    height: 2rem;
+    width: 2rem;
+    top: 0rem;
+    right: 50%;
+    translate: 50%;
+    align-items: center;
+    justify-content: center;
+
+    .pull-refresh-icon {
+        height: 2rem;
+        width: 2rem;
+        color: $bb-secondary-title-color;
+        font-size: 2rem;
+    }
+}
+
 @keyframes openCalendar {
     0% {
         scale: 0;
@@ -309,6 +329,10 @@
             font-size: 1.8rem;
             margin-top: 5rem;
         }
+    }
+
+    .pull-refresh-icon-container {
+        display: flex;
     }
 }
 

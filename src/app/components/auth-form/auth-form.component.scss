@@ -1,3 +1,5 @@
+@import "bb-core";
+
 :host {
     position: absolute;
     width: 100%;
@@ -55,6 +57,15 @@
 .submit-login,
 .submit-register {
     color: white !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    ::ng-deep {
+        .mdc-button__label {
+            display: flex;
+        }
+    }
 }
 
 .hide-card {
@@ -86,4 +97,50 @@
     padding-left: 0.5rem;
     padding-right: 0.5rem;
     translate: 0 -0.5rem;
+}
+
+.loader {
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    position: relative;
+    animation: pulse 1s linear infinite;
+}
+
+.loader:after {
+    content: "";
+    position: absolute;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    animation: scaleUp 1s linear infinite;
+}
+
+@keyframes scaleUp {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+    }
+    60%,
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+@keyframes pulse {
+    0%,
+    60%,
+    100% {
+        transform: scale(1);
+    }
+    80% {
+        transform: scale(1.2);
+    }
 }

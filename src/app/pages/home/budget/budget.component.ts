@@ -35,6 +35,8 @@ export class BudgetComponent implements OnInit, AfterViewChecked {
     isAddCategoryButtonHidden = false;
     isRefreshing = false;
     isBudgetBrosBudget = true;
+    scrollPosition = 0;
+    isScrolling = false;
 
     constructor(
         public transactionService: TransactionService,
@@ -172,5 +174,23 @@ export class BudgetComponent implements OnInit, AfterViewChecked {
 
     setBudgetPanelExpansion(isBudgetBrosBudget: boolean) {
         this.isBudgetBrosBudget = isBudgetBrosBudget;
+    }
+
+    startRefresh(event: Event) {
+        if (this.mobileModalService.isMobileDevice()) {
+            this.scrollPosition = (event.target as HTMLDivElement).scrollTop;
+
+            if (this.scrollPosition > 10) {
+                this.isScrolling = false;
+            } else if (this.scrollPosition <= -110 && this.isScrolling) {
+                this.refreshBudget();
+            }
+        }
+    }
+
+    setIsScrolling() {
+        if (this.scrollPosition <= 10) {
+            this.isScrolling = true;
+        }
     }
 }

@@ -7,6 +7,7 @@ export interface Transaction {
     date: string;
     lineItemId: string;
     deleted: boolean;
+    isIncomeTransaction: boolean;
 }
 
 export type NewTransaction = Omit<

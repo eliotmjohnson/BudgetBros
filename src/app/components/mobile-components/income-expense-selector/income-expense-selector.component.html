@@ -1,0 +1,22 @@
+<span class="outer-container">
+    <span class="inner-container">
+        <div
+            (touchend)="$event.preventDefault(); setSelector(false)"
+            [style.color]="isIncomeSelected ? undefined : '#e55b66'"
+        >
+            - Expense
+        </div>
+        <div
+            (touchend)="$event.preventDefault(); setSelector(true)"
+            [style.color]="!isIncomeSelected ? undefined : 'rgb(109, 206, 109)'"
+        >
+            + Income
+        </div>
+        @if (isSelectorVisible) {
+            <span
+                class="selector"
+                [class.income-selected]="isIncomeSelected"
+            ></span>
+        }
+    </span>
+</span>

@@ -96,9 +96,11 @@
             mat-flat-button
             color="primary"
         >
-            <ng-container *ngIf="!authService.isSubmitting; else spinner">
+            @if (!authService.isSubmitting) {
                 {{ register ? "Register" : "Login" }}
-            </ng-container>
+            } @else {
+                <span class="loader"></span>
+            }
         </button>
     </form>
     <button
@@ -114,7 +116,3 @@
         fontIcon="attach_money"
     />
 </section>
-
-<ng-template #spinner>
-    <mat-spinner [diameter]="25" />
-</ng-template>

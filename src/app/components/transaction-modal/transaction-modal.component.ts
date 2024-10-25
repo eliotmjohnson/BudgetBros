@@ -124,6 +124,10 @@ export class TransactionModalComponent implements AfterViewInit, OnInit {
             notes: new FormControl<string | null>(
                 (this.modalData || this.mobileModalData).transaction?.notes ||
                     null
+            ),
+            isIncomeTransaction: new FormControl<boolean>(
+                (this.modalData || this.mobileModalData).transaction
+                    ?.isIncomeTransaction || false
             )
         },
         {}
@@ -244,7 +248,9 @@ export class TransactionModalComponent implements AfterViewInit, OnInit {
                     ? submittedTransaction.merchant
                     : null,
                 notes: submittedTransaction.notes || '',
-                deleted: false
+                deleted: false,
+                isIncomeTransaction:
+                    submittedTransaction.isIncomeTransaction || false
             };
 
             if (!needsRefresh) {
@@ -273,7 +279,9 @@ export class TransactionModalComponent implements AfterViewInit, OnInit {
                 merchant: submittedTransaction.merchant
                     ? submittedTransaction.merchant
                     : null,
-                notes: submittedTransaction.notes || ''
+                notes: submittedTransaction.notes || '',
+                isIncomeTransaction:
+                    submittedTransaction.isIncomeTransaction || false
             };
 
             if (!needsRefresh) {
@@ -287,6 +295,13 @@ export class TransactionModalComponent implements AfterViewInit, OnInit {
             );
         }
         this.closeModal();
+    }
+
+    setIsIncomeSelectedValue(isIncomeTransaction: boolean) {
+        this.form.patchValue({ isIncomeTransaction: isIncomeTransaction });
+        if (!this.form.dirty) {
+            this.form.markAsDirty();
+        }
     }
 
     eagerAddTransaction(transaction: NewTransaction) {

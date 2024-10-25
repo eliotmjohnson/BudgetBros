@@ -1,6 +1,7 @@
-@if (authService.isLoading()) {
+@if (authService.isLoading() || !animationEnd) {
     <main
         @loaderOverlayAnimation
+        (animationend)="animationEnd = true"
         class="bb-main-overlay"
     >
         <BBLogo
@@ -14,7 +15,7 @@
 } @else {
     <router-outlet></router-outlet>
 }
-@if (authService.isLoggedIn) {
+@if (authService.isLoggedIn && animationEnd) {
     <app-tabs-bar />
 }
 

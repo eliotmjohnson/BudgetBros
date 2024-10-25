@@ -40,6 +40,7 @@ pub fn get_compiled_budget_data(rows: Vec<BudgetRowData>) -> Vec<BudgetCategoryD
                         amount: row.amount.unwrap_or_default(),
                         notes: row.notes.unwrap_or_default(),
                         date: row.date.unwrap_or_default(),
+                        is_income_transaction: row.is_income_transaction.unwrap_or(false),
                     });
                 }
             }

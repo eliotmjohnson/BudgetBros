@@ -13,7 +13,7 @@ pub struct Transaction {
     pub date: DateTime<Local>,
     pub line_item_id: String,
     pub user_id: String,
-    pub deleted: bool
+    pub deleted: bool,
 }
 
 #[derive(Serialize, Deserialize, FromRow, Debug)]
@@ -26,7 +26,8 @@ pub struct IsolatedTransaction {
     pub date: DateTime<Local>,
     pub line_item_id: String,
     pub budget_category_name: String,
-    pub deleted: bool
+    pub deleted: bool,
+    pub is_income_transaction: bool,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -40,7 +41,8 @@ pub struct IsolatedTransactionResponse {
     pub date: DateTime<Local>,
     pub line_item_id: String,
     pub budget_category_name: String,
-    pub deleted: bool
+    pub deleted: bool,
+    pub is_income_transaction: bool,
 }
 
 #[derive(Serialize, Deserialize, FromRow, Debug)]
@@ -53,7 +55,8 @@ pub struct NewTransaction {
     pub notes: String,
     pub date: String,
     pub line_item_id: String,
-    pub deleted: bool
+    pub deleted: bool,
+    pub is_income_transaction: bool,
 }
 
 #[derive(Serialize, Deserialize, FromRow, Debug)]
@@ -66,5 +69,6 @@ pub struct UpdatedTransaction {
     pub notes: String,
     pub date: DateTime<Local>,
     pub line_item_id: String,
-    pub deleted: bool
+    pub deleted: bool,
+    pub is_income_transaction: bool,
 }

@@ -57,9 +57,24 @@
         budgetCalculator.calculatedBudgetAmount !== 0
     "
 >
+    @if (!budgetService.isLoading() && isScrolling) {
+        <div
+            class="pull-refresh-icon-container"
+            style.transform="translateY({{ -(scrollPosition / 30) }}rem)"
+        >
+            <mat-icon
+                [style.rotate.deg]="scrollPosition * 3"
+                [style.opacity]="-(scrollPosition / 70)"
+                class="pull-refresh-icon"
+                >replay</mat-icon
+            >
+        </div>
+    }
     <div
         #budgets
         class="budgets"
+        (scroll)="startRefresh($event)"
+        (touchstart)="setIsScrolling()"
         cdkDropList
         (cdkDropListDropped)="handleDrop($event)"
     >

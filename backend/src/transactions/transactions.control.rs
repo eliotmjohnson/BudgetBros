@@ -1,34 +1,21 @@
 use actix_web::{
-    delete, 
-    get, 
-    post, 
-    put, 
-    web::{
-        Data, 
-        Json, 
-        Path, 
-        Query
-    }, 
-    HttpResponse, 
-    Responder
+    delete, get, post, put,
+    web::{Data, Json, Path, Query},
+    HttpResponse, Responder,
 };
 
 use serde::Deserialize;
 
 use crate::{
     transactions::transactions_models::{
-        IsolatedTransactionResponse, NewTransaction, UpdatedTransaction
-    }, 
-    AppState
+        IsolatedTransactionResponse, NewTransaction, UpdatedTransaction,
+    },
+    AppState,
 };
 
 use super::transactions_services::{
-    add_transaction, 
-    get_all_transactions_between_dates, 
-    get_line_item_transactions, 
-    update_transaction,
-    soft_delete_transaction,
-    delete_transaction
+    add_transaction, delete_transaction, get_all_transactions_between_dates,
+    get_line_item_transactions, soft_delete_transaction, update_transaction,
 };
 
 #[get("/{line_item_id}")]
@@ -58,7 +45,7 @@ pub struct QueryParams {
 pub async fn get_all_transactions_between_dates_handler(
     state: Data<AppState>,
     params: Path<String>,
-    query: Query<QueryParams>
+    query: Query<QueryParams>,
 ) -> impl Responder {
     let user_id = params.into_inner();
     let query_params = query.into_inner();
@@ -84,7 +71,8 @@ pub async fn get_all_transactions_between_dates_handler(
                     date: transaction.date,
                     merchant: Some(transaction.merchant).unwrap_or_default(),
                     budget_category_name: transaction.budget_category_name,
-                    deleted: transaction.deleted
+                    deleted: transaction.deleted,
+                    is_income_transaction: transaction.is_income_transaction,
                 })
                 .collect();
 
@@ -100,7 +88,7 @@ pub async fn get_all_transactions_between_dates_handler(
 #[post("")]
 pub async fn add_transaction_handler(
     state: Data<AppState>,
-    body: Json<NewTransaction>
+    body: Json<NewTransaction>,
 ) -> impl Responder {
     let new_transaction = body.into_inner();
 
@@ -117,7 +105,8 @@ pub async fn add_transaction_handler(
                 date: transaction.date,
                 merchant: Some(transaction.merchant).unwrap_or_default(),
                 budget_category_name: transaction.budget_category_name,
-                deleted: transaction.deleted
+                deleted: transaction.deleted,
+                is_income_transaction: transaction.is_income_transaction,
             };
             HttpResponse::Ok().json(newly_added_transaction)
         }
@@ -131,7 +120,7 @@ pub async fn add_transaction_handler(
 #[put("")]
 pub async fn update_transaction_handler(
     state: Data<AppState>,
-    body: Json<UpdatedTransaction>
+    body: Json<UpdatedTransaction>,
 ) -> impl Responder {
     let updated_transaction = body.into_inner();
 

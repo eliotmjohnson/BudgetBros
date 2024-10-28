@@ -1,4 +1,4 @@
-export const BASE_BE_URL = 'http://3.135.191.230:8080';
+export const BASE_BE_URL = 'http://localhost:8080';
 export const BE_API_URL = `${BASE_BE_URL}/api`;
 
 export const UNPROTECTED_ROUTES = [

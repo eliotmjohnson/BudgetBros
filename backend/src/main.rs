@@ -82,7 +82,7 @@ async fn main() -> std::io::Result<()> {
             )
             .configure(auth_router)
     })
-    .bind(("127.0.0.1", PORT))?
+    .bind(("0.0.0.0", PORT))?
     .run()
     .await
 }

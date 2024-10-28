@@ -73,6 +73,11 @@ export class BudgetCategoryCardComponent implements OnInit, AfterViewChecked {
 
             if (!this.mobileModalService.isIOSDevice()) {
                 setTimeout(() => this.focusTitleInput(), 400);
+            } else if (
+                this.budgetService.budget()!.budgetCategories.length > 1 &&
+                this.mobileModalService.isMobileDevice()
+            ) {
+                this.centerNewCategory();
             }
         }
 
@@ -86,13 +91,6 @@ export class BudgetCategoryCardComponent implements OnInit, AfterViewChecked {
                 !this.isNewBudgetCategory
             ) {
                 this.focusTitleInput();
-            }
-
-            if (
-                this.budgetService.budget()!.budgetCategories.length > 1 &&
-                this.mobileModalService.isMobileDevice()
-            ) {
-                this.centerNewCategory();
             }
         }
     }
@@ -324,7 +322,7 @@ export class BudgetCategoryCardComponent implements OnInit, AfterViewChecked {
 
     centerNewCategory() {
         const categoryLocation =
-            this.titleInput.nativeElement.getBoundingClientRect();
+            this.hostElement.nativeElement.getBoundingClientRect();
         window.scrollTo({
             top: categoryLocation.top - 275,
             behavior: 'smooth'

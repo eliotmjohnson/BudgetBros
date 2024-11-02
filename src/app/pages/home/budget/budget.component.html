@@ -121,6 +121,7 @@
                 (isAddingBudgetCategory)="enableAddingBudgetCategory($event)"
                 (hideCategoryButton)="isAddCategoryButtonHidden = true"
                 cdkDrag
+                (cdkDragStarted)="isReordering = true"
                 cdkDragLockAxis="y"
                 [cdkDragDisabled]="isAddingBudgetCategory"
                 cdkDragBoundary=".budgets"
@@ -129,6 +130,13 @@
                     class="drag-handle"
                     fontIcon="drag_indicator"
                     cdkDragHandle
+                    (touchstart)="
+                        mobileModalService.isReorderingCategories.set(true)
+                    "
+                    (touchend)="
+                        !isReordering &&
+                            mobileModalService.isReorderingCategories.set(false)
+                    "
                 />
             </BudgetCategoryCard>
             @if (!isAddingBudgetCategory) {

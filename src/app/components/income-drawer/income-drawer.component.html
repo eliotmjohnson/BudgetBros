@@ -52,6 +52,7 @@
     #drawerHandle
     (click)="openDrawer()"
     class="drawer-open-button"
+    [class.is-reordering]="mobileService.isReorderingCategories()"
     (touchstart)="setUpDrawerSlide($event)"
 >
     Income

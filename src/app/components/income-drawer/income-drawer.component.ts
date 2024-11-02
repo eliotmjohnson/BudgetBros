@@ -47,7 +47,7 @@ export class IncomeDrawerComponent implements AfterViewInit {
         private currencyPipe: CurrencyPipe,
         private renderer: Renderer2,
         private elementRef: ElementRef<HTMLElement>,
-        private mobileService: MobileModalService,
+        public mobileService: MobileModalService,
         public budgetService: BudgetService
     ) {
         effect(() => {

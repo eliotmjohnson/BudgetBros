@@ -22,6 +22,11 @@ $hidden-tab-distance: calc(5rem + min(2vh, env(safe-area-inset-bottom)));
     translate: 0 $hidden-tab-distance;
 }
 
+:host(.is-reordering) {
+    transition: translate 0.25s;
+    translate: 0 calc($hidden-tab-distance + 5rem);
+}
+
 .tab-bar {
     position: relative;
     width: 100%;
@@ -71,6 +76,7 @@ $hidden-tab-distance: calc(5rem + min(2vh, env(safe-area-inset-bottom)));
     border: none;
     background-color: $bb-primary-green-text;
     transition: translate 0.25s;
+    transform: translate3d(0, 0, 0);
 
     mat-icon {
         color: white;

@@ -9,6 +9,7 @@ export class MobileModalService {
     isAddTransactionModalOpen = signal(false);
     isBudgetTransactionsModalOpen = signal(false);
     isIOSDevice = signal(false);
+    isReorderingCategories = signal(false);
     showPlannedAmounts = signal(false);
 
     mobileModalData: TransactionModalData = { mode: 'add' };

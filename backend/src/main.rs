@@ -1,6 +1,6 @@
 use actix_cors::Cors;
 use actix_web::{main, middleware::Logger, web::Data, App, HttpServer};
-use actix_web::{middleware, web};
+use actix_web::{middleware, web, HttpResponse, Responder};
 use actix_web_httpauth::middleware::HttpAuthentication;
 
 use dotenv::dotenv;
@@ -28,6 +28,10 @@ pub struct AppState {
 
 const PORT: u16 = 8080;
 const FE_URL: &str = "http://localhost:4200";
+
+async fn health_check() -> impl Responder {
+    HttpResponse::Ok().body("OK")
+}
 
 #[main]
 async fn main() -> std::io::Result<()> {
@@ -71,6 +75,7 @@ async fn main() -> std::io::Result<()> {
             )
             .wrap(middleware::NormalizePath::trim())
             .app_data(Data::new(AppState { db: pool.clone() }))
+            .route("/health", web::get().to(health_check))
             .service(
                 web::scope("/api")
                     .wrap(bearer_middleware)

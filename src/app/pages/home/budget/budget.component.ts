@@ -35,6 +35,7 @@ export class BudgetComponent implements OnInit, AfterViewChecked {
     isAddCategoryButtonHidden = false;
     isRefreshing = false;
     isBudgetBrosBudget = true;
+    isReordering = false;
     scrollPosition = 0;
     isScrolling = false;
 
@@ -73,6 +74,8 @@ export class BudgetComponent implements OnInit, AfterViewChecked {
             event.currentIndex
         );
 
+        this.mobileModalService.isReorderingCategories.set(false);
+        this.isReordering = false;
         this.budgetCategoryService.updateBudgetCategoryOrder();
     }
 

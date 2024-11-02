@@ -74,12 +74,13 @@ $animation-timing: cubic-bezier(0.4, 1, 0.4, 1);
     font-style: italic;
     padding-top: 0.1rem;
     padding-bottom: 0.2rem;
-    transform: translateZ(10px);
+    transform: translateZ(10px) translate3d(0, 0, 0);
     line-height: 0.9rem;
     color: $bb-secondary-title-color;
     border-bottom-right-radius: 1rem;
     border-bottom-left-radius: 1rem;
     box-shadow: 0 0.2rem 0.2rem -0.1rem rgb(0, 0, 0, 0.15);
+    transition: opacity 0.5s;
 
     mat-icon {
         display: flex;
@@ -125,6 +126,10 @@ $animation-timing: cubic-bezier(0.4, 1, 0.4, 1);
             #fafafa 1.3rem
         );
     }
+}
+
+.is-reordering {
+    opacity: 0;
 }
 
 @media (max-width: 1145px) {

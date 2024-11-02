@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1
+# syntax=docker/dockerfile:1.4
 
 ARG RUST_VERSION=1.78.0
 ARG APP_NAME=budget-bros-backend
@@ -6,7 +6,7 @@ ARG APP_NAME=budget-bros-backend
 ################################################################################
 # Create a stage for building the application.
 
-FROM rust:${RUST_VERSION}-slim AS build
+FROM --platform=linux/amd64 rust:${RUST_VERSION}-slim AS build
 ARG APP_NAME
 WORKDIR /app
 
@@ -31,7 +31,7 @@ RUN cargo build --locked --release && \
 ################################################################################
 # Create a new stage for running the application with minimal runtime dependencies.
 
-FROM debian:bookworm-slim AS final
+FROM --platform=linux/amd64 debian:bookworm-slim AS final
 
 # Install OpenSSL runtime libraries (OpenSSL 3).
 RUN apt-get update && \

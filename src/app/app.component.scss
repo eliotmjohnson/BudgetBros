@@ -42,6 +42,10 @@
 }
 
 @media (display-mode: standalone) {
+    :host {
+        border-radius: 3.4rem;
+    }
+
     .bb-main-overlay {
         height: 100vh;
     }

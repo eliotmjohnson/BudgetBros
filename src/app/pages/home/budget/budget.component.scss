@@ -255,11 +255,12 @@
     position: absolute;
     height: 2rem;
     width: 2rem;
-    top: 0rem;
+    bottom: -1.5rem;
     right: 50%;
     translate: 50%;
     align-items: center;
     justify-content: center;
+    z-index: -1;
 
     .pull-refresh-icon {
         height: 2rem;
@@ -303,12 +304,20 @@
     .budget-dashboard-wrapper {
         padding: 1rem;
         padding-top: 0rem;
+        overflow-y: auto;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        &::-webkit-scrollbar {
+            display: none;
+        }
 
         .budgets {
             width: 100vw;
             padding-right: 0rem;
             padding-top: 1rem;
             padding-bottom: 30vh;
+            height: calc(100% + 1px);
+            overscroll-behavior: contain;
         }
     }
 

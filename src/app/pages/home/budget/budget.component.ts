@@ -186,6 +186,7 @@ export class BudgetComponent implements OnInit, AfterViewChecked {
             if (this.scrollPosition > 10) {
                 this.isScrolling = false;
             } else if (this.scrollPosition <= -110 && this.isScrolling) {
+                this.isScrolling = false;
                 this.refreshBudget();
             }
         }

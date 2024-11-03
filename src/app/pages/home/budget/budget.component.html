@@ -50,13 +50,6 @@
     </span>
     <AmountTypeSelector />
     <IncomeDrawer />
-</header>
-<section
-    class="budget-dashboard-wrapper"
-    [class.expand-dashboard-wrapper]="
-        budgetCalculator.calculatedBudgetAmount !== 0
-    "
->
     @if (!budgetService.isLoading() && isScrolling) {
         <div
             class="pull-refresh-icon-container"
@@ -70,11 +63,19 @@
             >
         </div>
     }
+</header>
+<section
+    class="budget-dashboard-wrapper"
+    [class.expand-dashboard-wrapper]="
+        budgetCalculator.calculatedBudgetAmount !== 0
+    "
+    (scroll)="startRefresh($event)"
+>
     <div
         #budgets
         class="budgets"
-        (scroll)="startRefresh($event)"
         (touchstart)="setIsScrolling()"
+        (scroll)="startRefresh($event)"
         cdkDropList
         (cdkDropListDropped)="handleDrop($event)"
     >

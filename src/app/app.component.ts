@@ -18,7 +18,11 @@ import { MatDialog } from '@angular/material/dialog';
         loaderOverlayAnimation,
         addTransactionModalAnimation,
         budgetTransactionModalAnimation
-    ]
+    ],
+    host: {
+        '[class.modal-present]': `this.mobileModalService.isAddTransactionModalOpen()
+            && !this.mobileModalService.isBudgetTransactionsModalOpen()`
+    }
 })
 export class AppComponent implements OnInit {
     animationEnd = false;

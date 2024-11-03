@@ -2,12 +2,12 @@
     display: flex;
     height: 100%;
     width: 100%;
-    border-radius: min(3.3rem, env(safe-area-inset-top));
+    border-radius: min(3.35rem, env(safe-area-inset-top));
     border-bottom-left-radius: 0rem;
     border-bottom-right-radius: 0rem;
     transition:
         transform 0.35s,
-        border-radius 0.3s cubic-bezier(0.5, 1, 0.5, 1),
+        border-radius 0.45s cubic-bezier(0.25, 1, 0.25, 1),
         translate 0.35s;
 }
 

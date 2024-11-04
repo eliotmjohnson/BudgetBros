@@ -16,12 +16,7 @@ export class BudgetCalculatorComponent {
 
     get calculatedBudgetAmount() {
         const currentBudget = this.budgetService.budget();
-        if (!currentBudget?.paycheckAmount) {
-            return 0;
-        } else if (
-            currentBudget &&
-            !isEqual(this.previousBudget, currentBudget)
-        ) {
+        if (currentBudget && !isEqual(this.previousBudget, currentBudget)) {
             this.previousBudget = cloneDeep(currentBudget);
             this.calculatedBudgetCache = this.calculateBudget(currentBudget);
             return this.calculatedBudgetCache;
@@ -34,7 +29,7 @@ export class BudgetCalculatorComponent {
 
     calculateBudget(budget: Budget) {
         const incomeAmount =
-            budget.paycheckAmount! + (budget.additionalIncomeAmount ?? 0);
+            (budget.paycheckAmount ?? 0) + (budget.additionalIncomeAmount ?? 0);
         const totalPlannedAmount = budget.budgetCategories.reduce(
             (categoryTotal, category) => {
                 return (

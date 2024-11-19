@@ -4,7 +4,8 @@ import { Router } from '@angular/router';
 @Component({
     selector: 'Sidebar',
     templateUrl: './sidebar.component.html',
-    styleUrls: ['./sidebar.component.scss']
+    styleUrls: ['./sidebar.component.scss'],
+    standalone: false
 })
 export class SidebarComponent implements OnInit {
     currentTab = 'Budget';

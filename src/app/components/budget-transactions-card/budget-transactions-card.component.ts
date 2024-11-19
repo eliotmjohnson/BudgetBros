@@ -15,7 +15,8 @@ import { deleteItemAnimation } from 'src/app/animations/mobile-item-animations';
     animations: [deleteItemAnimation],
     host: {
         '[class.open-budget-transactions-modal]': 'isMobileComponent'
-    }
+    },
+    standalone: false
 })
 export class BudgetTransactionsCardComponent {
     @Input() isMobileComponent = false;

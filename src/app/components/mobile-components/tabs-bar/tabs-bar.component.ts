@@ -8,10 +8,10 @@ import { TransactionService } from 'src/app/services/transaction.service';
     templateUrl: './tabs-bar.component.html',
     styleUrl: './tabs-bar.component.scss',
     host: {
-        '[class.modal-open]':
-            'mobileModalService.isAddTransactionModalOpen() || mobileModalService.isBudgetTransactionsModalOpen()',
+        '[class.modal-open]': 'mobileModalService.isAddTransactionModalOpen() || mobileModalService.isBudgetTransactionsModalOpen()',
         '[class.is-reordering]': 'mobileModalService.isReorderingCategories()'
-    }
+    },
+    standalone: false
 })
 export class TabsBarComponent {
     constructor(

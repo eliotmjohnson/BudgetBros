@@ -22,7 +22,8 @@ import { getTodayMidnight } from 'src/app/utils/timeUtils';
 @Component({
     selector: 'app-transactions',
     templateUrl: './transactions.component.html',
-    styleUrls: ['./transactions.component.scss']
+    styleUrls: ['./transactions.component.scss'],
+    standalone: false
 })
 export class TransactionsComponent implements OnInit {
     transactionService = inject(TransactionService);

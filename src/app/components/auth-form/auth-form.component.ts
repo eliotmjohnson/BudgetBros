@@ -11,7 +11,8 @@ import { AuthService } from 'src/app/services/auth.service';
     styleUrls: ['./auth-form.component.scss'],
     host: {
         '[class.back]': 'register'
-    }
+    },
+    standalone: false
 })
 export class AuthFormComponent {
     @Input() register = false;

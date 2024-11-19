@@ -26,7 +26,8 @@ import {
         '[style.transition]': 'slideTransition',
         '[class.is-sliding]': 'isSliding'
     },
-    providers: [CurrencyPipe]
+    providers: [CurrencyPipe],
+    standalone: false
 })
 export class IncomeDrawerComponent implements AfterViewInit {
     isDrawerOpen = false;

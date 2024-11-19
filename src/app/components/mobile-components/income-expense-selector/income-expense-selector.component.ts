@@ -3,7 +3,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 @Component({
     selector: 'IncomeExpenseSelector',
     templateUrl: './income-expense-selector.component.html',
-    styleUrl: './income-expense-selector.component.scss'
+    styleUrl: './income-expense-selector.component.scss',
+    standalone: false
 })
 export class IncomeExpenseSelectorComponent implements OnInit {
     @Input() isIncomeSelected = false;

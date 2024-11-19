@@ -12,9 +12,9 @@ import { MobileModalService } from 'src/app/services/mobile-modal.service';
     host: {
         '[class.modal-present]': `this.mobileModalService.isAddTransactionModalOpen()
             && !this.mobileModalService.isBudgetTransactionsModalOpen()`,
-        '[class.slide-body]':
-            'this.mobileModalService.isBudgetTransactionsModalOpen()'
-    }
+        '[class.slide-body]': 'this.mobileModalService.isBudgetTransactionsModalOpen()'
+    },
+    standalone: false
 })
 export class HomeComponent {
     constructor(

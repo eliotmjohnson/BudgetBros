@@ -31,7 +31,8 @@ import {
     host: {
         '[class.open-budget-transactions-modal]': 'isMobileComponent',
         '[class.feature-modal-open]': 'isFeatureModalOpen'
-    }
+    },
+    standalone: false
 })
 export class BudgetTransactionsCardComponent {
     @Input() isMobileComponent = false;

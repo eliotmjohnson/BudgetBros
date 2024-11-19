@@ -18,7 +18,8 @@ import { TransactionService } from 'src/app/services/transaction.service';
 @Component({
     selector: 'app-budget',
     templateUrl: './budget.component.html',
-    styleUrls: ['./budget.component.scss']
+    styleUrls: ['./budget.component.scss'],
+    standalone: false
 })
 export class BudgetComponent implements OnInit, AfterViewChecked {
     @ViewChild('calendarSelector') calendarSelector!: MatCalendar<Date>;

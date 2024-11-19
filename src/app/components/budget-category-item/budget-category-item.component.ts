@@ -35,7 +35,8 @@ import {
 @Component({
     selector: 'BudgetCategoryItem',
     templateUrl: './budget-category-item.component.html',
-    styleUrls: ['./budget-category-item.component.scss']
+    styleUrls: ['./budget-category-item.component.scss'],
+    standalone: false
 })
 export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     @ViewChild('lineItemTitleInput') lineItemTitleInput!: ElementRef;

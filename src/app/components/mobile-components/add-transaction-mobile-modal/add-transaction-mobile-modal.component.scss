@@ -28,6 +28,7 @@
 
 :host(.full-screen-modal) {
     padding-top: min(5.25vh, env(safe-area-inset-top));
+    border-radius: 0rem;
     animation: loadFullScreenModal 0.65s cubic-bezier(0.22, 1, 0.22, 1) forwards;
 
     @keyframes loadFullScreenModal {

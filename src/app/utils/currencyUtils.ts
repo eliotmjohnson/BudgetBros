@@ -80,8 +80,19 @@ export function addValueToCurrencyInput(
     return reConvertedValue;
 }
 
-export function stripCurrency(field: string, form: FormGroup) {
-    return Number(form.get(field)?.value.replace(/[^\d]/g, '')) / 100;
+export function stripCurrency(
+    field?: string,
+    form?: FormGroup,
+    value?: string
+) {
+    return (
+        Number(
+            (form && field ? form.get(field)!.value : value).replace(
+                /[^\d]/g,
+                ''
+            )
+        ) / 100
+    );
 }
 
 export function currencyRequiredValidator(control: AbstractControl) {

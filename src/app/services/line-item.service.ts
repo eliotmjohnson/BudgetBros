@@ -5,6 +5,7 @@ import { BE_API_URL } from '../constants/constants';
 import {
     LineItem,
     SaveLineItemPayload,
+    UpdateFundPayload,
     UpdateLineItemPayload
 } from '../models/lineItem';
 import { BudgetService } from './budget.service';
@@ -92,6 +93,27 @@ export class LineItemService {
         this.http
             .post(`${this.baseUrl}/reorder/${budgetCategoryId}`, lineItemIds)
             .subscribe({
+                error: (error) => {
+                    this.budgetService.openSnagDialogAndRefresh(error);
+                }
+            });
+    }
+
+    updateFund(lineItemId: string, updateFundPayload: UpdateFundPayload) {
+        this.http
+            .patch<string>(
+                `${this.baseUrl}/fund/${lineItemId}`,
+                updateFundPayload
+            )
+            .subscribe({
+                next: (fundId) => {
+                    if (updateFundPayload.isAddingFund) {
+                        const fetchedLineItem = this.fetchLineItem(lineItemId);
+                        if (fetchedLineItem) {
+                            fetchedLineItem.fundId = fundId;
+                        }
+                    }
+                },
                 error: (error) => {
                     this.budgetService.openSnagDialogAndRefresh(error);
                 }

@@ -37,6 +37,7 @@ pub struct BudgetRowData {
     pub is_fund: Option<bool>,
     pub planned_amount: Option<f64>,
     pub starting_balance: Option<f64>,
+    pub fund_id: Option<String>,
     pub transaction_id: Option<String>,
     pub title: Option<String>,
     pub merchant: Option<String>,
@@ -66,6 +67,7 @@ pub struct LineItemData {
     pub is_fund: bool,
     pub planned_amount: f64,
     pub starting_balance: f64,
+    pub fund_id: String,
     pub transactions: Vec<TransactionData>,
 }
 

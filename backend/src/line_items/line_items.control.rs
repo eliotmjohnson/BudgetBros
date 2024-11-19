@@ -1,14 +1,17 @@
 use actix_web::{
-    delete, post, put,
+    delete, patch, post, put,
     web::{Data, Json, Path},
     HttpResponse, Responder,
 };
 
 use crate::{
     line_items::{
-        line_items_models::{LineItemDeleteRequest, NewLineItem, UpdatedLineItem},
+        line_items_models::{
+            LineItemDeleteRequest, NewLineItem, UpdateFundRequest, UpdatedLineItem,
+        },
         line_items_service::{
-            add_line_item, delete_line_item, update_line_item, update_line_item_order,
+            add_fund, add_line_item, delete_line_item, update_fund, update_line_item,
+            update_line_item_order,
         },
     },
     AppState,
@@ -99,6 +102,31 @@ pub async fn reorder_line_item_handler(
 
     match reorder_line_item_result {
         Ok(_) => HttpResponse::Ok().json("Line Items Reordered successfully"),
+        Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
+    }
+}
+
+#[patch("/fund/{line_item_id}")]
+pub async fn update_fund_handler(
+    state: Data<AppState>,
+    body: Json<UpdateFundRequest>,
+    path: Path<String>,
+) -> impl Responder {
+    let update_fund_request = body.into_inner();
+    let line_item_id = path.into_inner();
+
+    let result = if update_fund_request.is_adding_fund {
+        add_fund(state, update_fund_request.starting_balance, line_item_id)
+            .await
+            .map(|fund_id| HttpResponse::Ok().json(fund_id))
+    } else {
+        update_fund(state, update_fund_request.starting_balance, line_item_id)
+            .await
+            .map(|_| HttpResponse::Ok().json("Fund Updated Successfully"))
+    };
+
+    match result {
+        Ok(response) => response,
         Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
     }
 }

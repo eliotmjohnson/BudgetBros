@@ -27,6 +27,11 @@ $hidden-tab-distance: calc(5rem + min(2vh, env(safe-area-inset-bottom)));
     translate: 0 calc($hidden-tab-distance + 5rem);
 }
 
+:host(.is-feature-modal-open) {
+    transition: translate 0.35s;
+    translate: 0 calc($hidden-tab-distance + 7rem);
+}
+
 .tab-bar {
     position: relative;
     width: 100%;

@@ -1,0 +1,101 @@
+@if (!isDetailsComponent) {
+    <span
+        (click)="expandFeaturePanel()"
+        class="feature-title-details"
+        [class.selected]="isPanelExpanded"
+    >
+        <div class="feature-icon-container">
+            <mat-icon
+                fontSet="material-icons-outlined"
+                class="feature-icon"
+                [class.highlighted]="isPanelExpanded"
+            >
+                savings
+            </mat-icon>
+        </div>
+        <span class="feature-title">
+            <h1>Fund</h1>
+            @if (isFund) {
+                <p>
+                    Starting Balance:
+                    {{
+                        transactionService.currentSelectedLineItem()
+                            ?.startingBalance | currency
+                    }}
+                </p>
+            }
+        </span>
+        <div class="feature-detail-toggle">
+            @if (!mobileService.isMobileDevice()) {
+                <p>{{ isFund ? "Update" : "Set" }}</p>
+            }
+            <mat-icon
+                [class.rotated]="
+                    isPanelExpanded && !mobileService.isMobileDevice()
+                "
+                [fontIcon]="
+                    mobileService.isMobileDevice()
+                        ? 'arrow_forward_ios'
+                        : 'arrow_drop_down'
+                "
+            />
+        </div>
+    </span>
+}
+<section class="feature-details-container">
+    @if (!isCreatingFund && !isFund) {
+        <span class="icon-container">
+            <mat-icon fontSet="material-icons-outlined">savings</mat-icon>
+        </span>
+        <section class="feature-description">
+            <h2>Funds help you save for expenses.</h2>
+            <p>Any money left over in a fund will carry over month-to-month.</p>
+        </section>
+        <button
+            mat-flat-button
+            color="primary"
+            class="feature-button"
+            (click)="changeToCreatingMode()"
+        >
+            Make This a Fund
+        </button>
+    } @else {
+        <section class="fund-form-container">
+            <form
+                (submit)="handleSubmit($event)"
+                class="fund-form"
+            >
+                <span class="form-item">
+                    <div class="item-description">
+                        <h2>Starting Balance</h2>
+                        <p>Starting amount for fund</p>
+                    </div>
+                    <mat-form-field
+                        appearance="outline"
+                        style="width: 45%"
+                    >
+                        <input
+                            #formInput
+                            pattern="\d*"
+                            style="text-align: right"
+                            [formControl]="featureForm"
+                            (click)="formInput.select()"
+                            (input)="handleInput($event)"
+                            matInput
+                        />
+                    </mat-form-field>
+                </span>
+                <span class="form-button-container">
+                    <button
+                        type="submit"
+                        mat-flat-button
+                        color="primary"
+                        [disabled]="!featureForm.dirty && isFund"
+                    >
+                        Save
+                    </button>
+                </span>
+            </form>
+        </section>
+    }
+</section>

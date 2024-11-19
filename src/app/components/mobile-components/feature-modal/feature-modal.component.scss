@@ -1,0 +1,59 @@
+@import "bb-core";
+
+:host {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: $bb-primary-green-text;
+    translate: 100vw;
+    padding-top: env(safe-area-inset-top);
+    animation: slideIn 0.5s cubic-bezier(0.4, 1, 0.4, 1) forwards;
+}
+
+.banner {
+    position: relative;
+    width: 100%;
+    background-color: rgb(109, 206, 109);
+    min-height: 3.25rem;
+
+    .back-button {
+        display: flex;
+        align-items: center;
+        position: absolute;
+        bottom: 0.85rem;
+        left: 1rem;
+        font-weight: 500;
+        font-size: 1rem;
+        color: white;
+
+        mat-icon {
+            font-size: 1.4rem;
+            height: 1.4rem;
+            width: 1.4rem;
+        }
+    }
+
+    .banner-title {
+        font-size: 1.1rem;
+        position: absolute;
+        left: 50%;
+        bottom: 0.5rem;
+        translate: -50%;
+        color: white;
+        font-weight: 500;
+        margin: 0;
+    }
+}
+
+.content {
+    min-height: calc(100% - 3.25rem);
+    background-color: white;
+}
+
+@keyframes slideIn {
+    100% {
+        translate: 0 0;
+    }
+}

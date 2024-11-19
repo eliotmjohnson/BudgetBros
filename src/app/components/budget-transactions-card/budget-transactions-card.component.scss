@@ -22,7 +22,7 @@
 .banner {
     position: relative;
     width: 100%;
-    min-height: 10rem;
+    min-height: 8rem;
     border-top-left-radius: 1rem;
     border-top-right-radius: 1rem;
     background-color: rgb(109, 206, 109);
@@ -83,6 +83,13 @@
             color: $bb-error-main;
         }
     }
+}
+
+.features-section {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 1rem;
 }
 
 .note-field {
@@ -163,7 +170,7 @@
     display: flex;
     flex-direction: column;
     border-top: 1px solid rgb(229, 229, 229);
-    padding-bottom: 5rem;
+    padding-bottom: 8rem;
 }
 
 .icon-wrapper {
@@ -245,9 +252,9 @@
         color: white;
 
         mat-icon {
-            font-size: 1.2rem;
-            height: 1.2rem;
-            width: 1.2rem;
+            font-size: 1.4rem;
+            height: 1.4rem;
+            width: 1.4rem;
         }
     }
 
@@ -255,5 +262,21 @@
         div {
             display: none;
         }
+    }
+
+    .transactions-container {
+        overflow: auto;
+        overscroll-behavior: contain;
+        padding-bottom: 9rem;
+    }
+
+    .dimmer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background-color: black;
+        opacity: 0.5;
     }
 }

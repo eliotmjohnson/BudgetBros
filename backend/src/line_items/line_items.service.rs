@@ -1,4 +1,4 @@
-use super::line_items_models::{LineItem, NewLineItem, UpdatedLineItem};
+use super::line_items_models::{LineItem, NewLineItem, SyncFundRequest, UpdatedLineItem};
 use crate::AppState;
 use actix_web::web::Data;
 use sqlx::postgres::PgQueryResult;
@@ -123,6 +123,39 @@ pub async fn update_fund(
     sqlx::query(query)
         .bind(starting_balance)
         .bind(line_item_id)
+        .execute(&state.db)
+        .await
+}
+
+pub async fn sync_fund(
+    state: Data<AppState>,
+    sync_fund_request: SyncFundRequest,
+    fund_id: String,
+) -> Result<PgQueryResult, sqlx::Error> {
+    let query = "
+        UPDATE 
+            line_items AS li
+        SET 
+            starting_balance = starting_balance + $1
+        FROM 
+            budget_categories AS bc
+        JOIN 
+            budgets AS b
+                ON bc.budget_id = b.id
+        JOIN 
+            budgets AS current_budget 
+                ON current_budget.id = $2
+        WHERE 
+            li.budget_category_id = bc.id
+            AND li.fund_id = $3
+            AND (b.year > current_budget.year 
+                OR (b.year = current_budget.year AND b.month_number > current_budget.month_number));
+        ";
+
+    sqlx::query(query)
+        .bind(sync_fund_request.starting_balance_change)
+        .bind(sync_fund_request.budget_id)
+        .bind(fund_id)
         .execute(&state.db)
         .await
 }

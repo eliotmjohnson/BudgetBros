@@ -40,6 +40,16 @@ export class BudgetComponent implements OnInit, AfterViewChecked {
     scrollPosition = 0;
     isScrolling = false;
 
+    selectedDate = computed(() => {
+        const currentBudget = this.budget();
+
+        if (currentBudget) {
+            return new Date(currentBudget.year, currentBudget.monthNumber - 1);
+        } else {
+            return this.today;
+        }
+    });
+
     constructor(
         public transactionService: TransactionService,
         public budgetService: BudgetService,

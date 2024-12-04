@@ -7,10 +7,10 @@ use actix_web::{
 use crate::{
     line_items::{
         line_items_models::{
-            LineItemDeleteRequest, NewLineItem, UpdateFundRequest, UpdatedLineItem,
+            LineItemDeleteRequest, NewLineItem, SyncFundRequest, UpdateFundRequest, UpdatedLineItem,
         },
         line_items_service::{
-            add_fund, add_line_item, delete_line_item, update_fund, update_line_item,
+            add_fund, add_line_item, delete_line_item, sync_fund, update_fund, update_line_item,
             update_line_item_order,
         },
     },
@@ -127,6 +127,23 @@ pub async fn update_fund_handler(
 
     match result {
         Ok(response) => response,
+        Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
+    }
+}
+
+#[patch("/fund/sync/{fund_id}")]
+pub async fn sync_fund_handler(
+    state: Data<AppState>,
+    body: Json<SyncFundRequest>,
+    path: Path<String>,
+) -> impl Responder {
+    let sync_fund_request = body.into_inner();
+    let fund_id = path.into_inner();
+
+    let result = sync_fund(state, sync_fund_request, fund_id).await;
+
+    match result {
+        Ok(_) => HttpResponse::Ok().json("Fund synced successfully"),
         Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
     }
 }

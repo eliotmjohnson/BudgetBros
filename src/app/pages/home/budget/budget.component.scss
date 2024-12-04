@@ -270,6 +270,16 @@
     }
 }
 
+::ng-deep {
+    .cdk-program-focused
+        .mat-calendar-body-active
+        > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(
+            .mat-calendar-body-comparison-identical
+        ) {
+        background-color: white;
+    }
+}
+
 @keyframes openCalendar {
     0% {
         scale: 0;

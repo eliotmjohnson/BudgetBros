@@ -50,6 +50,7 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     @Output() deleteSavedLineItem = new EventEmitter<string>();
 
     itemId = model('');
+    fundId = input<string | undefined>();
     transactions = input<Transaction[]>([]);
     plannedAmount = model<number>(0);
     startingBalance = input(0);
@@ -65,7 +66,13 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
         );
 
         if (this.needsFundBalanceUpdate(newRemainingAmount)) {
-            console.log(newRemainingAmount - this.previousRemainingAmount!);
+            const startingBalanceChange =
+                newRemainingAmount - this.previousRemainingAmount!;
+
+            this.lineItemService.syncFund(
+                this.fundId()!,
+                startingBalanceChange
+            );
         }
 
         this.previousRemainingAmount = newRemainingAmount;
@@ -155,6 +162,7 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
 
         return !!(
             this.fund &&
+            this.fundId() &&
             this.previousRemainingAmount &&
             newRemainingAmount !== this.previousRemainingAmount &&
             currentBudget &&

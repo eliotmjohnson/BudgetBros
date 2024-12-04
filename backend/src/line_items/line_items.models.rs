@@ -50,3 +50,10 @@ pub struct UpdateFundRequest {
     pub starting_balance: f64,
     pub is_adding_fund: bool,
 }
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SyncFundRequest {
+    pub budget_id: String,
+    pub starting_balance_change: f64,
+}

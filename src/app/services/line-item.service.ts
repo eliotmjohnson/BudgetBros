@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { effect, Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { retry, Subject } from 'rxjs';
 import { BE_API_URL } from '../constants/constants';
 import {
     LineItem,
@@ -118,5 +118,22 @@ export class LineItemService {
                     this.budgetService.openSnagDialogAndRefresh(error);
                 }
             });
+    }
+
+    syncFund(fundId: string, startingBalanceChange: number) {
+        const currentBudget = this.budgetService.budget();
+        if (currentBudget) {
+            this.http
+                .patch<string>(`${this.baseUrl}/fund/sync/${fundId}`, {
+                    budgetId: currentBudget.budgetId,
+                    startingBalanceChange
+                })
+                .pipe(retry(2))
+                .subscribe({
+                    error: (error) => {
+                        this.budgetService.openSnagDialogAndRefresh(error);
+                    }
+                });
+        }
     }
 }

@@ -84,7 +84,6 @@ export class TransactionsComponent implements OnInit {
 
     constructor() {
         effect(() => {
-            console.log(this.transactionService.transactions.isLoading());
             if (!this.transactions?.length) return;
 
             const firstTransaction = this.transactions()!.at(0)!;

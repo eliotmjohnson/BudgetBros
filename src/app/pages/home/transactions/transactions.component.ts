@@ -84,7 +84,7 @@ export class TransactionsComponent implements OnInit {
 
     constructor() {
         effect(() => {
-            if (!this.transactions?.length) return;
+            if (!this.transactions()?.length) return;
 
             const firstTransaction = this.transactions()!.at(0)!;
             const lastTransaction = this.transactions()!.at(-1)!;

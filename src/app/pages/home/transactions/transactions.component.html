@@ -21,7 +21,7 @@
                     gap: '1rem'
                 }"
             >
-                @if (transactions().length) {
+                @if (transactions()?.length) {
                     <button
                         mat-icon-button
                         matTooltip="Filter transactions"
@@ -86,7 +86,7 @@
         <mat-divider />
     </div>
     <div class="transactions-inner-container">
-        @if (transactionService.isLoading()) {
+        @if (areTransactionsLoading()) {
             <mat-spinner
                 [diameter]="50"
                 [style.align-self]="'center'"

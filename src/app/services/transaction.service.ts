@@ -9,6 +9,8 @@ import {
     Transaction
 } from '../models/transaction';
 import { AuthService } from './auth.service';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { getTodayMidnight } from '../utils/timeUtils';
 
 @Injectable({
     providedIn: 'root'
@@ -19,35 +21,33 @@ export class TransactionService {
     baseUrl = `${BE_API_URL}/transactions`;
 
     currentSelectedLineItem = signal<SelectedLineItem | null>(null);
-    transactions = signal<IsolatedTransaction[]>([]);
-    isLoading = signal(false);
     newlyCreatedTransactionId = new Subject<string>();
 
+    transactionsDate1 = signal<Date>(getTodayMidnight());
+    transactionsDate2 = signal<Date>(getTodayMidnight());
+
+    transactions = rxResource({
+        request: () => ({
+            date1: this.transactionsDate1(),
+            date2: this.transactionsDate2()
+        }),
+        loader: ({ request: { date1, date2 } }) =>
+            this.getTransactionsBetweenDates(date1, date2)
+    });
+
     getTransactionsBetweenDates(date1: Date, date2: Date) {
-        this.isLoading.set(true);
-        this.http
-            .get<IsolatedTransaction[]>(
-                `
+        return this.http.get<IsolatedTransaction[]>(
+            `
                 ${this.baseUrl}/${this.authService.userId}?start_date=${date1.toISOString()}&end_date=${date2.toISOString()}
             `
-            )
-            .subscribe({
-                next: (transactions) => {
-                    this.isLoading.set(false);
-                    this.transactions.set(transactions);
-                },
-                error: (error) => {
-                    this.isLoading.set(false);
-                    console.error(error);
-                }
-            });
+        );
     }
 
     softDeleteTransaction(transactionId: IsolatedTransaction['transactionId']) {
-        const currentTransactions = this.transactions();
+        const currentTransactions = this.transactions.value();
 
         this.transactions.update((transactions) =>
-            transactions.filter((t) => t.transactionId !== transactionId)
+            transactions?.filter((t) => t.transactionId !== transactionId)
         );
 
         this.http.delete(`${this.baseUrl}/soft/${transactionId}`).subscribe({
@@ -90,9 +90,11 @@ export class TransactionService {
         this.http.put<string>(this.baseUrl, transaction).subscribe({
             next: () => {
                 if (needsRefresh) {
-                    const prevTransaction = this.transactions().find(
-                        (t) => t.transactionId === transaction.transactionId
-                    );
+                    const prevTransaction = this.transactions
+                        .value()
+                        ?.find(
+                            (t) => t.transactionId === transaction.transactionId
+                        );
 
                     if (
                         !prevTransaction ||
@@ -105,7 +107,7 @@ export class TransactionService {
                         );
                     } else {
                         this.transactions.update((transactions) =>
-                            transactions.map((t) =>
+                            transactions?.map((t) =>
                                 t.transactionId === transaction.transactionId
                                     ? {
                                           ...transaction,

@@ -34,7 +34,8 @@ export class TransactionsComponent implements OnInit {
         end: new FormControl<Date | null>(new Date())
     });
 
-    transactions = this.transactionService.transactions;
+    transactions = this.transactionService.transactions.value;
+    areTransactionsLoading = this.transactionService.transactions.isLoading;
 
     isFilterOpen = signal(false);
     filterFields = signal([
@@ -56,7 +57,7 @@ export class TransactionsComponent implements OnInit {
         const transactions = this.transactions();
         const [titleField, amountField, merchantField] = this.filterFields();
 
-        return transactions.filter((transaction) => {
+        return transactions?.filter((transaction) => {
             const titleFilter = titleField.value
                 ? transaction.title
                       ?.toLowerCase()
@@ -83,10 +84,11 @@ export class TransactionsComponent implements OnInit {
 
     constructor() {
         effect(() => {
-            if (!this.transactions().length) return;
+            console.log(this.transactionService.transactions.isLoading());
+            if (!this.transactions?.length) return;
 
-            const firstTransaction = this.transactions().at(0)!;
-            const lastTransaction = this.transactions().at(-1)!;
+            const firstTransaction = this.transactions()!.at(0)!;
+            const lastTransaction = this.transactions()!.at(-1)!;
 
             this.form.get('start')?.setValue(new Date(lastTransaction.date));
             this.form.get('end')?.setValue(new Date(firstTransaction.date));
@@ -143,7 +145,8 @@ export class TransactionsComponent implements OnInit {
         const end = this.form.get('end')?.value;
 
         if (start && end) {
-            this.transactionService.getTransactionsBetweenDates(start, end);
+            this.transactionService.transactionsDate1.set(start);
+            this.transactionService.transactionsDate2.set(end);
         }
     }
 

@@ -1,0 +1,3 @@
+-- Make line_item_id nullable in transactions table for untracked purposes
+ALTER TABLE transactions
+ALTER COLUMN line_item_id DROP NOT NULL;

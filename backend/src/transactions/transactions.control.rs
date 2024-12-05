@@ -18,18 +18,18 @@ use super::transactions_services::{
     get_line_item_transactions, soft_delete_transaction, update_transaction,
 };
 
-#[get("/untracked")]
-pub async fn get_untracked_transactions(state: Data<AppState>) -> impl Responder {
-    let transactions_result = get_line_item_transactions(state, line_item_id).await;
+// #[get("/untracked")]
+// pub async fn get_untracked_transactions(state: Data<AppState>) -> impl Responder {
+//     let transactions_result = get_line_item_transactions(state, line_item_id).await;
 
-    match transactions_result {
-        Ok(transactions) => HttpResponse::Ok().json(transactions),
-        Err(e) => {
-            println!("{}", e);
-            HttpResponse::InternalServerError().body(e.to_string())
-        }
-    }
-}
+//     match transactions_result {
+//         Ok(transactions) => HttpResponse::Ok().json(transactions),
+//         Err(e) => {
+//             println!("{}", e);
+//             HttpResponse::InternalServerError().body(e.to_string())
+//         }
+//     }
+// }
 
 #[get("/{line_item_id}")]
 pub async fn get_all_line_item_transactions_handler(

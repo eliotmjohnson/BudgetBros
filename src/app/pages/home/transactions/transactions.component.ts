@@ -144,8 +144,8 @@ export class TransactionsComponent implements OnInit {
         const end = this.form.get('end')?.value;
 
         if (start && end) {
-            this.transactionService.transactionsDate1.set(start);
-            this.transactionService.transactionsDate2.set(end);
+            this.transactionService.selectedStartDate.set(start);
+            this.transactionService.selectedEndDate.set(end);
         }
     }
 

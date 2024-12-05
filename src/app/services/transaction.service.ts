@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
-import { Subject } from 'rxjs';
 import { BE_API_URL } from '../constants/constants';
 import { SelectedLineItem } from '../models/lineItem';
 import {
@@ -16,23 +15,24 @@ import { getTodayMidnight } from '../utils/timeUtils';
     providedIn: 'root'
 })
 export class TransactionService {
-    http = inject(HttpClient);
-    authService = inject(AuthService);
     baseUrl = `${BE_API_URL}/transactions`;
 
-    currentSelectedLineItem = signal<SelectedLineItem | null>(null);
-    newlyCreatedTransactionId = new Subject<string>();
+    http = inject(HttpClient);
+    authService = inject(AuthService);
 
-    transactionsDate1 = signal<Date>(getTodayMidnight());
-    transactionsDate2 = signal<Date>(getTodayMidnight());
+    currentSelectedLineItem = signal<SelectedLineItem | null>(null);
+    newlyCreatedTransactionId = signal<string | null>(null);
+
+    selectedStartDate = signal<Date>(getTodayMidnight());
+    selectedEndDate = signal<Date>(getTodayMidnight());
 
     transactions = rxResource({
         request: () => ({
-            date1: this.transactionsDate1(),
-            date2: this.transactionsDate2()
+            start: this.selectedStartDate(),
+            end: this.selectedEndDate()
         }),
-        loader: ({ request: { date1, date2 } }) =>
-            this.getTransactionsBetweenDates(date1, date2)
+        loader: ({ request: { start, end } }) =>
+            this.getTransactionsBetweenDates(start, end)
     });
 
     getTransactionsBetweenDates(date1: Date, date2: Date) {
@@ -71,7 +71,7 @@ export class TransactionService {
                             new Date(transaction.date)
                         );
                     } else {
-                        this.newlyCreatedTransactionId.next(
+                        this.newlyCreatedTransactionId.set(
                             transaction.transactionId
                         );
                     }

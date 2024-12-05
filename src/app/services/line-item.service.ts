@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { effect, Injectable } from '@angular/core';
+import { Injectable, linkedSignal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { BE_API_URL } from '../constants/constants';
 import {
@@ -8,6 +8,7 @@ import {
     UpdateLineItemPayload
 } from '../models/lineItem';
 import { BudgetService } from './budget.service';
+import { Budget } from '../models/budget';
 
 @Injectable({
     providedIn: 'root'
@@ -15,18 +16,16 @@ import { BudgetService } from './budget.service';
 export class LineItemService {
     baseUrl = `${BE_API_URL}/line_items`;
     newlyAddedLineItemId = new Subject<string>();
-    fetchedLineItem: LineItem | undefined = undefined;
+
+    fetchedLineItem = linkedSignal<Budget | undefined, LineItem | undefined>({
+        source: () => this.budgetService.budget(),
+        computation: () => undefined
+    });
 
     constructor(
         private http: HttpClient,
         private budgetService: BudgetService
-    ) {
-        effect(() => {
-            if (budgetService.budget()) {
-                this.fetchedLineItem = undefined;
-            }
-        });
-    }
+    ) {}
 
     saveNewLineItem(saveLineItemPayload: SaveLineItemPayload) {
         this.http
@@ -69,7 +68,7 @@ export class LineItemService {
     fetchLineItem(lineItemId: string): LineItem | undefined {
         if (
             !this.fetchedLineItem ||
-            this.fetchedLineItem.lineItemId !== lineItemId
+            this.fetchedLineItem()?.lineItemId !== lineItemId
         ) {
             this.budgetService
                 .budget()
@@ -78,14 +77,14 @@ export class LineItemService {
                         (lineItem) => lineItem.lineItemId === lineItemId
                     );
                     if (result) {
-                        this.fetchedLineItem = result;
+                        this.fetchedLineItem.set(result);
                         return true;
                     }
                     return false;
                 });
         }
 
-        return this.fetchedLineItem;
+        return this.fetchedLineItem();
     }
 
     updateLineItemOrder(lineItemIds: string[], budgetCategoryId: string) {

@@ -1,4 +1,4 @@
-@import "bb-core";
+@use "bb-core";
 
 .inline-transaction-wrapper {
     display: flex;
@@ -51,7 +51,7 @@
             margin: 0;
             font-size: 1.2rem;
             font-weight: 500;
-            color: $bb-primary-title-color;
+            color: bb-core.$bb-primary-title-color;
             opacity: 0.9;
             overflow: hidden;
             white-space: nowrap;
@@ -64,7 +64,7 @@
             font-size: 1rem;
             font-weight: 400;
             opacity: 0.7;
-            color: $bb-secondary-title-color;
+            color: bb-core.$bb-secondary-title-color;
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
@@ -77,13 +77,13 @@
         font-weight: 500;
         padding-right: 1.5rem;
         min-width: max-content;
-        color: $bb-primary-title-color;
+        color: bb-core.$bb-primary-title-color;
         margin: 0;
         transition: translate 0.2s 0.05s;
     }
 
     .is-income-transaction {
-        color: $bb-primary-green-text;
+        color: bb-core.$bb-primary-green-text;
     }
 
     .delete-icon {
@@ -94,7 +94,7 @@
         font-size: 1.5rem;
         height: 1.5rem;
         width: 1.5rem;
-        color: $bb-error-main;
+        color: bb-core.$bb-error-main;
         transition: opacity 0.2s;
     }
 }

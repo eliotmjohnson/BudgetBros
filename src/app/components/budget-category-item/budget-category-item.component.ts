@@ -23,6 +23,7 @@ import {
     UpdateLineItemPayload
 } from 'src/app/models/lineItem';
 import { Transaction } from 'src/app/models/transaction';
+import { BudgetService } from 'src/app/services/budget.service';
 import { LineItemService } from 'src/app/services/line-item.service';
 import { MobileModalService } from 'src/app/services/mobile-modal.service';
 import { TransactionService } from 'src/app/services/transaction.service';
@@ -42,7 +43,6 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     @ViewChild('plannedAmountInput') plannedAmountInput!: ElementRef;
     @ViewChild(MatMenuTrigger) itemMenu?: MatMenuTrigger;
     @Input() itemTitle = '';
-    @Input() startingBalance = 0;
     @Input() fund = false;
     @Output() undoCreateNewLineItem = new EventEmitter();
     @Output() updateNewLineItemId = new EventEmitter<string>();
@@ -50,17 +50,45 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     @Output() deleteSavedLineItem = new EventEmitter<string>();
 
     itemId = model('');
+    fundId = input<string | undefined>();
     transactions = input<Transaction[]>([]);
     plannedAmount = model<number>(0);
+    startingBalance = input<number | undefined>(0);
     lineItemInputValue = new FormControl('');
     initialLineItemTitle = '';
     initialPlannedAmount = 0;
     isEditModeEnabled = signal(false);
     isNewLineItem = false;
-    remainingAmount = computed(() => this.calculateRemainingAmount());
+    previousRemainingAmount: number | null = null;
+    remainingAmount = computed(() => {
+        if (!this.isEditModeEnabled()) {
+            const newRemainingAmount = parseFloat(
+                this.calculateRemainingAmount().toFixed(2)
+            );
+
+            if (this.needsFundBalanceUpdate(newRemainingAmount)) {
+                const startingBalanceChange = parseFloat(
+                    (
+                        newRemainingAmount - this.previousRemainingAmount!
+                    ).toFixed(2)
+                );
+
+                this.lineItemService.syncFund(
+                    this.fundId()!,
+                    startingBalanceChange
+                );
+            }
+
+            this.previousRemainingAmount = newRemainingAmount;
+            return newRemainingAmount;
+        } else {
+            return this.previousRemainingAmount || 0;
+        }
+    });
     progressPercentage = computed(() => {
         const calculation =
-            (this.remainingAmount() / this.plannedAmount()) * 100;
+            (this.remainingAmount() / (this.plannedAmount() || 0.01)) * 100;
+
         return calculation ? (calculation < 0 ? 0 : calculation) : 0;
     });
     isLineItemSelected = computed(
@@ -78,11 +106,13 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     constructor(
         public transactionService: TransactionService,
         private lineItemService: LineItemService,
-        public mobileModalService: MobileModalService
+        public mobileModalService: MobileModalService,
+        private budgetService: BudgetService
     ) {
         effect(() => {
             if (
                 this.transactions() &&
+                this.startingBalance() !== undefined &&
                 untracked(
                     () =>
                         transactionService.currentSelectedLineItem()?.lineItemId
@@ -117,9 +147,9 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
                       transaction.isIncomeTransaction
                           ? balance + transaction.amount
                           : balance - transaction.amount,
-                  this.startingBalance + this.plannedAmount()
+                  (this.startingBalance() ?? 0) + this.plannedAmount()
               )
-            : this.startingBalance + this.plannedAmount();
+            : (this.startingBalance() ?? 0) + this.plannedAmount();
     }
 
     setSelectedLineItem() {
@@ -133,6 +163,21 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
         }
     }
 
+    needsFundBalanceUpdate(newRemainingAmount: number) {
+        const today = new Date();
+        const currentBudget = untracked(() => this.budgetService.budget());
+
+        return !!(
+            this.fund &&
+            this.fundId() &&
+            this.previousRemainingAmount !== null &&
+            newRemainingAmount !== this.previousRemainingAmount &&
+            currentBudget &&
+            (currentBudget.year < today.getFullYear() ||
+                currentBudget.monthNumber < today.getMonth() + 1)
+        );
+    }
+
     setTransactionData() {
         const selectedLineItem: SelectedLineItem = {
             name: this.lineItemInputValue.value ?? '',
@@ -140,8 +185,10 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
             remainingAmount: this.remainingAmount(),
             lineItemId: this.itemId(),
             isFund: this.fund,
-            transactions: this.transactions()
+            transactions: this.transactions(),
+            startingBalance: this.startingBalance()
         };
+
         this.transactionService.currentSelectedLineItem.set(selectedLineItem);
     }
 
@@ -241,9 +288,7 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
         const updateLineItemPayload: UpdateLineItemPayload = {
             id: this.itemId(),
             name: this.lineItemInputValue.value ?? '',
-            isFund: false,
-            plannedAmount: this.plannedAmount(),
-            startingBalance: 0
+            plannedAmount: this.plannedAmount()
         };
 
         this.lineItemService.updateLineItem(updateLineItemPayload);

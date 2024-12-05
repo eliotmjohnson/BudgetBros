@@ -63,6 +63,8 @@ import { SettingsComponent } from './pages/home/settings/settings.component';
 import { TransactionsComponent } from './pages/home/transactions/transactions.component';
 import { LoginComponent } from './pages/login/login.component';
 import { SortByDatePipe } from './pipes/sort-by-date.pipe';
+import { InlineFeatureComponent } from './components/inline-feature/inline-feature.component';
+import { FeatureModalComponent } from './components/mobile-components/feature-modal/feature-modal.component';
 
 @NgModule({
     declarations: [
@@ -97,7 +99,9 @@ import { SortByDatePipe } from './pipes/sort-by-date.pipe';
         SlideToDeleteComponent,
         IncomeDrawerComponent,
         BudgetCalculatorComponent,
-        IncomeExpenseSelectorComponent
+        IncomeExpenseSelectorComponent,
+        InlineFeatureComponent,
+        FeatureModalComponent
     ],
     bootstrap: [AppComponent],
     imports: [

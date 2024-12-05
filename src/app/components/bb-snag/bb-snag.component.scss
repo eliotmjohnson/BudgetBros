@@ -1,4 +1,4 @@
-@import "bb-core";
+@use "bb-core";
 
 :host {
     display: flex;
@@ -11,7 +11,7 @@
 
     h1 {
         text-align: center;
-        color: $bb-primary-title-color;
+        color: bb-core.$bb-primary-title-color;
         margin: 0;
         font-style: italic;
         padding: 5px;

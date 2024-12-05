@@ -8,6 +8,7 @@ export class MobileModalService {
     isMobileDevice = signal(false);
     isAddTransactionModalOpen = signal(false);
     isBudgetTransactionsModalOpen = signal(false);
+    isFeatureModalOpen = signal(false);
     isIOSDevice = signal(false);
     isReorderingCategories = signal(false);
     showPlannedAmounts = signal(false);
@@ -17,5 +18,11 @@ export class MobileModalService {
     constructor() {
         const userAgent = window.navigator.userAgent;
         this.isIOSDevice.set(/iPhone/i.test(userAgent));
+    }
+
+    closeAllModals() {
+        this.isAddTransactionModalOpen.set(false);
+        this.isBudgetTransactionsModalOpen.set(false);
+        this.isFeatureModalOpen.set(false);
     }
 }

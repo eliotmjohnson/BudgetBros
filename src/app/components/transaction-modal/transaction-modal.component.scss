@@ -1,4 +1,4 @@
-@import "bb-core";
+@use "bb-core";
 
 ::ng-deep {
     &.mat-mdc-dialog-container {
@@ -89,7 +89,7 @@ mat-label {
     .mat-mdc-dialog-title {
         width: 100%;
         height: 3.25rem;
-        background-color: $bb-primary-green-text;
+        background-color: bb-core.$bb-primary-green-text;
         display: flex;
         justify-content: center;
         align-items: center;

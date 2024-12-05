@@ -5,7 +5,7 @@ export interface LineItem {
     name: string;
     isFund: boolean;
     plannedAmount: number;
-    startingBalance: number;
+    startingBalance?: number;
     fundId?: string;
     transactions: Transaction[];
 }

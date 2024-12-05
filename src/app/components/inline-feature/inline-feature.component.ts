@@ -33,7 +33,7 @@ import {
     standalone: false
 })
 export class InlineFeatureComponent implements OnInit, AfterViewChecked {
-    @ViewChild('formInput') formInput?: ElementRef;
+    @ViewChild('formInput') formInput?: ElementRef<HTMLInputElement>;
     @Input() isCreatingFund = false;
     @Input() isDetailsComponent = false;
     @Input() isFund: boolean | undefined = false;
@@ -45,7 +45,7 @@ export class InlineFeatureComponent implements OnInit, AfterViewChecked {
         this.currencyPipe.transform(
             this.transactionService
                 .currentSelectedLineItem()
-                ?.startingBalance.toString() || '0.00'
+                ?.startingBalance?.toString() || '0.00'
         )
     );
 
@@ -74,6 +74,9 @@ export class InlineFeatureComponent implements OnInit, AfterViewChecked {
 
     ngAfterViewChecked(): void {
         if (this.formInput && !this.formLoaded) {
+            if (this.mobileService.isMobileDevice()) {
+                this.formInput.nativeElement.setAttribute('pattern', '\\d*');
+            }
             this.featureForm.clearValidators();
             this.featureForm.updateValueAndValidity();
             this.formLoaded = true;

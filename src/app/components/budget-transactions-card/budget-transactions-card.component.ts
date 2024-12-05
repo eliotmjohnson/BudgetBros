@@ -46,8 +46,8 @@ export class BudgetTransactionsCardComponent {
         return (
             (this.transactionService.currentSelectedLineItem()!
                 .remainingAmount /
-                this.transactionService.currentSelectedLineItem()!
-                    .plannedAmount) *
+                (this.transactionService.currentSelectedLineItem()!
+                    .plannedAmount || 0.01)) *
                 100 || 0
         );
     });

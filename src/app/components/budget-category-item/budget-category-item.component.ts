@@ -53,7 +53,7 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     fundId = input<string | undefined>();
     transactions = input<Transaction[]>([]);
     plannedAmount = model<number>(0);
-    startingBalance = input(0);
+    startingBalance = input<number | undefined>(0);
     lineItemInputValue = new FormControl('');
     initialLineItemTitle = '';
     initialPlannedAmount = 0;
@@ -61,22 +61,29 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     isNewLineItem = false;
     previousRemainingAmount: number | null = null;
     remainingAmount = computed(() => {
-        const newRemainingAmount = parseFloat(
-            this.calculateRemainingAmount().toFixed(2)
-        );
-
-        if (this.needsFundBalanceUpdate(newRemainingAmount)) {
-            const startingBalanceChange =
-                newRemainingAmount - this.previousRemainingAmount!;
-
-            this.lineItemService.syncFund(
-                this.fundId()!,
-                startingBalanceChange
+        if (!this.isEditModeEnabled()) {
+            const newRemainingAmount = parseFloat(
+                this.calculateRemainingAmount().toFixed(2)
             );
-        }
 
-        this.previousRemainingAmount = newRemainingAmount;
-        return newRemainingAmount;
+            if (this.needsFundBalanceUpdate(newRemainingAmount)) {
+                const startingBalanceChange = parseFloat(
+                    (
+                        newRemainingAmount - this.previousRemainingAmount!
+                    ).toFixed(2)
+                );
+
+                this.lineItemService.syncFund(
+                    this.fundId()!,
+                    startingBalanceChange
+                );
+            }
+
+            this.previousRemainingAmount = newRemainingAmount;
+            return newRemainingAmount;
+        } else {
+            return this.previousRemainingAmount || 0;
+        }
     });
     progressPercentage = computed(() => {
         const calculation =
@@ -105,7 +112,7 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
         effect(() => {
             if (
                 this.transactions() &&
-                this.startingBalance() != undefined &&
+                this.startingBalance() !== undefined &&
                 untracked(
                     () =>
                         transactionService.currentSelectedLineItem()?.lineItemId
@@ -140,9 +147,9 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
                       transaction.isIncomeTransaction
                           ? balance + transaction.amount
                           : balance - transaction.amount,
-                  this.startingBalance() + this.plannedAmount()
+                  (this.startingBalance() ?? 0) + this.plannedAmount()
               )
-            : this.startingBalance() + this.plannedAmount();
+            : (this.startingBalance() ?? 0) + this.plannedAmount();
     }
 
     setSelectedLineItem() {
@@ -163,7 +170,7 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
         return !!(
             this.fund &&
             this.fundId() &&
-            this.previousRemainingAmount &&
+            this.previousRemainingAmount !== null &&
             newRemainingAmount !== this.previousRemainingAmount &&
             currentBudget &&
             (currentBudget.year < today.getFullYear() ||

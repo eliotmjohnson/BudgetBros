@@ -45,11 +45,11 @@ async fn main() -> std::io::Result<()> {
         .await
         .expect("Failed to connect to database");
 
-    sqlx::migrate!("./migrations")
-        .set_locking(false)
-        .run(&pool)
-        .await
-        .expect("Failed to migrate database");
+    // sqlx::migrate!("./migrations")
+    //     .set_locking(false)
+    //     .run(&pool)
+    //     .await
+    //     .expect("Failed to migrate database");
 
     println!("Dat Cockroach DB is connected, yo!");
     println!(

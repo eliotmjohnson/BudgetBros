@@ -6,13 +6,14 @@ use crate::AppState;
 
 use super::transactions_models::{IsolatedTransaction, NewTransaction, Transaction, UpdatedTransaction};
 
-pub async fn get_line_item_transactions(state: Data<AppState>, line_item_id: String) -> Result<Vec<Transaction>, sqlx::Error> {
+
+pub async fn get_untracked_transactions(state: Data<AppState>) -> Result<Vec<Transaction>, sqlx::Error> {
     let query = 
         "SELECT * 
         FROM 
             transactions 
         WHERE 
-            line_item_id = $1
+            line_item_id = null
             AND deleted = false";
 
     sqlx::query_as::<_, Transaction>(query)

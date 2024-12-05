@@ -41,6 +41,7 @@
             >
                 <mat-calendar
                     #calendarSelector
+                    [selected]="selectedDate()"
                     (monthSelected)="getNewBudget($event)"
                     startView="multi-year"
                 ></mat-calendar>

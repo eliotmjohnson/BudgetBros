@@ -1,4 +1,4 @@
-@import "bb-core";
+@use "bb-core";
 
 :host {
     display: flex;
@@ -30,7 +30,7 @@
             .title {
                 font-weight: bold;
                 font-size: 1.3rem;
-                color: $bb-primary-title-color;
+                color: bb-core.$bb-primary-title-color;
             }
 
             .refresh-icon {
@@ -39,7 +39,7 @@
                 transition: color 0.3s;
 
                 &:hover {
-                    color: $bb-primary-title-color;
+                    color: bb-core.$bb-primary-title-color;
                 }
             }
 
@@ -194,7 +194,7 @@
         font-style: italic;
         margin: 0;
         font-size: 2rem;
-        color: $bb-secondary-title-color;
+        color: bb-core.$bb-secondary-title-color;
         opacity: 0.6;
         padding: 5px;
     }
@@ -219,7 +219,7 @@
         font-style: italic;
         margin: 0;
         font-size: 1.4rem;
-        color: $bb-secondary-title-color;
+        color: bb-core.$bb-secondary-title-color;
         opacity: 0.5;
         padding: 5px;
     }
@@ -233,7 +233,7 @@
         transition: color 0.4s;
 
         &:hover {
-            color: $bb-primary-green-text;
+            color: bb-core.$bb-primary-green-text;
         }
     }
 }
@@ -265,8 +265,18 @@
     .pull-refresh-icon {
         height: 2rem;
         width: 2rem;
-        color: $bb-secondary-title-color;
+        color: bb-core.$bb-secondary-title-color;
         font-size: 2rem;
+    }
+}
+
+::ng-deep {
+    .cdk-program-focused
+        .mat-calendar-body-active
+        > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(
+            .mat-calendar-body-comparison-identical
+        ) {
+        background-color: white;
     }
 }
 

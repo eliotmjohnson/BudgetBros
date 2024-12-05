@@ -1,4 +1,4 @@
-@import "bb-core";
+@use "bb-core";
 
 :host {
     display: none;
@@ -7,7 +7,7 @@
     left: 0;
     flex-direction: column;
     align-items: center;
-    background-color: $bb-primary-green-text;
+    background-color: bb-core.$bb-primary-green-text;
     translate: 0 100vh;
     height: 100vh;
     width: 100vw;
@@ -28,6 +28,7 @@
 
 :host(.full-screen-modal) {
     padding-top: min(5.25vh, env(safe-area-inset-top));
+    border-radius: 0rem;
     animation: loadFullScreenModal 0.65s cubic-bezier(0.22, 1, 0.22, 1) forwards;
 
     @keyframes loadFullScreenModal {

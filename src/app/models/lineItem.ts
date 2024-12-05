@@ -5,11 +5,12 @@ export interface LineItem {
     name: string;
     isFund: boolean;
     plannedAmount: number;
-    startingBalance: number;
+    startingBalance?: number;
+    fundId?: string;
     transactions: Transaction[];
 }
 
-export type SelectedLineItem = Omit<LineItem, 'startingBalance'> & {
+export type SelectedLineItem = LineItem & {
     remainingAmount: number;
 };
 
@@ -24,10 +25,15 @@ export interface SaveLineItemPayload {
 
 export type UpdateLineItemPayload = Omit<
     SaveLineItemPayload,
-    'budgetCategoryId'
+    'budgetCategoryId' | 'startingBalance' | 'isFund'
 > & { id: string };
 
 export interface LineItemReduced {
     lineItemId: string;
     lineItemName: string;
+}
+
+export interface UpdateFundPayload {
+    startingBalance: number;
+    isAddingFund: boolean;
 }

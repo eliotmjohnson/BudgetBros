@@ -28,6 +28,7 @@ pub async fn get_budget(
             li.is_fund,
             li.planned_amount,
             li.starting_balance,
+            li.fund_id,
             tr.id AS transaction_id,
             tr.title,
             tr.merchant,

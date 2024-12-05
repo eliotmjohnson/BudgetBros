@@ -1,11 +1,11 @@
-@import "bb-core";
+@use "bb-core";
 
 .transactions-container {
     display: flex;
     flex-direction: column;
     gap: 1rem;
     padding: 1.5rem;
-    height: calc(100vh - $bb-header-height);
+    height: calc(100vh - bb-core.$bb-header-height);
 
     .upper-section-container {
         display: flex;
@@ -25,7 +25,7 @@
             }
 
             .icon {
-                color: $bb-primary-green-text;
+                color: bb-core.$bb-primary-green-text;
             }
         }
 

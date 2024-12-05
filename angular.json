@@ -86,7 +86,8 @@
                             "buildTarget": "BudgetBros:build:production"
                         },
                         "development": {
-                            "buildTarget": "BudgetBros:build:development"
+                            "buildTarget": "BudgetBros:build:development",
+                            "hmr": false
                         }
                     },
                     "defaultConfiguration": "development"

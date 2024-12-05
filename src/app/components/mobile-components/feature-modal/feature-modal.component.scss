@@ -1,4 +1,4 @@
-@import "bb-core";
+@use "bb-core";
 
 :host {
     width: 100vw;
@@ -6,7 +6,7 @@
     position: fixed;
     top: 0;
     left: 0;
-    background-color: $bb-primary-green-text;
+    background-color: bb-core.$bb-primary-green-text;
     translate: 100vw;
     padding-top: env(safe-area-inset-top);
     animation: slideIn 0.5s cubic-bezier(0.4, 1, 0.4, 1) forwards;

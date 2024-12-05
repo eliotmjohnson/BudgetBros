@@ -1,4 +1,4 @@
-@import "bb-core";
+@use "bb-core";
 
 :host {
     z-index: 0;
@@ -36,14 +36,14 @@
                 font-family: inherit;
                 font-size: 1.2rem;
                 font-weight: 600;
-                color: $bb-secondary-title-color;
+                color: bb-core.$bb-secondary-title-color;
                 padding: 0.3rem;
                 border: none;
                 border-radius: 0.4rem;
                 width: 98%;
 
                 &:focus {
-                    color: $bb-primary-title-color;
+                    color: bb-core.$bb-primary-title-color;
                     outline: 1px solid rgb(206, 206, 206);
                 }
 
@@ -102,7 +102,7 @@
     height: 1.5rem;
     width: 1.5rem;
     cursor: pointer;
-    color: $bb-error-main;
+    color: bb-core.$bb-error-main;
     z-index: 1;
 }
 

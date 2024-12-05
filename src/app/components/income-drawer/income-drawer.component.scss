@@ -1,18 +1,17 @@
-@import "bb-core";
+@use "bb-core";
 
 $animation-timing: cubic-bezier(0.4, 1, 0.4, 1);
 
 :host {
     width: 59%;
     height: 21rem;
-    top: 0;
+    top: -14rem;
     left: 0;
     position: absolute;
     display: flex;
     flex-direction: column;
     align-items: center;
     background-color: #fafafa;
-    translate: 0 -14rem;
     transform: translateZ(-10px);
     transition:
         translate 0.45s $animation-timing,
@@ -22,7 +21,7 @@ $animation-timing: cubic-bezier(0.4, 1, 0.4, 1);
 }
 
 :host(.drawer-open) {
-    translate: 0 7rem;
+    translate: 0 21rem;
     box-shadow: 0 0.3rem 0.2rem -0.2rem rgb(0, 0, 0, 0.15);
     border-radius: 2rem;
 }
@@ -76,7 +75,7 @@ $animation-timing: cubic-bezier(0.4, 1, 0.4, 1);
     padding-bottom: 0.2rem;
     transform: translateZ(10px);
     line-height: 0.9rem;
-    color: $bb-secondary-title-color;
+    color: bb-core.$bb-secondary-title-color;
     border-bottom-right-radius: 1rem;
     border-bottom-left-radius: 1rem;
     box-shadow: 0 0.2rem 0.2rem -0.1rem rgb(0, 0, 0, 0.15);
@@ -115,7 +114,7 @@ $animation-timing: cubic-bezier(0.4, 1, 0.4, 1);
         height: 1.3rem;
         width: 1.3rem;
         background-color: #fafafa;
-        background-color: $bb-error-main;
+        background-color: bb-core.$bb-error-main;
         left: -1.22rem;
         top: 0;
         background: radial-gradient(

@@ -1,4 +1,4 @@
-@import "bb-core";
+@use "bb-core";
 
 :host {
     max-width: 40%;
@@ -51,7 +51,7 @@
         font-size: 1rem;
         font-weight: 400;
         margin-bottom: 0.5rem;
-        color: $bb-secondary-title-color;
+        color: bb-core.$bb-secondary-title-color;
     }
 
     .top {
@@ -62,7 +62,7 @@
             font-size: 2rem;
             font-weight: 700;
             margin: 0;
-            color: $bb-primary-title-color;
+            color: bb-core.$bb-primary-title-color;
         }
 
         h2 {
@@ -70,7 +70,7 @@
             font-size: 1.9rem;
             letter-spacing: -0.05rem;
             font-weight: 700;
-            color: $bb-primary-green-text;
+            color: bb-core.$bb-primary-green-text;
             margin: 0;
 
             .dollar-sign {
@@ -80,7 +80,7 @@
         }
 
         .unhappy-remaining {
-            color: $bb-error-main;
+            color: bb-core.$bb-error-main;
         }
     }
 }
@@ -109,7 +109,7 @@
         font-size: 1.3rem;
         letter-spacing: 0.05rem;
         margin: 0;
-        color: $bb-secondary-title-color;
+        color: bb-core.$bb-secondary-title-color;
     }
 
     div {
@@ -125,7 +125,7 @@
             margin: 0;
             padding-right: 0.5rem;
             translate: 10rem;
-            color: $bb-primary-green-text;
+            color: bb-core.$bb-primary-green-text;
             transition: translate 0.25s;
         }
 
@@ -146,7 +146,7 @@
                 border-radius: 100%;
                 border: none;
                 cursor: pointer;
-                background-color: $bb-primary-green-text;
+                background-color: bb-core.$bb-primary-green-text;
 
                 mat-icon {
                     display: flex;
@@ -206,11 +206,11 @@
         }
 
         .negative {
-            color: $bb-error-main;
+            color: bb-core.$bb-error-main;
         }
 
         .positive {
-            color: $bb-primary-green-text;
+            color: bb-core.$bb-primary-green-text;
         }
     }
 }

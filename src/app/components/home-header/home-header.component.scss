@@ -1,7 +1,7 @@
-@import "bb-core";
+@use "bb-core";
 
 :host {
-    height: $bb-header-height;
+    height: bb-core.$bb-header-height;
 }
 
 header {

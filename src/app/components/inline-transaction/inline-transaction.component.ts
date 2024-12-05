@@ -16,7 +16,8 @@ import {
     styleUrl: './inline-transaction.component.scss',
     host: {
         '[@.disabled]': '!isDeletingTransaction'
-    }
+    },
+    standalone: false
 })
 export class InlineTransactionComponent {
     @Input() transactionId?: string | undefined;

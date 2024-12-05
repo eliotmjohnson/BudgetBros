@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { effect, Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { retry, Subject } from 'rxjs';
 import { BE_API_URL } from '../constants/constants';
 import {
     LineItem,
     SaveLineItemPayload,
+    UpdateFundPayload,
     UpdateLineItemPayload
 } from '../models/lineItem';
 import { BudgetService } from './budget.service';
@@ -96,5 +97,43 @@ export class LineItemService {
                     this.budgetService.openSnagDialogAndRefresh(error);
                 }
             });
+    }
+
+    updateFund(lineItemId: string, updateFundPayload: UpdateFundPayload) {
+        this.http
+            .patch<string>(
+                `${this.baseUrl}/fund/${lineItemId}`,
+                updateFundPayload
+            )
+            .subscribe({
+                next: (fundId) => {
+                    if (updateFundPayload.isAddingFund) {
+                        const fetchedLineItem = this.fetchLineItem(lineItemId);
+                        if (fetchedLineItem) {
+                            fetchedLineItem.fundId = fundId;
+                        }
+                    }
+                },
+                error: (error) => {
+                    this.budgetService.openSnagDialogAndRefresh(error);
+                }
+            });
+    }
+
+    syncFund(fundId: string, startingBalanceChange: number) {
+        const currentBudget = this.budgetService.budget();
+        if (currentBudget) {
+            this.http
+                .patch<string>(`${this.baseUrl}/fund/sync/${fundId}`, {
+                    budgetId: currentBudget.budgetId,
+                    startingBalanceChange
+                })
+                .pipe(retry(2))
+                .subscribe({
+                    error: (error) => {
+                        this.budgetService.openSnagDialogAndRefresh(error);
+                    }
+                });
+        }
     }
 }

@@ -1,4 +1,4 @@
-@import "bb-core";
+@use "bb-core";
 
 .mat-mdc-card {
     box-shadow: none;
@@ -6,12 +6,12 @@
 }
 
 .title-text {
-    color: $bb-primary-green-text;
+    color: bb-core.$bb-primary-green-text;
     margin: 0;
 }
 
 .merchant-text {
-    color: $bb-primary-title-color;
+    color: bb-core.$bb-primary-title-color;
     margin: 0;
 }
 
@@ -37,7 +37,7 @@
 
 .date {
     margin: 0 1rem;
-    color: $bb-secondary-title-color;
+    color: bb-core.$bb-secondary-title-color;
 }
 
 .mat-mdc-card-actions {
@@ -45,11 +45,11 @@
 }
 
 .error {
-    color: $bb-error-main;
+    color: bb-core.$bb-error-main;
 }
 
 .edit {
-    color: $bb-secondary-title-color;
+    color: bb-core.$bb-secondary-title-color;
 }
 
 mat-card-header {

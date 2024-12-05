@@ -21,3 +21,8 @@ export const MONTHS = [
     'November',
     'December'
 ];
+
+export enum Features {
+    FUND,
+    DUE_DATE
+}

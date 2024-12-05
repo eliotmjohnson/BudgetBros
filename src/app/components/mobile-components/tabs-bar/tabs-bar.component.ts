@@ -10,8 +10,11 @@ import { TransactionService } from 'src/app/services/transaction.service';
     host: {
         '[class.modal-open]':
             'mobileModalService.isAddTransactionModalOpen() || mobileModalService.isBudgetTransactionsModalOpen()',
-        '[class.is-reordering]': 'mobileModalService.isReorderingCategories()'
-    }
+        '[class.is-reordering]': 'mobileModalService.isReorderingCategories()',
+        '[class.is-feature-modal-open]':
+            'mobileModalService.isFeatureModalOpen()'
+    },
+    standalone: false
 })
 export class TabsBarComponent {
     constructor(

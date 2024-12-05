@@ -18,7 +18,8 @@ import { TransactionService } from 'src/app/services/transaction.service';
 @Component({
     selector: 'app-budget',
     templateUrl: './budget.component.html',
-    styleUrls: ['./budget.component.scss']
+    styleUrls: ['./budget.component.scss'],
+    standalone: false
 })
 export class BudgetComponent implements OnInit, AfterViewChecked {
     @ViewChild('calendarSelector') calendarSelector!: MatCalendar<Date>;
@@ -38,6 +39,16 @@ export class BudgetComponent implements OnInit, AfterViewChecked {
     isReordering = false;
     scrollPosition = 0;
     isScrolling = false;
+
+    selectedDate = computed(() => {
+        const currentBudget = this.budget();
+
+        if (currentBudget) {
+            return new Date(currentBudget.year, currentBudget.monthNumber - 1);
+        } else {
+            return this.today;
+        }
+    });
 
     constructor(
         public transactionService: TransactionService,

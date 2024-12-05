@@ -37,7 +37,8 @@ import { TransactionService } from 'src/app/services/transaction.service';
         '[style.height]': 'hostHeight',
         '[style.translate.rem]':
             'this.mobileModalService.isIOSDevice() && isNewBudgetCategory ? 50 : 0'
-    }
+    },
+    standalone: false
 })
 export class BudgetCategoryCardComponent implements OnInit, AfterViewChecked {
     @ViewChild('titleInput') titleInput!: ElementRef<HTMLInputElement>;
@@ -236,7 +237,7 @@ export class BudgetCategoryCardComponent implements OnInit, AfterViewChecked {
                 name: 'Add Title',
                 isFund: false,
                 plannedAmount: 0,
-                startingBalance: 0,
+                startingBalance: undefined,
                 transactions: []
             };
 

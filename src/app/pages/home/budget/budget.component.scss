@@ -271,12 +271,20 @@
 }
 
 ::ng-deep {
-    .cdk-program-focused
-        .mat-calendar-body-active
-        > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(
-            .mat-calendar-body-comparison-identical
-        ) {
-        background-color: white;
+    .calendar-selector {
+        .mat-calendar-body-today:not(.mat-calendar-body-selected):not(
+                .mat-calendar-body-comparison-identical
+            ) {
+            border-color: transparent;
+        }
+
+        .mat-calendar-body-selected {
+            color: white;
+        }
+
+        .mat-calendar-body-selected.mat-calendar-body-today {
+            box-shadow: none;
+        }
     }
 }
 

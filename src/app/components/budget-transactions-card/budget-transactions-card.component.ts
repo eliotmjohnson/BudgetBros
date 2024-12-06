@@ -1,4 +1,5 @@
 import {
+    ChangeDetectorRef,
     Component,
     computed,
     Input,
@@ -66,7 +67,8 @@ export class BudgetTransactionsCardComponent {
     constructor(
         public transactionService: TransactionService,
         public mobileModalService: MobileModalService,
-        private dialogService: MatDialog
+        private dialogService: MatDialog,
+        public cdr: ChangeDetectorRef
     ) {}
 
     closeBudgetTransactionsModal() {
@@ -98,5 +100,9 @@ export class BudgetTransactionsCardComponent {
     closeFeatureModal() {
         this.isFeatureModalOpen = false;
         this.mobileModalService.isFeatureModalOpen.set(false);
+    }
+
+    updateViewAnimation() {
+        this.cdr.detectChanges();
     }
 }

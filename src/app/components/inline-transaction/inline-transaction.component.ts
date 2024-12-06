@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MONTHS } from 'src/app/constants/constants';
 import { IsolatedTransaction } from 'src/app/models/transaction';
@@ -27,7 +27,9 @@ export class InlineTransactionComponent {
     @Input() notes = '';
     @Input() isIncomeTransaction = false;
     @Input({ transform: (date: string) => new Date(date) }) date!: Date;
+
     isDeletingTransaction = false;
+    updateViewAnimation = output();
 
     constructor(
         private transactionService: TransactionService,
@@ -46,6 +48,8 @@ export class InlineTransactionComponent {
 
     deleteTransaction(e?: MouseEvent) {
         this.isDeletingTransaction = true;
+        this.updateViewAnimation.emit();
+
         if (e) e.stopPropagation();
 
         this.transactionService.softDeleteTransaction(this.transactionId!);

@@ -21,6 +21,11 @@
     padding: 16px;
 }
 
+.not-opened {
+    z-index: 0;
+    display: none;
+}
+
 /* Main page content styles */
 .main-content {
     padding: 16px;

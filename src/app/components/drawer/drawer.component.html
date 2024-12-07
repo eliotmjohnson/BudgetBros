@@ -1,6 +1,7 @@
 <mat-drawer-container
     class="custom-drawer-container"
     [hasBackdrop]="true"
+    [ngClass]="{ 'not-opened': !isOpen() }"
 >
     <!-- Drawer -->
     <mat-drawer
@@ -10,7 +11,10 @@
         [position]="position() === 'right' ? 'end' : 'start'"
         class="custom-drawer"
     >
-        <div class="drawer-content">
+        <div
+            class="drawer-content"
+            [ngClass]="{ 'not-opened': !isOpen() }"
+        >
             <!-- Add your content here -->
             <h2>Drawer Content</h2>
             <p>This drawer covers the full height of the browser window.</p>

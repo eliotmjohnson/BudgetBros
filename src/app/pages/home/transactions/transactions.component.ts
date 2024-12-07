@@ -4,14 +4,17 @@ import {
     computed,
     effect,
     inject,
+    linkedSignal,
     signal
 } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import {
     TransactionModalComponent,
     TransactionModalData
 } from 'src/app/components/transaction-modal/transaction-modal.component';
+import { IsolatedTransaction, Transaction } from 'src/app/models/transaction';
 import { TransactionService } from 'src/app/services/transaction.service';
 import {
     addValueToCurrencyInput,
@@ -35,7 +38,10 @@ export class TransactionsComponent implements OnInit {
     });
 
     transactions = this.transactionService.transactions.value;
-    untrackedTransactions = this.transactionService.untrackedTransactions.value;
+
+    untrackedTransactions = rxResource({
+        loader: () => this.transactionService.getUntrackedTransactions()
+    });
 
     areTransactionsLoading = this.transactionService.transactions.isLoading;
 
@@ -55,7 +61,9 @@ export class TransactionsComponent implements OnInit {
         }
     ]);
 
-    filteredTransactions = computed(() => {
+    filteredTransactions = linkedSignal<
+        IsolatedTransaction[] | Transaction[] | undefined
+    >(() => {
         const transactions = this.transactions();
         const [titleField, amountField, merchantField] = this.filterFields();
 
@@ -153,5 +161,9 @@ export class TransactionsComponent implements OnInit {
 
     toggleFilter() {
         this.isFilterOpen.set(!this.isFilterOpen());
+    }
+
+    viewUntracked() {
+        this.filteredTransactions.set(this.untrackedTransactions.value());
     }
 }

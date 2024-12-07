@@ -21,6 +21,16 @@
                     gap: '1rem'
                 }"
             >
+                <button
+                    mat-icon-button
+                    matTooltip="View untracked transactions"
+                    (click)="viewUntracked()"
+                >
+                    <mat-icon
+                        fontIcon="receipt"
+                        class="icon"
+                    />
+                </button>
                 @if (transactions()?.length) {
                     <button
                         mat-icon-button

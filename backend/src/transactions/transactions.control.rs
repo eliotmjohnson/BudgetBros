@@ -8,7 +8,7 @@ use serde::Deserialize;
 
 use crate::{
     transactions::transactions_models::{
-        IsolatedTransactionResponse, NewTransaction, UpdatedTransaction,
+        IsolatedTransactionResponse, NewTransaction, TransactionResponse, UpdatedTransaction,
     },
     AppState,
 };
@@ -28,7 +28,23 @@ pub async fn get_untracked_transactions_handler(
     let transactions_result = get_untracked_transactions(state, user_id).await;
 
     match transactions_result {
-        Ok(transactions) => HttpResponse::Ok().json(transactions),
+        Ok(transactions) => {
+            let transactions_response: Vec<TransactionResponse> = transactions
+                .into_iter()
+                .map(|transaction| TransactionResponse {
+                    line_item_id: transaction.line_item_id.unwrap_or_default(),
+                    transaction_id: transaction.id,
+                    title: transaction.title,
+                    amount: transaction.amount,
+                    notes: transaction.notes.unwrap_or_default(),
+                    date: transaction.date,
+                    merchant: transaction.merchant,
+                    deleted: transaction.deleted,
+                    is_income_transaction: transaction.is_income_transaction,
+                })
+                .collect();
+            HttpResponse::Ok().json(transactions_response)
+        }
         Err(e) => {
             println!("{}", e);
             HttpResponse::InternalServerError().body(e.to_string())

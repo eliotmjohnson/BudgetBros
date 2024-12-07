@@ -36,7 +36,7 @@ export interface TransactionModalData {
         | 'budgetTransactionsAdd'
         | 'budgetTransactionsAddMobile'
         | 'budgetTransactionsEdit';
-    transaction?: IsolatedTransaction;
+    transaction?: IsolatedTransaction | Transaction;
     lineItemId?: string;
 }
 
@@ -225,15 +225,15 @@ export class TransactionModalComponent implements AfterViewInit, OnInit {
 
     submitForm() {
         if (this.form.invalid) return;
+
+        const currentTransactionData = this.modalData || this.mobileModalData;
         const needsRefresh =
-            (this.modalData || this.mobileModalData).mode !==
-                'budgetTransactionsAddMobile' &&
+            currentTransactionData.mode !== 'budgetTransactionsAddMobile' &&
             !this.isBudgetTransactionsModal;
 
         if (
-            (this.modalData || this.mobileModalData).mode !== 'edit' &&
-            (this.modalData || this.mobileModalData).mode !==
-                'budgetTransactionsEdit'
+            currentTransactionData.mode !== 'edit' &&
+            currentTransactionData.mode !== 'budgetTransactionsEdit'
         ) {
             const submittedTransaction = this.form.value;
             const newTransaction: NewTransaction = {
@@ -242,8 +242,7 @@ export class TransactionModalComponent implements AfterViewInit, OnInit {
                 amount: submittedTransaction.amount!,
                 lineItemId:
                     (submittedTransaction.lineItem! as LineItemReduced)
-                        .lineItemId ||
-                    (this.modalData || this.mobileModalData).lineItemId!,
+                        .lineItemId || currentTransactionData.lineItemId!,
                 date: submittedTransaction.date!.toISOString(),
                 merchant: submittedTransaction.merchant
                     ? submittedTransaction.merchant
@@ -265,22 +264,22 @@ export class TransactionModalComponent implements AfterViewInit, OnInit {
             );
         } else {
             const submittedTransaction = this.form.value;
+
             const updatedTransaction: Transaction = {
-                transactionId: (this.modalData || this.mobileModalData)
-                    .transaction!.transactionId,
+                transactionId:
+                    currentTransactionData.transaction!.transactionId,
                 title: submittedTransaction.title || '',
-                deleted: (this.modalData || this.mobileModalData).transaction!
-                    .deleted,
+                deleted: currentTransactionData.transaction!.deleted,
                 amount: submittedTransaction.amount!,
                 lineItemId:
                     (submittedTransaction.lineItem! as LineItemReduced)
-                        .lineItemId ||
-                    (this.modalData || this.mobileModalData).lineItemId!,
+                        .lineItemId || currentTransactionData.lineItemId!,
                 date: submittedTransaction.date!.toISOString(),
                 merchant: submittedTransaction.merchant
                     ? submittedTransaction.merchant
                     : null,
                 notes: submittedTransaction.notes || '',
+                userId: currentTransactionData.transaction!.userId!,
                 isIncomeTransaction:
                     submittedTransaction.isIncomeTransaction || false
             };
@@ -290,7 +289,7 @@ export class TransactionModalComponent implements AfterViewInit, OnInit {
             }
             this.transactionService.updateTransaction(
                 updatedTransaction,
-                (this.modalData || this.mobileModalData).transaction
+                (currentTransactionData.transaction as IsolatedTransaction)
                     ?.budgetCategoryName,
                 needsRefresh
             );

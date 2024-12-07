@@ -14,6 +14,7 @@ pub struct Transaction {
     pub line_item_id: Option<String>,
     pub user_id: String,
     pub deleted: bool,
+    pub is_income_transaction: bool,
 }
 
 #[derive(Serialize, Deserialize, FromRow, Debug)]
@@ -41,6 +42,20 @@ pub struct IsolatedTransactionResponse {
     pub date: DateTime<Local>,
     pub line_item_id: String,
     pub budget_category_name: String,
+    pub deleted: bool,
+    pub is_income_transaction: bool,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct TransactionResponse {
+    pub transaction_id: String,
+    pub title: String,
+    pub merchant: Option<String>,
+    pub amount: f64,
+    pub notes: String,
+    pub date: DateTime<Local>,
+    pub line_item_id: String,
     pub deleted: bool,
     pub is_income_transaction: bool,
 }

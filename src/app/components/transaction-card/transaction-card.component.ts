@@ -1,6 +1,6 @@
-import { Component, inject, input, signal } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { IsolatedTransaction } from 'src/app/models/transaction';
+import { IsolatedTransaction, Transaction } from 'src/app/models/transaction';
 import { TransactionService } from 'src/app/services/transaction.service';
 import {
     TransactionModalComponent,
@@ -20,8 +20,18 @@ export class TransactionCardComponent {
     dialog = inject(MatDialog);
     budgetCategoryService = inject(BudgetCategoryService);
 
-    transaction = input.required<IsolatedTransaction>();
+    transaction = input.required<IsolatedTransaction | Transaction>();
     areNotesOpen = signal(false);
+
+    budgetCategoryName = computed(() => {
+        const transaction = this.transaction();
+
+        if ('budgetCategoryName' in transaction) {
+            return transaction.budgetCategoryName;
+        }
+
+        return null;
+    });
 
     toggleNotes() {
         this.areNotesOpen.set(!this.areNotesOpen());

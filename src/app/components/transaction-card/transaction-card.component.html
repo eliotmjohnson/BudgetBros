@@ -66,9 +66,8 @@
         </div>
         <div class="actions-buttons-container">
             <mat-chip [disableRipple]="true">
-                {{ transaction().isIncomeTransaction ? "+" : "-" }}${{
-                    transaction().amount
-                }}
+                {{ transaction().isIncomeTransaction ? "+" : "-" }}
+                {{ transaction().amount | currency }}
             </mat-chip>
             <button
                 mat-icon-button

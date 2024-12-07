@@ -35,6 +35,8 @@ export class TransactionsComponent implements OnInit {
     });
 
     transactions = this.transactionService.transactions.value;
+    untrackedTransactions = this.transactionService.untrackedTransactions.value;
+
     areTransactionsLoading = this.transactionService.transactions.isLoading;
 
     isFilterOpen = signal(false);

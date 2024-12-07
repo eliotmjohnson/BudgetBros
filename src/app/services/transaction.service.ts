@@ -35,11 +35,21 @@ export class TransactionService {
             this.getTransactionsBetweenDates(start, end)
     });
 
+    untrackedTransactions = rxResource({
+        loader: () => this.getUntrackedTransactions()
+    });
+
     getTransactionsBetweenDates(date1: Date, date2: Date) {
         return this.http.get<IsolatedTransaction[]>(
             `
                 ${this.baseUrl}/${this.authService.userId}?start_date=${date1.toISOString()}&end_date=${date2.toISOString()}
             `
+        );
+    }
+
+    getUntrackedTransactions() {
+        return this.http.get<Transaction[]>(
+            `${this.baseUrl}/untracked/${this.authService.userId}`
         );
     }
 

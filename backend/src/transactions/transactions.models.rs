@@ -9,9 +9,9 @@ pub struct Transaction {
     pub title: String,
     pub merchant: Option<String>,
     pub amount: f64,
-    pub notes: String,
+    pub notes: Option<String>,
     pub date: DateTime<Local>,
-    pub line_item_id: String,
+    pub line_item_id: Option<String>,
     pub user_id: String,
     pub deleted: bool,
 }

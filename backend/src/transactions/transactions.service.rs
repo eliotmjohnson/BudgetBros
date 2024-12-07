@@ -22,6 +22,19 @@ pub async fn get_line_item_transactions(state: Data<AppState>, line_item_id: Str
         .await
 }
 
+pub async fn get_untracked_transactions(state: Data<AppState>, user_id: String) -> Result<Vec<Transaction>, sqlx::Error> {
+    let query = 
+        "SELECT * 
+        FROM transactions 
+        WHERE user_id = $1 
+        AND line_item_id IS NULL";
+
+    sqlx::query_as::<_, Transaction>(query)
+        .bind(user_id)   
+        .fetch_all(&state.db)
+        .await
+}
+
 pub async fn get_all_transactions_between_dates(
     state: Data<AppState>,
     user_id: String,

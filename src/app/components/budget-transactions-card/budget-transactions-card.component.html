@@ -2,6 +2,8 @@
     width="100%"
     height="100%"
     padding="0rem"
+    [style.translate]="isFeatureModalOpen ? '-6rem' : '0rem'"
+    [style.transition]="'translate 0.5s cubic-bezier(0.4, 1, 0.4, 1)'"
     [isBudgetTransactionsModal]="isMobileComponent"
 >
     @if (transactionService.currentSelectedLineItem()) {
@@ -11,7 +13,7 @@
                 class="back-button"
             >
                 <mat-icon fontIcon="arrow_back_ios" />
-                Back
+                Budget
             </span>
             <div class="icon-wrapper">
                 <div
@@ -48,6 +50,14 @@
                     </h2>
                 </span>
             </section>
+            <section class="features-section">
+                <InlineFeature
+                    [isFund]="
+                        transactionService.currentSelectedLineItem()?.isFund
+                    "
+                    (click)="openFeatureModal()"
+                />
+            </section>
             <mat-form-field
                 class="note-field"
                 appearance="outline"
@@ -79,7 +89,7 @@
                 track transaction.transactionId
             ) {
                 <InlineTransaction
-                    @deleteItemAnimation
+                    @deleteTransactionAnimation
                     [transactionId]="transaction.transactionId"
                     [title]="transaction.title!"
                     [amount]="transaction.amount"
@@ -87,6 +97,7 @@
                     [date]="transaction.date"
                     [notes]="transaction.notes"
                     [isIncomeTransaction]="transaction.isIncomeTransaction"
+                    (updateViewAnimation)="updateViewAnimation()"
                 />
             }
         </section>
@@ -100,3 +111,25 @@
         </div>
     }
 </Card>
+@if (isFeatureModalOpen) {
+    <div
+        [@dimmerAnimation]="'darkDim'"
+        class="dimmer"
+    ></div>
+    <FeatureModal
+        (sendClose)="closeFeatureModal()"
+        @featureModalAnimation
+    >
+        @switch (featureComponent) {
+            @case (features.FUND) {
+                <InlineFeature
+                    [isFund]="
+                        transactionService.currentSelectedLineItem()?.isFund
+                    "
+                    (closeMobileModal)="closeFeatureModal()"
+                    [isDetailsComponent]="true"
+                />
+            }
+        }
+    </FeatureModal>
+}

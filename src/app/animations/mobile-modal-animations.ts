@@ -27,6 +27,15 @@ export const budgetTransactionModalAnimation = trigger(
     ]
 );
 
+export const featureModalAnimation = trigger('featureModalAnimation', [
+    transition(':leave', [
+        animate(
+            '0.5s cubic-bezier(0.4, 1, 0.4, 1)',
+            style({ translate: '100vw' })
+        )
+    ])
+]);
+
 export const dimmerAnimation = trigger('dimmerAnimation', [
     state('lightDim', style({ opacity: 0.15 })),
     state('darkDim', style({ opacity: 0.5 })),

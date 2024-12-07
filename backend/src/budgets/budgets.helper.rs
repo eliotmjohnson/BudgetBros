@@ -29,6 +29,7 @@ pub fn get_compiled_budget_data(rows: Vec<BudgetRowData>) -> Vec<BudgetCategoryD
                         is_fund: row.is_fund.unwrap_or_default(),
                         starting_balance: row.starting_balance.unwrap_or_default(),
                         planned_amount: row.planned_amount.unwrap_or_default(),
+                        fund_id: row.fund_id.unwrap_or_default(),
                         transactions: Vec::new(),
                     });
 

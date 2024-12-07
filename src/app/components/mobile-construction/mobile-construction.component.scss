@@ -1,4 +1,4 @@
-@import "bb-core";
+@use "bb-core";
 
 :host {
     height: 100%;
@@ -23,7 +23,7 @@
         margin: 0;
         font-style: italic;
         text-align: center;
-        color: $bb-secondary-title-color;
+        color: bb-core.$bb-secondary-title-color;
         padding: 5px;
     }
 

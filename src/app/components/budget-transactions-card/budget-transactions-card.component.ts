@@ -1,31 +1,54 @@
-import { Component, computed, Input } from '@angular/core';
+import {
+    ChangeDetectorRef,
+    Component,
+    computed,
+    Input,
+    ViewChild,
+    ViewContainerRef
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { deleteTransactionAnimation } from 'src/app/animations/mobile-item-animations';
+import {
+    dimmerAnimation,
+    featureModalAnimation
+} from 'src/app/animations/mobile-modal-animations';
+import { Features } from 'src/app/constants/constants';
 import { MobileModalService } from 'src/app/services/mobile-modal.service';
 import { TransactionService } from 'src/app/services/transaction.service';
 import {
     TransactionModalComponent,
     TransactionModalData
 } from '../transaction-modal/transaction-modal.component';
-import { deleteItemAnimation } from 'src/app/animations/mobile-item-animations';
 
 @Component({
     selector: 'BudgetTransactionsCard',
     templateUrl: './budget-transactions-card.component.html',
     styleUrl: './budget-transactions-card.component.scss',
-    animations: [deleteItemAnimation],
+    animations: [
+        deleteTransactionAnimation,
+        featureModalAnimation,
+        dimmerAnimation
+    ],
     host: {
-        '[class.open-budget-transactions-modal]': 'isMobileComponent'
+        '[class.open-budget-transactions-modal]': 'isMobileComponent',
+        '[class.feature-modal-open]': 'isFeatureModalOpen'
     },
     standalone: false
 })
 export class BudgetTransactionsCardComponent {
     @Input() isMobileComponent = false;
+    @ViewChild('featureModal', { read: ViewContainerRef })
+    featureModal!: ViewContainerRef;
+    isFeatureModalOpen = false;
+    featureComponent = Features.FUND;
+    features = Features;
+
     progress = computed(() => {
         return (
             (this.transactionService.currentSelectedLineItem()!
                 .remainingAmount /
-                this.transactionService.currentSelectedLineItem()!
-                    .plannedAmount) *
+                (this.transactionService.currentSelectedLineItem()!
+                    .plannedAmount || 0.01)) *
                 100 || 0
         );
     });
@@ -43,8 +66,9 @@ export class BudgetTransactionsCardComponent {
 
     constructor(
         public transactionService: TransactionService,
-        private mobileModalService: MobileModalService,
-        private dialogService: MatDialog
+        public mobileModalService: MobileModalService,
+        private dialogService: MatDialog,
+        public cdr: ChangeDetectorRef
     ) {}
 
     closeBudgetTransactionsModal() {
@@ -64,5 +88,21 @@ export class BudgetTransactionsCardComponent {
                         ?.lineItemId
             }
         });
+    }
+
+    openFeatureModal() {
+        if (this.mobileModalService.isMobileDevice()) {
+            this.isFeatureModalOpen = true;
+            this.mobileModalService.isFeatureModalOpen.set(true);
+        }
+    }
+
+    closeFeatureModal() {
+        this.isFeatureModalOpen = false;
+        this.mobileModalService.isFeatureModalOpen.set(false);
+    }
+
+    updateViewAnimation() {
+        this.cdr.detectChanges();
     }
 }

@@ -41,8 +41,9 @@
             >
                 <mat-calendar
                     #calendarSelector
+                    [selected]="selectedDate()"
                     (monthSelected)="getNewBudget($event)"
-                    startView="multi-year"
+                    startView="year"
                 ></mat-calendar>
             </Card>
             <main class="calendar-selector-overlay"></main>

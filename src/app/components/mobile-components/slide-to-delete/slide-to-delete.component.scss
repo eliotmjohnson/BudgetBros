@@ -1,4 +1,4 @@
-@import "bb-core";
+@use "bb-core";
 
 :host {
     display: flex;
@@ -12,7 +12,7 @@
 }
 
 .slide-to-delete-button {
-    background-color: $bb-error-main;
+    background-color: bb-core.$bb-error-main;
     display: none;
     align-items: center;
     min-width: 200%;

@@ -1,0 +1,25 @@
+<mat-drawer-container
+    class="custom-drawer-container"
+    [hasBackdrop]="true"
+>
+    <!-- Drawer -->
+    <mat-drawer
+        #drawer
+        mode="over"
+        [opened]="isOpen()"
+        [position]="position() === 'right' ? 'end' : 'start'"
+        class="custom-drawer"
+    >
+        <div class="drawer-content">
+            <!-- Add your content here -->
+            <h2>Drawer Content</h2>
+            <p>This drawer covers the full height of the browser window.</p>
+            <button
+                mat-button
+                (click)="drawer.close()"
+            >
+                Close Drawer
+            </button>
+        </div>
+    </mat-drawer>
+</mat-drawer-container>

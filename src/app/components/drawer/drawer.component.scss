@@ -1,0 +1,27 @@
+/* Ensures the drawer covers the entire browser window */
+.custom-drawer-container {
+    position: fixed; /* Fix the container to the viewport */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh; /* Full height of the viewport */
+    z-index: 1000; /* Ensure it is above other content */
+    background: transparent; /* Avoid extra background interfering */
+}
+
+/* Drawer styles */
+.custom-drawer {
+    width: 300px; /* Adjust the drawer width as needed */
+    height: 100%; /* Full height of the viewport */
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3); /* Optional shadow */
+}
+
+/* Drawer content padding */
+.drawer-content {
+    padding: 16px;
+}
+
+/* Main page content styles */
+.main-content {
+    padding: 16px;
+}

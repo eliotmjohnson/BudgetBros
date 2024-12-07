@@ -9,7 +9,7 @@ import {
 } from '../models/transaction';
 import { AuthService } from './auth.service';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { getTodayMidnight } from '../utils/timeUtils';
+import { of } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -23,16 +23,21 @@ export class TransactionService {
     currentSelectedLineItem = signal<SelectedLineItem | null>(null);
     newlyCreatedTransactionId = signal<string | null>(null);
 
-    selectedStartDate = signal<Date>(getTodayMidnight());
-    selectedEndDate = signal<Date>(getTodayMidnight());
+    selectedStartDate = signal<Date | null>(null);
+    selectedEndDate = signal<Date | null>(null);
 
     transactions = rxResource({
         request: () => ({
             start: this.selectedStartDate(),
             end: this.selectedEndDate()
         }),
-        loader: ({ request: { start, end } }) =>
-            this.getTransactionsBetweenDates(start, end)
+        loader: ({ request: { start, end } }) => {
+            if (start && end) {
+                return this.getTransactionsBetweenDates(start, end);
+            }
+
+            return of([]);
+        }
     });
 
     getTransactionsBetweenDates(date1: Date, date2: Date) {

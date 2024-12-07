@@ -40,6 +40,7 @@ export class TransactionsComponent implements OnInit {
     transactions = this.transactionService.transactions.value;
 
     untrackedTransactions = rxResource({
+        request: () => this.isUntrackedTransactionsSidebarOpen() || undefined,
         loader: () => this.transactionService.getUntrackedTransactions()
     });
 
@@ -92,6 +93,8 @@ export class TransactionsComponent implements OnInit {
         this.filterFields().some((filter) => filter.value)
     );
 
+    isUntrackedTransactionsSidebarOpen = signal<boolean>(false);
+
     constructor() {
         effect(() => {
             if (!this.transactions()?.length) return;
@@ -107,7 +110,8 @@ export class TransactionsComponent implements OnInit {
     ngOnInit(): void {
         const today = getTodayMidnight();
 
-        this.transactionService.getTransactionsBetweenDates(today, today);
+        this.transactionService.selectedStartDate.set(today);
+        this.transactionService.selectedEndDate.set(today);
     }
 
     checkIfValidKey(e: KeyboardEvent) {
@@ -164,6 +168,6 @@ export class TransactionsComponent implements OnInit {
     }
 
     viewUntracked() {
-        this.filteredTransactions.set(this.untrackedTransactions.value());
+        this.isUntrackedTransactionsSidebarOpen.update((prev) => !prev);
     }
 }

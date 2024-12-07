@@ -224,16 +224,11 @@ export class TransactionModalComponent implements AfterViewInit, OnInit {
     }
 
     submitForm() {
-        console.log('submit');
-
         if (this.form.invalid) return;
         const needsRefresh =
             (this.modalData || this.mobileModalData).mode !==
                 'budgetTransactionsAddMobile' &&
             !this.isBudgetTransactionsModal;
-
-        console.log(this.modalData);
-        console.log(this.isBudgetTransactionsModal);
 
         if (
             (this.modalData || this.mobileModalData).mode !== 'edit' &&
@@ -326,8 +321,6 @@ export class TransactionModalComponent implements AfterViewInit, OnInit {
     updateEagerTransactionId(newTransaction: NewTransaction) {
         const newlyCreatedTransactionId =
             this.transactionService.newlyCreatedTransactionId();
-
-        console.log({ newlyCreatedTransactionId });
 
         const newEagerTransaction = this.lineItemService
             .fetchLineItem(newTransaction.lineItemId)

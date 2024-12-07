@@ -338,9 +338,7 @@ export class TransactionModalComponent implements AfterViewInit, OnInit {
         if (foundLineItem) {
             foundLineItem.transactions = foundLineItem.transactions.map((t) =>
                 t.transactionId === transaction.transactionId
-                    ? {
-                          ...transaction
-                      }
+                    ? { ...transaction }
                     : t
             );
         }

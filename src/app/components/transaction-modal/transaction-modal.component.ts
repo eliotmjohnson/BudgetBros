@@ -279,7 +279,7 @@ export class TransactionModalComponent implements AfterViewInit, OnInit {
                     ? submittedTransaction.merchant
                     : null,
                 notes: submittedTransaction.notes || '',
-                userId: currentTransactionData.transaction!.userId!,
+                userId: currentTransactionData.transaction!.userId,
                 isIncomeTransaction:
                     submittedTransaction.isIncomeTransaction || false
             };

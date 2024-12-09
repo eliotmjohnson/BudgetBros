@@ -228,7 +228,7 @@ export class TransactionModalComponent implements AfterViewInit, OnInit {
             currentTransactionData.mode !== 'budgetTransactionsAddMobile' &&
             !this.isBudgetTransactionsModal;
 
-        const isUntracked = !currentTransactionData.lineItemId;
+        const isUntracked = !currentTransactionData.transaction?.lineItemId;
 
         if (
             currentTransactionData.mode !== 'edit' &&

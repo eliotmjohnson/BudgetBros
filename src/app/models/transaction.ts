@@ -5,7 +5,7 @@ export interface Transaction {
     amount: number;
     notes: string;
     date: string;
-    lineItemId: string;
+    lineItemId?: string | null;
     userId: string;
     deleted: boolean;
     isIncomeTransaction: boolean;
@@ -14,7 +14,7 @@ export interface Transaction {
 export type NewTransaction = Omit<
     Transaction,
     'transactionId' | 'lineItemId'
-> & { lineItemId: string };
+> & { lineItemId?: string | null };
 
 export type IsolatedTransaction = Transaction & {
     budgetCategoryName: string;

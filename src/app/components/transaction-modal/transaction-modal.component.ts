@@ -98,16 +98,13 @@ export class TransactionModalComponent implements AfterViewInit, OnInit {
                 [Validators.required]
             ),
             amount: new FormControl<number | undefined>(undefined),
-            lineItem: new FormControl<LineItemReduced | null | string>(
-                {
-                    value:
-                        this.preSelectedLineItem() ||
-                        (this.modalData || this.mobileModalData).lineItemId ||
-                        null,
-                    disabled: !this.dropdownCategories().length
-                },
-                [Validators.required]
-            ),
+            lineItem: new FormControl<LineItemReduced | null | string>({
+                value:
+                    this.preSelectedLineItem() ||
+                    (this.modalData || this.mobileModalData).lineItemId ||
+                    null,
+                disabled: !this.dropdownCategories().length
+            }),
             date: new FormControl<Date | null>(
                 (this.modalData || this.mobileModalData).transaction?.date
                     ? new Date(
@@ -213,9 +210,9 @@ export class TransactionModalComponent implements AfterViewInit, OnInit {
         addValueToCurrencyInput(e, this.form);
     }
 
-    closeModal() {
+    closeModal(transactionId?: string) {
         if (this.dialogRef) {
-            this.dialogRef.close();
+            this.dialogRef.close(transactionId);
         } else {
             this.mobileService.isAddTransactionModalOpen.set(false);
         }
@@ -231,6 +228,8 @@ export class TransactionModalComponent implements AfterViewInit, OnInit {
             currentTransactionData.mode !== 'budgetTransactionsAddMobile' &&
             !this.isBudgetTransactionsModal;
 
+        const isUntracked = !currentTransactionData.lineItemId;
+
         if (
             currentTransactionData.mode !== 'edit' &&
             currentTransactionData.mode !== 'budgetTransactionsEdit'
@@ -241,8 +240,10 @@ export class TransactionModalComponent implements AfterViewInit, OnInit {
                 title: submittedTransaction.title || '',
                 amount: submittedTransaction.amount!,
                 lineItemId:
-                    (submittedTransaction.lineItem! as LineItemReduced)
-                        .lineItemId || currentTransactionData.lineItemId!,
+                    (submittedTransaction.lineItem as LineItemReduced)
+                        ?.lineItemId ||
+                    currentTransactionData.lineItemId! ||
+                    null,
                 date: submittedTransaction.date!.toISOString(),
                 merchant: submittedTransaction.merchant
                     ? submittedTransaction.merchant
@@ -273,7 +274,9 @@ export class TransactionModalComponent implements AfterViewInit, OnInit {
                 amount: submittedTransaction.amount!,
                 lineItemId:
                     (submittedTransaction.lineItem! as LineItemReduced)
-                        .lineItemId || currentTransactionData.lineItemId!,
+                        ?.lineItemId ||
+                    currentTransactionData.lineItemId! ||
+                    null,
                 date: submittedTransaction.date!.toISOString(),
                 merchant: submittedTransaction.merchant
                     ? submittedTransaction.merchant
@@ -287,6 +290,7 @@ export class TransactionModalComponent implements AfterViewInit, OnInit {
             if (!needsRefresh) {
                 this.eagerUpdateTransaction(updatedTransaction);
             }
+
             this.transactionService.updateTransaction(
                 updatedTransaction,
                 (currentTransactionData.transaction as IsolatedTransaction)
@@ -294,7 +298,11 @@ export class TransactionModalComponent implements AfterViewInit, OnInit {
                 needsRefresh
             );
         }
-        this.closeModal();
+        this.closeModal(
+            isUntracked
+                ? currentTransactionData.transaction?.transactionId
+                : undefined
+        );
     }
 
     setIsIncomeSelectedValue(isIncomeTransaction: boolean) {
@@ -305,15 +313,15 @@ export class TransactionModalComponent implements AfterViewInit, OnInit {
     }
 
     eagerAddTransaction(transaction: NewTransaction) {
-        const foundLineItem = this.lineItemService.fetchLineItem(
-            transaction.lineItemId
-        );
+        const foundLineItem =
+            transaction.lineItemId &&
+            this.lineItemService.fetchLineItem(transaction.lineItemId);
 
         if (foundLineItem) {
             foundLineItem.transactions = [
                 ...foundLineItem.transactions,
                 { ...transaction, transactionId: '' }
-            ];
+            ] as Transaction[];
         }
     }
 
@@ -321,9 +329,11 @@ export class TransactionModalComponent implements AfterViewInit, OnInit {
         const newlyCreatedTransactionId =
             this.transactionService.newlyCreatedTransactionId();
 
-        const newEagerTransaction = this.lineItemService
-            .fetchLineItem(newTransaction.lineItemId)
-            ?.transactions.find((trx) => !trx.transactionId);
+        const newEagerTransaction =
+            newTransaction.lineItemId &&
+            this.lineItemService
+                .fetchLineItem(newTransaction.lineItemId)
+                ?.transactions.find((trx) => !trx.transactionId);
 
         if (newEagerTransaction && newlyCreatedTransactionId) {
             newEagerTransaction.transactionId = newlyCreatedTransactionId;
@@ -331,9 +341,9 @@ export class TransactionModalComponent implements AfterViewInit, OnInit {
     }
 
     eagerUpdateTransaction(transaction: Transaction) {
-        const foundLineItem = this.lineItemService.fetchLineItem(
-            transaction.lineItemId
-        );
+        const foundLineItem =
+            transaction.lineItemId &&
+            this.lineItemService.fetchLineItem(transaction.lineItemId);
 
         if (foundLineItem) {
             foundLineItem.transactions = foundLineItem.transactions.map((t) =>

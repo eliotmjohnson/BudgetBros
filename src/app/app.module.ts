@@ -66,7 +66,6 @@ import { LoginComponent } from './pages/login/login.component';
 import { SortByDatePipe } from './pipes/sort-by-date.pipe';
 import { InlineFeatureComponent } from './components/inline-feature/inline-feature.component';
 import { FeatureModalComponent } from './components/mobile-components/feature-modal/feature-modal.component';
-import { DrawerComponent } from './components/drawer/drawer.component';
 
 @NgModule({
     declarations: [
@@ -103,8 +102,7 @@ import { DrawerComponent } from './components/drawer/drawer.component';
         BudgetCalculatorComponent,
         IncomeExpenseSelectorComponent,
         InlineFeatureComponent,
-        FeatureModalComponent,
-        DrawerComponent
+        FeatureModalComponent
     ],
     bootstrap: [AppComponent],
     imports: [

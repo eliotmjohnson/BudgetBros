@@ -7,7 +7,6 @@ import {
     linkedSignal,
     signal
 } from '@angular/core';
-import { rxResource } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import {
@@ -38,14 +37,11 @@ export class TransactionsComponent implements OnInit {
     });
 
     transactions = this.transactionService.transactions.value;
-
-    untrackedTransactions = rxResource({
-        request: () => this.isUntrackedTransactionsSidebarOpen() || undefined,
-        loader: () => this.transactionService.getUntrackedTransactions()
-    });
+    untrackedTransactions = this.transactionService.untrackedTransactions.value;
 
     areTransactionsLoading = this.transactionService.transactions.isLoading;
 
+    areUntrackedTransactionsBeingViewed = signal(false);
     isFilterOpen = signal(false);
     filterFields = signal([
         {
@@ -65,7 +61,10 @@ export class TransactionsComponent implements OnInit {
     filteredTransactions = linkedSignal<
         IsolatedTransaction[] | Transaction[] | undefined
     >(() => {
-        const transactions = this.transactions();
+        const untrackedTransactions = this.untrackedTransactions();
+        const transactions = this.areUntrackedTransactionsBeingViewed()
+            ? untrackedTransactions
+            : this.transactions();
         const [titleField, amountField, merchantField] = this.filterFields();
 
         return transactions?.filter((transaction) => {
@@ -92,8 +91,6 @@ export class TransactionsComponent implements OnInit {
     filtersHaveValue = computed(() =>
         this.filterFields().some((filter) => filter.value)
     );
-
-    isUntrackedTransactionsSidebarOpen = signal<boolean>(false);
 
     constructor() {
         effect(() => {
@@ -167,7 +164,7 @@ export class TransactionsComponent implements OnInit {
         this.isFilterOpen.set(!this.isFilterOpen());
     }
 
-    viewUntracked() {
-        this.isUntrackedTransactionsSidebarOpen.update((prev) => !prev);
+    toggleUntracked() {
+        this.areUntrackedTransactionsBeingViewed.update((prev) => !prev);
     }
 }

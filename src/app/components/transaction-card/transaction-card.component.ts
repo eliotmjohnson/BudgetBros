@@ -50,14 +50,22 @@ export class TransactionCardComponent {
             year
         );
 
-        this.dialog.open<TransactionModalComponent, TransactionModalData>(
+        const dialogRef = this.dialog.open<
             TransactionModalComponent,
-            {
-                data: {
-                    mode: 'edit',
-                    transaction: this.transaction()
-                }
+            TransactionModalData
+        >(TransactionModalComponent, {
+            data: {
+                mode: 'edit',
+                transaction: this.transaction()
             }
-        );
+        });
+
+        dialogRef
+            .afterClosed()
+            .subscribe((result?: Transaction['transactionId']) => {
+                if (result) {
+                    this.transactionService.untrackedTransactions.reload();
+                }
+            });
     }
 }

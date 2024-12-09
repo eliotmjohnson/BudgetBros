@@ -83,7 +83,7 @@ pub struct UpdatedTransaction {
     pub amount: f64,
     pub notes: String,
     pub date: DateTime<Local>,
-    pub line_item_id: String,
+    pub line_item_id: Option<String>,
     pub deleted: bool,
     pub is_income_transaction: bool,
 }

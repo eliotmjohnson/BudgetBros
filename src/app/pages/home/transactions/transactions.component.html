@@ -25,7 +25,8 @@
                 <button
                     mat-icon-button
                     matTooltip="View untracked transactions"
-                    (click)="viewUntracked()"
+                    [disabled]="!untrackedTransactions()?.length"
+                    (click)="toggleUntracked()"
                 >
                     <mat-icon
                         fontIcon="receipt"
@@ -114,5 +115,4 @@
             }
         }
     </div>
-    <Drawer [isOpen]="isUntrackedTransactionsSidebarOpen()" />
 </div>

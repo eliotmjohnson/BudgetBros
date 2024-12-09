@@ -40,6 +40,10 @@ export class TransactionService {
         }
     });
 
+    untrackedTransactions = rxResource({
+        loader: () => this.getUntrackedTransactions()
+    });
+
     getTransactionsBetweenDates(date1: Date, date2: Date) {
         return this.http.get<IsolatedTransaction[]>(
             `

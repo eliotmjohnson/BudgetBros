@@ -6,6 +6,7 @@ use crate::AppState;
 
 use super::transactions_models::{IsolatedTransaction, NewTransaction, Transaction, UpdatedTransaction};
 
+
 pub async fn get_line_item_transactions(state: Data<AppState>, line_item_id: String) -> Result<Vec<Transaction>, sqlx::Error> {
     let query = 
         "SELECT * 
@@ -17,6 +18,19 @@ pub async fn get_line_item_transactions(state: Data<AppState>, line_item_id: Str
 
     sqlx::query_as::<_, Transaction>(query)
         .bind(line_item_id)   
+        .fetch_all(&state.db)
+        .await
+}
+
+pub async fn get_untracked_transactions(state: Data<AppState>, user_id: String) -> Result<Vec<Transaction>, sqlx::Error> {
+    let query = 
+        "SELECT * 
+        FROM transactions 
+        WHERE user_id = $1 
+        AND line_item_id IS NULL";
+
+    sqlx::query_as::<_, Transaction>(query)
+        .bind(user_id)   
         .fetch_all(&state.db)
         .await
 }

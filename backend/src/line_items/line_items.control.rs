@@ -26,7 +26,8 @@ pub async fn add_line_item_handler(
     let mut line_item_order = new_line_item.line_item_order.clone();
 
     let add_line_item_result = add_line_item(state.clone(), new_line_item.clone()).await;
-    if let Err(_) = add_line_item_result {
+
+    if add_line_item_result.is_err() {
         return HttpResponse::InternalServerError().body("Failed to add new line item");
     }
 
@@ -39,7 +40,8 @@ pub async fn add_line_item_handler(
         new_line_item.budget_category_id.clone(),
     )
     .await;
-    if let Err(_) = update_line_item_order_result {
+
+    if update_line_item_order_result.is_err() {
         return HttpResponse::InternalServerError().body("Failed to update line item order");
     }
 
@@ -73,7 +75,8 @@ pub async fn delete_line_item_handler(
     let budget_category_id = body.budget_category_id.clone();
 
     let delete_line_item_result = delete_line_item(state.clone(), line_item_id.clone()).await;
-    if let Err(_) = delete_line_item_result {
+
+    if delete_line_item_result.is_err() {
         return HttpResponse::InternalServerError().body("Failed to delete line item");
     }
 
@@ -81,7 +84,8 @@ pub async fn delete_line_item_handler(
 
     let update_line_item_order_result =
         update_line_item_order(state.clone(), line_item_order, budget_category_id).await;
-    if let Err(_) = update_line_item_order_result {
+
+    if update_line_item_order_result.is_err() {
         return HttpResponse::InternalServerError().body("Failed to update line item order");
     }
 

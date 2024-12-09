@@ -29,7 +29,7 @@
         </button>
     </mat-card-header>
     <mat-card-content>
-        {{ transaction().budgetCategoryName }}
+        {{ budgetCategoryName() }}
     </mat-card-content>
     <div class="actions-wrapper">
         <div class="date-wrapper">
@@ -66,9 +66,8 @@
         </div>
         <div class="actions-buttons-container">
             <mat-chip [disableRipple]="true">
-                {{ transaction().isIncomeTransaction ? "+" : "-" }}${{
-                    transaction().amount
-                }}
+                {{ transaction().isIncomeTransaction ? "+" : "-" }}
+                {{ transaction().amount | currency }}
             </mat-chip>
             <button
                 mat-icon-button

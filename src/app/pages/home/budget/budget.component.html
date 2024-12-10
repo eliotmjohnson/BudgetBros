@@ -41,6 +41,7 @@
             >
                 <mat-calendar
                     #calendarSelector
+                    [startAt]="selectedDate()"
                     [selected]="selectedDate()"
                     (monthSelected)="getNewBudget($event)"
                     startView="year"
@@ -105,7 +106,7 @@
                     } @else {
                         <p>Get Started</p>
                         <mat-icon
-                            (click)="createNewBudgetCategoryPlaceholder()"
+                            (click)="openBudgetStarterModal()"
                             class="add-button"
                             fontIcon="add_circle"
                         />
@@ -158,3 +159,10 @@
     </div>
     <BudgetTransactionsCard />
 </section>
+@if (isOpeningKeyboard()) {
+    <input
+        #phantomInput
+        class="phantom-input"
+        type="text"
+    />
+}

@@ -24,10 +24,20 @@ pub struct UpdatedLineItem {
 pub struct NewLineItem {
     pub name: String,
     pub is_fund: bool,
+    pub fund_id: Option<String>,
     pub planned_amount: f64,
     pub starting_balance: f64,
     pub budget_category_id: String,
     pub line_item_order: Vec<String>,
+}
+
+pub struct CopyLineItem {
+    pub name: String,
+    pub is_fund: bool,
+    pub fund_id: Option<String>,
+    pub planned_amount: f64,
+    pub starting_balance: f64,
+    pub budget_category_id: String,
 }
 
 #[derive(Serialize, Deserialize, FromRow, Debug, Clone)]

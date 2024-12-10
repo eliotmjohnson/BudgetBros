@@ -69,10 +69,11 @@ export class IncomeDrawerComponent implements AfterViewInit {
         });
     }
 
-    openDrawer() {
+    openDrawer(needsRefresh = true) {
         this.slideTranslate = null;
+
         if (!this.isDrawerOpen) {
-            this.form.markAsPristine();
+            if (needsRefresh) this.setBudgetInputValues();
             this.closeListener = this.renderer.listen(
                 'document',
                 'mousedown',
@@ -90,7 +91,6 @@ export class IncomeDrawerComponent implements AfterViewInit {
             );
         } else {
             this.closeListener();
-            this.setBudgetInputValues();
         }
 
         this.isDrawerOpen = !this.isDrawerOpen;
@@ -139,10 +139,13 @@ export class IncomeDrawerComponent implements AfterViewInit {
                 currentBudget?.additionalIncomeAmount ?? 0
             )
         });
+        this.form.markAsPristine();
+        this.form.controls.paycheck.setErrors(null);
     }
 
     setUpDrawerSlide(e: TouchEvent) {
         e.preventDefault();
+        if (!this.isDrawerOpen) this.setBudgetInputValues();
 
         const startingYPos = e.touches[0].clientY;
         const hostHeight = this.elementRef.nativeElement.clientHeight;
@@ -183,7 +186,7 @@ export class IncomeDrawerComponent implements AfterViewInit {
                     }
 
                     this.cleanUpListeners();
-                    this.openDrawer();
+                    this.openDrawer(false);
                 }
             );
         }

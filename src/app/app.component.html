@@ -29,3 +29,6 @@
         [isMobileComponent]="true"
     />
 }
+@if (mobileModalService.isMobileBudgetStarterModalOpen()) {
+    <BudgetStarter @addTransactionModalAnimation />
+}

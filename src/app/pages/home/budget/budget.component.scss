@@ -270,6 +270,13 @@
     }
 }
 
+.phantom-input {
+    position: fixed;
+    top: 0;
+    left: 0;
+    opacity: 0;
+}
+
 ::ng-deep {
     .calendar-selector {
         .mat-calendar-body-today:not(.mat-calendar-body-selected):not(

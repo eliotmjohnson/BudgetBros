@@ -13,6 +13,7 @@ import {
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { take } from 'rxjs';
 import { BudgetCategoryWithLineItems } from 'src/app/models/budgetCategory';
 import { LineItemReduced } from 'src/app/models/lineItem';
 import {
@@ -319,15 +320,17 @@ export class TransactionModalComponent implements AfterViewInit, OnInit {
     }
 
     updateEagerTransactionId(newTransaction: NewTransaction) {
-        this.transactionService.newlyCreatedTransactionId.subscribe((id) => {
-            const newEagerTransaction = this.lineItemService
-                .fetchLineItem(newTransaction.lineItemId)
-                ?.transactions.find((trx) => !trx.transactionId);
+        this.transactionService.newlyCreatedTransactionId
+            .pipe(take(1))
+            .subscribe((id) => {
+                const newEagerTransaction = this.lineItemService
+                    .fetchLineItem(newTransaction.lineItemId)
+                    ?.transactions.find((trx) => !trx.transactionId);
 
-            if (newEagerTransaction) {
-                newEagerTransaction.transactionId = id;
-            }
-        });
+                if (newEagerTransaction) {
+                    newEagerTransaction.transactionId = id;
+                }
+            });
     }
 
     eagerUpdateTransaction(transaction: Transaction) {

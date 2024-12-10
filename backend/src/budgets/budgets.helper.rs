@@ -29,7 +29,7 @@ pub fn get_compiled_budget_data(rows: Vec<BudgetRowData>) -> Vec<BudgetCategoryD
                         is_fund: row.is_fund.unwrap_or_default(),
                         starting_balance: row.starting_balance.unwrap_or_default(),
                         planned_amount: row.planned_amount.unwrap_or_default(),
-                        fund_id: row.fund_id.unwrap_or_default(),
+                        fund_id: row.fund_id,
                         transactions: Vec::new(),
                     });
 
@@ -57,4 +57,41 @@ pub fn get_compiled_budget_data(rows: Vec<BudgetRowData>) -> Vec<BudgetCategoryD
             line_items: category.budget_line_items.into_values().collect(),
         })
         .collect()
+}
+
+pub fn sort_by_category_order(
+    compiled_budget_data: &mut Vec<BudgetCategoryDataConverted>,
+    category_order: &[String],
+) {
+    compiled_budget_data.sort_by(|a, b| {
+        let index_a = category_order
+            .iter()
+            .position(|id| id == &a.budget_category_id)
+            .unwrap_or(usize::MAX);
+        let index_b = category_order
+            .iter()
+            .position(|id| id == &b.budget_category_id)
+            .unwrap_or(usize::MAX);
+        index_a.cmp(&index_b)
+    });
+}
+
+pub fn sort_by_line_item_order(
+    current_line_items: &mut Vec<LineItemData>,
+    line_item_order: Option<Vec<String>>,
+) {
+    let li_order = line_item_order.unwrap_or_default();
+
+    current_line_items.sort_by(|a, b| {
+        let index_a = li_order
+            .iter()
+            .position(|id| id == &a.line_item_id)
+            .unwrap_or(usize::MAX);
+        let index_b = li_order
+            .iter()
+            .position(|id| id == &b.line_item_id)
+            .unwrap_or(usize::MAX);
+
+        index_a.cmp(&index_b)
+    });
 }

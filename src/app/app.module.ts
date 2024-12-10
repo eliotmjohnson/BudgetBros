@@ -65,6 +65,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { SortByDatePipe } from './pipes/sort-by-date.pipe';
 import { InlineFeatureComponent } from './components/inline-feature/inline-feature.component';
 import { FeatureModalComponent } from './components/mobile-components/feature-modal/feature-modal.component';
+import { BudgetStarterComponent } from './components/budget-starter/budget-starter.component';
 
 @NgModule({
     declarations: [
@@ -101,7 +102,8 @@ import { FeatureModalComponent } from './components/mobile-components/feature-mo
         BudgetCalculatorComponent,
         IncomeExpenseSelectorComponent,
         InlineFeatureComponent,
-        FeatureModalComponent
+        FeatureModalComponent,
+        BudgetStarterComponent
     ],
     bootstrap: [AppComponent],
     imports: [

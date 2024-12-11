@@ -68,7 +68,7 @@ export class LineItemService {
 
     fetchLineItem(lineItemId: string): LineItem | undefined {
         if (
-            !this.fetchedLineItem ||
+            !this.fetchedLineItem() ||
             this.fetchedLineItem()?.lineItemId !== lineItemId
         ) {
             this.budgetService

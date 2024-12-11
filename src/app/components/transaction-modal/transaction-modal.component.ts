@@ -326,18 +326,17 @@ export class TransactionModalComponent implements AfterViewInit, OnInit {
     }
 
     updateEagerTransactionId(newTransaction: NewTransaction) {
-        const newlyCreatedTransactionId =
-            this.transactionService.newlyCreatedTransactionId();
+        this.transactionService.newlyCreatedTransactionId.subscribe((id) => {
+            const newEagerTransaction =
+                newTransaction.lineItemId &&
+                this.lineItemService
+                    .fetchLineItem(newTransaction.lineItemId)
+                    ?.transactions.find((trx) => !trx.transactionId);
 
-        const newEagerTransaction =
-            newTransaction.lineItemId &&
-            this.lineItemService
-                .fetchLineItem(newTransaction.lineItemId)
-                ?.transactions.find((trx) => !trx.transactionId);
-
-        if (newEagerTransaction && newlyCreatedTransactionId) {
-            newEagerTransaction.transactionId = newlyCreatedTransactionId;
-        }
+            if (newEagerTransaction) {
+                newEagerTransaction.transactionId = id;
+            }
+        });
     }
 
     eagerUpdateTransaction(transaction: Transaction) {

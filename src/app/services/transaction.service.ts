@@ -9,7 +9,7 @@ import {
 } from '../models/transaction';
 import { AuthService } from './auth.service';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -21,7 +21,7 @@ export class TransactionService {
     authService = inject(AuthService);
 
     currentSelectedLineItem = signal<SelectedLineItem | null>(null);
-    newlyCreatedTransactionId = signal<string | null>(null);
+    newlyCreatedTransactionId = new Subject<string>();
 
     selectedStartDate = signal<Date | null>(null);
     selectedEndDate = signal<Date | null>(null);
@@ -86,7 +86,7 @@ export class TransactionService {
                             new Date(transaction.date)
                         );
                     } else {
-                        this.newlyCreatedTransactionId.set(
+                        this.newlyCreatedTransactionId.next(
                             transaction.transactionId
                         );
                     }

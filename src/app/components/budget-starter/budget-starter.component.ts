@@ -16,7 +16,6 @@ export class BudgetStarterComponent implements OnInit {
 
     ngOnInit(): void {
         this.determineBudgetCopyEligibility();
-        this.mobileService.budgetCopyOption.set('');
     }
 
     emitOption(option: string) {

@@ -9,11 +9,12 @@ pub struct Transaction {
     pub title: String,
     pub merchant: Option<String>,
     pub amount: f64,
-    pub notes: String,
+    pub notes: Option<String>,
     pub date: DateTime<Local>,
-    pub line_item_id: String,
+    pub line_item_id: Option<String>,
     pub user_id: String,
     pub deleted: bool,
+    pub is_income_transaction: bool,
 }
 
 #[derive(Serialize, Deserialize, FromRow, Debug)]
@@ -45,6 +46,20 @@ pub struct IsolatedTransactionResponse {
     pub is_income_transaction: bool,
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct TransactionResponse {
+    pub transaction_id: String,
+    pub title: String,
+    pub merchant: Option<String>,
+    pub amount: f64,
+    pub notes: String,
+    pub date: DateTime<Local>,
+    pub line_item_id: String,
+    pub deleted: bool,
+    pub is_income_transaction: bool,
+}
+
 #[derive(Serialize, Deserialize, FromRow, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct NewTransaction {
@@ -68,7 +83,7 @@ pub struct UpdatedTransaction {
     pub amount: f64,
     pub notes: String,
     pub date: DateTime<Local>,
-    pub line_item_id: String,
+    pub line_item_id: Option<String>,
     pub deleted: bool,
     pub is_income_transaction: bool,
 }

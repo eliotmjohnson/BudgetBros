@@ -8,15 +8,49 @@ use serde::Deserialize;
 
 use crate::{
     transactions::transactions_models::{
-        IsolatedTransactionResponse, NewTransaction, UpdatedTransaction,
+        IsolatedTransactionResponse, NewTransaction, TransactionResponse, UpdatedTransaction,
     },
     AppState,
 };
 
 use super::transactions_services::{
     add_transaction, delete_transaction, get_all_transactions_between_dates,
-    get_line_item_transactions, soft_delete_transaction, update_transaction,
+    get_line_item_transactions, get_untracked_transactions, soft_delete_transaction,
+    update_transaction,
 };
+
+#[get("/untracked/{user_id}")]
+pub async fn get_untracked_transactions_handler(
+    state: Data<AppState>,
+    params: Path<String>,
+) -> impl Responder {
+    let user_id = params.into_inner();
+    let transactions_result = get_untracked_transactions(state, user_id).await;
+
+    match transactions_result {
+        Ok(transactions) => {
+            let transactions_response: Vec<TransactionResponse> = transactions
+                .into_iter()
+                .map(|transaction| TransactionResponse {
+                    line_item_id: transaction.line_item_id.unwrap_or_default(),
+                    transaction_id: transaction.id,
+                    title: transaction.title,
+                    amount: transaction.amount,
+                    notes: transaction.notes.unwrap_or_default(),
+                    date: transaction.date,
+                    merchant: transaction.merchant,
+                    deleted: transaction.deleted,
+                    is_income_transaction: transaction.is_income_transaction,
+                })
+                .collect();
+            HttpResponse::Ok().json(transactions_response)
+        }
+        Err(e) => {
+            println!("{}", e);
+            HttpResponse::InternalServerError().body(e.to_string())
+        }
+    }
+}
 
 #[get("/{line_item_id}")]
 pub async fn get_all_line_item_transactions_handler(

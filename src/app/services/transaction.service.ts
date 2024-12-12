@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
-import { Subject } from 'rxjs';
 import { BE_API_URL } from '../constants/constants';
 import { SelectedLineItem } from '../models/lineItem';
 import {
@@ -10,29 +9,39 @@ import {
 } from '../models/transaction';
 import { AuthService } from './auth.service';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { getTodayMidnight } from '../utils/timeUtils';
+import { of, Subject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
 export class TransactionService {
+    baseUrl = `${BE_API_URL}/transactions`;
+
     http = inject(HttpClient);
     authService = inject(AuthService);
-    baseUrl = `${BE_API_URL}/transactions`;
 
     currentSelectedLineItem = signal<SelectedLineItem | null>(null);
     newlyCreatedTransactionId = new Subject<string>();
 
-    transactionsDate1 = signal<Date>(getTodayMidnight());
-    transactionsDate2 = signal<Date>(getTodayMidnight());
+    selectedStartDate = signal<Date | null>(null);
+    selectedEndDate = signal<Date | null>(null);
 
     transactions = rxResource({
         request: () => ({
-            date1: this.transactionsDate1(),
-            date2: this.transactionsDate2()
+            start: this.selectedStartDate(),
+            end: this.selectedEndDate()
         }),
-        loader: ({ request: { date1, date2 } }) =>
-            this.getTransactionsBetweenDates(date1, date2)
+        loader: ({ request: { start, end } }) => {
+            if (start && end) {
+                return this.getTransactionsBetweenDates(start, end);
+            }
+
+            return of([]);
+        }
+    });
+
+    untrackedTransactions = rxResource({
+        loader: () => this.getUntrackedTransactions()
     });
 
     getTransactionsBetweenDates(date1: Date, date2: Date) {
@@ -40,6 +49,12 @@ export class TransactionService {
             `
                 ${this.baseUrl}/${this.authService.userId}?start_date=${date1.toISOString()}&end_date=${date2.toISOString()}
             `
+        );
+    }
+
+    getUntrackedTransactions() {
+        return this.http.get<Transaction[]>(
+            `${this.baseUrl}/untracked/${this.authService.userId}`
         );
     }
 

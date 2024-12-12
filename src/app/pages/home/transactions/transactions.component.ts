@@ -4,6 +4,7 @@ import {
     computed,
     effect,
     inject,
+    linkedSignal,
     signal
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -12,6 +13,7 @@ import {
     TransactionModalComponent,
     TransactionModalData
 } from 'src/app/components/transaction-modal/transaction-modal.component';
+import { IsolatedTransaction, Transaction } from 'src/app/models/transaction';
 import { TransactionService } from 'src/app/services/transaction.service';
 import {
     addValueToCurrencyInput,
@@ -35,8 +37,11 @@ export class TransactionsComponent implements OnInit {
     });
 
     transactions = this.transactionService.transactions.value;
+    untrackedTransactions = this.transactionService.untrackedTransactions.value;
+
     areTransactionsLoading = this.transactionService.transactions.isLoading;
 
+    areUntrackedTransactionsBeingViewed = signal(false);
     isFilterOpen = signal(false);
     filterFields = signal([
         {
@@ -53,8 +58,13 @@ export class TransactionsComponent implements OnInit {
         }
     ]);
 
-    filteredTransactions = computed(() => {
-        const transactions = this.transactions();
+    filteredTransactions = linkedSignal<
+        IsolatedTransaction[] | Transaction[] | undefined
+    >(() => {
+        const untrackedTransactions = this.untrackedTransactions();
+        const transactions = this.areUntrackedTransactionsBeingViewed()
+            ? untrackedTransactions
+            : this.transactions();
         const [titleField, amountField, merchantField] = this.filterFields();
 
         return transactions?.filter((transaction) => {
@@ -97,7 +107,8 @@ export class TransactionsComponent implements OnInit {
     ngOnInit(): void {
         const today = getTodayMidnight();
 
-        this.transactionService.getTransactionsBetweenDates(today, today);
+        this.transactionService.selectedStartDate.set(today);
+        this.transactionService.selectedEndDate.set(today);
     }
 
     checkIfValidKey(e: KeyboardEvent) {
@@ -144,12 +155,16 @@ export class TransactionsComponent implements OnInit {
         const end = this.form.get('end')?.value;
 
         if (start && end) {
-            this.transactionService.transactionsDate1.set(start);
-            this.transactionService.transactionsDate2.set(end);
+            this.transactionService.selectedStartDate.set(start);
+            this.transactionService.selectedEndDate.set(end);
         }
     }
 
     toggleFilter() {
         this.isFilterOpen.set(!this.isFilterOpen());
+    }
+
+    toggleUntracked() {
+        this.areUntrackedTransactionsBeingViewed.update((prev) => !prev);
     }
 }

@@ -253,27 +253,33 @@ export class BudgetComponent implements OnInit, AfterViewChecked {
     }
 
     handleBudgetCopyMobile() {
-        const budgetCopyOptionMobile =
-            this.mobileModalService.budgetCopyOption();
-        if (budgetCopyOptionMobile === 'copy') {
-            untracked(() => this.copyCurrentBudget());
-            this.isCopyingBudget.subscribe((isCopyingBudget) => {
-                if (!isCopyingBudget) {
-                    this.mobileModalService.isMobileBudgetStarterModalOpen.set(
-                        false
-                    );
-                }
-            });
-        } else if (budgetCopyOptionMobile === 'new') {
-            this.openKeyboard();
+        if (this.mobileModalService.isMobileDevice()) {
+            const budgetCopyOptionMobile =
+                this.mobileModalService.budgetCopyOption();
+            if (budgetCopyOptionMobile === 'copy') {
+                untracked(() => this.copyCurrentBudget());
+                this.isCopyingBudget.subscribe((isCopyingBudget) => {
+                    if (!isCopyingBudget) {
+                        this.mobileModalService.isMobileBudgetStarterModalOpen.set(
+                            false
+                        );
+                        this.mobileModalService.budgetCopyOption.set('');
+                    }
+                });
+            } else if (budgetCopyOptionMobile === 'new') {
+                this.openKeyboard();
 
-            untracked(() =>
-                setTimeout(() => {
-                    this.createNewBudgetCategoryPlaceholder();
-                    this.isOpeningKeyboard.set(false);
-                }, 350)
-            );
-            this.mobileModalService.isMobileBudgetStarterModalOpen.set(false);
+                untracked(() =>
+                    setTimeout(() => {
+                        this.createNewBudgetCategoryPlaceholder();
+                        this.isOpeningKeyboard.set(false);
+                        this.mobileModalService.budgetCopyOption.set('');
+                    }, 350)
+                );
+                this.mobileModalService.isMobileBudgetStarterModalOpen.set(
+                    false
+                );
+            }
         }
     }
 

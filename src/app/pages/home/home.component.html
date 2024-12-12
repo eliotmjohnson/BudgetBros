@@ -12,11 +12,13 @@
 </main>
 @if (
     mobileModalService.isBudgetTransactionsModalOpen() ||
-    mobileModalService.isAddTransactionModalOpen()
+    mobileModalService.isAddTransactionModalOpen() ||
+    mobileModalService.isMobileBudgetStarterModalOpen()
 ) {
     <div
         [@dimmerAnimation]="
-            mobileModalService.isAddTransactionModalOpen()
+            mobileModalService.isAddTransactionModalOpen() ||
+            mobileModalService.isMobileBudgetStarterModalOpen()
                 ? 'lightDim'
                 : mobileModalService.isBudgetTransactionsModalOpen()
                   ? 'darkDim'

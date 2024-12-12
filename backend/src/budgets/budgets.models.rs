@@ -19,7 +19,22 @@ pub struct NewBudget {
     pub year: i64,
 }
 
-#[derive(Serialize, FromRow, Debug)]
+#[derive(Serialize, Deserialize, FromRow)]
+#[serde(rename_all = "camelCase")]
+pub struct AvailableBudget {
+    pub id: String,
+    pub month_number: i64,
+    pub year: i64,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CopyBudget {
+    pub current_month_number: i64,
+    pub current_year: i64,
+}
+
+#[derive(Serialize, FromRow, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct BudgetRowData {
     pub budget_id: String,
@@ -67,7 +82,7 @@ pub struct LineItemData {
     pub is_fund: bool,
     pub planned_amount: f64,
     pub starting_balance: f64,
-    pub fund_id: String,
+    pub fund_id: Option<String>,
     pub transactions: Vec<TransactionData>,
 }
 

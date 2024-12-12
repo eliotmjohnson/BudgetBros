@@ -1,13 +1,21 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import {
     AfterViewChecked,
+    ChangeDetectorRef,
     Component,
     computed,
     effect,
+    ElementRef,
     OnInit,
+    signal,
+    untracked,
     ViewChild
 } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { MatCalendar, MatCalendarView } from '@angular/material/datepicker';
+import { MatDialog } from '@angular/material/dialog';
+import { skip, take } from 'rxjs';
+import { BudgetStarterComponent } from 'src/app/components/budget-starter/budget-starter.component';
 import { MONTHS } from 'src/app/constants/constants';
 import { BudgetCategory } from 'src/app/models/budgetCategory';
 import { BudgetCategoryService } from 'src/app/services/budget-category.service';
@@ -23,6 +31,7 @@ import { TransactionService } from 'src/app/services/transaction.service';
 })
 export class BudgetComponent implements OnInit, AfterViewChecked {
     @ViewChild('calendarSelector') calendarSelector!: MatCalendar<Date>;
+    @ViewChild('phantomInput') phantomInput!: ElementRef<HTMLInputElement>;
     months = MONTHS;
     selectedMonth = computed(() => {
         return MONTHS[(this.budget()?.monthNumber ?? 1) - 1];
@@ -39,6 +48,11 @@ export class BudgetComponent implements OnInit, AfterViewChecked {
     isReordering = false;
     scrollPosition = 0;
     isScrolling = false;
+    isOpeningKeyboard = signal(false);
+    isCopyingBudget = toObservable(this.budgetService.isCopyingBudget).pipe(
+        skip(1),
+        take(2)
+    );
 
     selectedDate = computed(() => {
         const currentBudget = this.budget();
@@ -54,13 +68,17 @@ export class BudgetComponent implements OnInit, AfterViewChecked {
         public transactionService: TransactionService,
         public budgetService: BudgetService,
         public mobileModalService: MobileModalService,
-        private budgetCategoryService: BudgetCategoryService
+        private budgetCategoryService: BudgetCategoryService,
+        private dialogService: MatDialog,
+        private cdr: ChangeDetectorRef
     ) {
         effect(() => {
             if (this.budget()?.budgetCategories) {
                 this.sortBudgetCategories();
             }
         });
+
+        effect(() => this.handleBudgetCopyMobile());
     }
 
     ngOnInit(): void {
@@ -206,6 +224,73 @@ export class BudgetComponent implements OnInit, AfterViewChecked {
     setIsScrolling() {
         if (this.scrollPosition <= 10) {
             this.isScrolling = true;
+        }
+    }
+
+    openBudgetStarterModal() {
+        if (!this.mobileModalService.isMobileDevice()) {
+            const dialogRef = this.dialogService.open(BudgetStarterComponent, {
+                height: '40rem',
+                width: '35rem'
+            });
+
+            dialogRef.componentInstance.optionEmitter.subscribe((option) => {
+                if (option === 'copy') {
+                    this.copyCurrentBudget();
+                    this.isCopyingBudget.subscribe((isCopyingBudget) => {
+                        if (!isCopyingBudget) {
+                            dialogRef.close();
+                        }
+                    });
+                } else if (option === 'new') {
+                    this.createNewBudgetCategoryPlaceholder();
+                    dialogRef.close();
+                }
+            });
+        } else {
+            this.mobileModalService.isMobileBudgetStarterModalOpen.set(true);
+        }
+    }
+
+    handleBudgetCopyMobile() {
+        const budgetCopyOptionMobile =
+            this.mobileModalService.budgetCopyOption();
+        if (budgetCopyOptionMobile === 'copy') {
+            untracked(() => this.copyCurrentBudget());
+            this.isCopyingBudget.subscribe((isCopyingBudget) => {
+                if (!isCopyingBudget) {
+                    this.mobileModalService.isMobileBudgetStarterModalOpen.set(
+                        false
+                    );
+                }
+            });
+        } else if (budgetCopyOptionMobile === 'new') {
+            this.openKeyboard();
+
+            untracked(() =>
+                setTimeout(() => {
+                    this.createNewBudgetCategoryPlaceholder();
+                    this.isOpeningKeyboard.set(false);
+                }, 350)
+            );
+            this.mobileModalService.isMobileBudgetStarterModalOpen.set(false);
+        }
+    }
+
+    openKeyboard() {
+        this.isOpeningKeyboard.set(true);
+        this.cdr.detectChanges();
+        this.phantomInput.nativeElement.focus();
+    }
+
+    copyCurrentBudget() {
+        const currentBudget = this.budget();
+
+        if (currentBudget) {
+            this.budgetService.copyBudget(
+                currentBudget.monthNumber,
+                currentBudget.year
+            );
         }
     }
 }

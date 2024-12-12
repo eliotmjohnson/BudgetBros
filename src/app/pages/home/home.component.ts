@@ -10,9 +10,10 @@ import { MobileModalService } from 'src/app/services/mobile-modal.service';
     styleUrls: ['./home.component.scss'],
     animations: [routerAnimations, dimmerAnimation],
     host: {
-        '[class.modal-present]': `this.mobileModalService.isAddTransactionModalOpen()
-            && !this.mobileModalService.isBudgetTransactionsModalOpen()`,
-        '[class.slide-body]': 'this.mobileModalService.isBudgetTransactionsModalOpen()'
+        '[class.modal-present]': `(this.mobileModalService.isAddTransactionModalOpen()
+            && !this.mobileModalService.isBudgetTransactionsModalOpen()) || this.mobileModalService.isMobileBudgetStarterModalOpen()`,
+        '[class.slide-body]':
+            'this.mobileModalService.isBudgetTransactionsModalOpen()'
     },
     standalone: false
 })

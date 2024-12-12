@@ -20,8 +20,8 @@ import { MatDialog } from '@angular/material/dialog';
         budgetTransactionModalAnimation
     ],
     host: {
-        '[class.modal-present]': `this.mobileModalService.isAddTransactionModalOpen()
-            && !this.mobileModalService.isBudgetTransactionsModalOpen()`
+        '[class.modal-present]': `(this.mobileModalService.isAddTransactionModalOpen()
+            && !this.mobileModalService.isBudgetTransactionsModalOpen()) || mobileModalService.isMobileBudgetStarterModalOpen()`
     },
     standalone: false
 })

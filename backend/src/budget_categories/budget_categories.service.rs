@@ -110,3 +110,21 @@ pub async fn update_budget_category_order(
         .fetch_one(&state.db)
         .await
 }
+
+pub async fn copy_budget_category(
+    state: Data<AppState>,
+    new_budget_category: NewBudgetCategory,
+) -> Result<NewBudgetCategoryId, sqlx::Error> {
+    let query = "INSERT INTO budget_categories
+        (name, user_id, budget_id, line_item_order)
+        VALUES ($1, $2, $3, $4)
+        RETURNING id";
+
+    sqlx::query_as::<_, NewBudgetCategoryId>(query)
+        .bind(new_budget_category.name)
+        .bind(new_budget_category.user_id)
+        .bind(new_budget_category.budget_id)
+        .bind(new_budget_category.category_order)
+        .fetch_one(&state.db)
+        .await
+}

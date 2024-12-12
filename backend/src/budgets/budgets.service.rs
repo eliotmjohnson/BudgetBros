@@ -3,7 +3,7 @@ use sqlx::postgres::PgQueryResult;
 
 use crate::AppState;
 
-use super::budgets_models::{BudgetId, BudgetRowData, UpdateBudgetIncomeRequest};
+use super::budgets_models::{AvailableBudget, BudgetId, BudgetRowData, UpdateBudgetIncomeRequest};
 
 pub async fn get_budget(
     state: Data<AppState>,
@@ -55,6 +55,32 @@ pub async fn get_budget(
         .bind(user_id)
         .bind(month_number)
         .bind(year)
+        .fetch_all(&state.db)
+        .await
+}
+
+pub async fn get_available_budgets(
+    state: Data<AppState>,
+    user_id: String,
+    month_number: i64,
+    year: i64,
+) -> Result<Vec<AvailableBudget>, sqlx::Error> {
+    let query = "
+       SELECT id, month_number, year
+       FROM budgets b
+       WHERE 
+            b.user_id = $1
+            AND (
+                ($3 = 1 AND (b.year = $2 OR b.year = $2 - 1))
+                OR 
+                ($3 != 1 AND (b.year = $2 OR b.year = $2 + 1))
+            );
+    ";
+
+    sqlx::query_as(query)
+        .bind(user_id)
+        .bind(year)
+        .bind(month_number)
         .fetch_all(&state.db)
         .await
 }
@@ -112,5 +138,30 @@ pub async fn update_budget_income(
         .bind(body.additional_income_amount)
         .bind(budget_id)
         .execute(&state.db)
+        .await
+}
+
+pub async fn copy_budget(
+    state: Data<AppState>,
+    user_id: String,
+    month_number: i64,
+    year: i64,
+    category_order: Vec<String>,
+    paycheck_amount: f64,
+    additional_income_amount: f64,
+) -> Result<BudgetId, sqlx::Error> {
+    let query = "INSERT INTO budgets
+        (user_id, month_number, year, category_order, paycheck_amount, additional_income_amount)
+        VALUES ($1, $2, $3, $4, $5, $6)
+        RETURNING id";
+
+    sqlx::query_as::<_, BudgetId>(query)
+        .bind(user_id)
+        .bind(month_number)
+        .bind(year)
+        .bind(category_order)
+        .bind(paycheck_amount)
+        .bind(additional_income_amount)
+        .fetch_one(&state.db)
         .await
 }

@@ -17,6 +17,7 @@ import {
 import { FormControl } from '@angular/forms';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { filter, take } from 'rxjs';
+import { Budget } from 'src/app/models/budget';
 import {
     SaveLineItemPayload,
     SelectedLineItem,
@@ -89,7 +90,13 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
         const calculation =
             (this.remainingAmount() / (this.plannedAmount() || 0.01)) * 100;
 
-        return calculation ? (calculation < 0 ? 0 : calculation) : 0;
+        return calculation
+            ? calculation < 0
+                ? 0
+                : calculation > 100
+                  ? 100
+                  : calculation
+            : 0;
     });
     isLineItemSelected = computed(
         () =>
@@ -164,7 +171,6 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     }
 
     needsFundBalanceUpdate(newRemainingAmount: number) {
-        const today = new Date();
         const currentBudget = untracked(() => this.budgetService.budget());
 
         return !!(
@@ -173,9 +179,22 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
             this.previousRemainingAmount !== null &&
             newRemainingAmount !== this.previousRemainingAmount &&
             currentBudget &&
-            (currentBudget.year < today.getFullYear() ||
-                currentBudget.monthNumber < today.getMonth() + 1)
+            this.isFutureBudgetAvailable(currentBudget)
         );
+    }
+
+    isFutureBudgetAvailable(currentBudget: Budget) {
+        const availableBudgets = this.budgetService.availableBudgets();
+        if (availableBudgets) {
+            return availableBudgets.some(
+                (budget) =>
+                    budget.year > currentBudget.year ||
+                    (budget.year === currentBudget.year &&
+                        budget.monthNumber > currentBudget.monthNumber)
+            );
+        } else {
+            return false;
+        }
     }
 
     setTransactionData() {

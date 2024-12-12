@@ -31,9 +31,6 @@
                 (input)="handleCurrencyInput($event, 'additionalIncome')"
                 (click)="selectInputText(additionalIncomeInput)"
             />
-            @if (form.controls.additionalIncome.errors) {
-                <mat-error>Amount is required</mat-error>
-            }
         </mat-form-field>
         <button
             mat-raised-button

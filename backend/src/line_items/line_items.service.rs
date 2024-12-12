@@ -1,4 +1,6 @@
-use super::line_items_models::{LineItem, NewLineItem, SyncFundRequest, UpdatedLineItem};
+use super::line_items_models::{
+    CopyLineItem, LineItem, NewLineItem, SyncFundRequest, UpdatedLineItem,
+};
 use crate::AppState;
 use actix_web::web::Data;
 use sqlx::postgres::PgQueryResult;
@@ -103,7 +105,7 @@ pub async fn add_fund(
         .await?;
 
     let fund_id: String = row.get("fund_id");
-    return Ok(fund_id);
+    Ok(fund_id)
 }
 
 pub async fn update_fund(
@@ -158,4 +160,47 @@ pub async fn sync_fund(
         .bind(fund_id)
         .execute(&state.db)
         .await
+}
+
+pub async fn copy_line_items(
+    state: Data<AppState>,
+    new_line_items: Vec<CopyLineItem>,
+) -> Result<Vec<String>, sqlx::Error> {
+    let mut query = "INSERT INTO line_items
+        (name, is_fund, planned_amount, starting_balance, fund_id, budget_category_id)
+        VALUES "
+        .to_string();
+
+    for (i, item) in new_line_items.iter().enumerate() {
+        let is_last_item = i == new_line_items.len() - 1;
+
+        let fund_id_str = match &item.fund_id {
+            Some(fund_id) => format!("'{}'", fund_id),
+            None => "NULL".to_string(),
+        };
+
+        let item_str = format!(
+            "('{}', {}, {}, {}, {}, '{}')",
+            item.name,
+            item.is_fund,
+            item.planned_amount,
+            item.starting_balance,
+            fund_id_str,
+            item.budget_category_id
+        );
+
+        if is_last_item {
+            query.push_str(&item_str);
+            query.push_str(" RETURNING id;");
+        } else {
+            query.push_str(&item_str);
+            query.push_str(", ");
+        }
+    }
+
+    let result = sqlx::query_as::<_, (String,)>(&query)
+        .fetch_all(&state.db)
+        .await?;
+
+    Ok(result.into_iter().map(|(id,)| id).collect())
 }

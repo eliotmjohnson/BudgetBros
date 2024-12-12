@@ -14,3 +14,9 @@ export interface UpdateBudgetIncomePayload {
     paycheckAmount: number;
     additionalIncomeAmount: number;
 }
+
+export interface AvailableBudget {
+    id: string;
+    monthNumber: number;
+    year: number;
+}

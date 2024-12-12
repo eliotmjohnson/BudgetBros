@@ -26,6 +26,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
@@ -65,6 +66,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { SortByDatePipe } from './pipes/sort-by-date.pipe';
 import { InlineFeatureComponent } from './components/inline-feature/inline-feature.component';
 import { FeatureModalComponent } from './components/mobile-components/feature-modal/feature-modal.component';
+import { BudgetStarterComponent } from './components/budget-starter/budget-starter.component';
 
 @NgModule({
     declarations: [
@@ -101,7 +103,8 @@ import { FeatureModalComponent } from './components/mobile-components/feature-mo
         BudgetCalculatorComponent,
         IncomeExpenseSelectorComponent,
         InlineFeatureComponent,
-        FeatureModalComponent
+        FeatureModalComponent,
+        BudgetStarterComponent
     ],
     bootstrap: [AppComponent],
     imports: [
@@ -128,7 +131,8 @@ import { FeatureModalComponent } from './components/mobile-components/feature-mo
         MatSelectModule,
         OverlayModule,
         LayoutModule,
-        MatRadioModule
+        MatRadioModule,
+        MatSidenavModule
     ],
     providers: [
         provideHttpClient(withInterceptors([httpInterceptor])),

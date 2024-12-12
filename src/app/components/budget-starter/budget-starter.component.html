@@ -1,0 +1,55 @@
+<div class="logo">
+    <BBLogo
+        [style.translate.rem]="1"
+        fontSize="4rem"
+        height="4rem"
+    />
+</div>
+<section class="options-container">
+    @if (isBudgetCopyAvailable()) {
+        <span class="copy-container">
+            <h1>Start by copying the previous month's budget</h1>
+            <button
+                tabindex="-1"
+                mat-raised-button
+                color="primary"
+                class="buttons"
+                [disabled]="budgetService.isCopyingBudget()"
+                (click)="emitOption('copy')"
+            >
+                @if (!budgetService.isCopyingBudget()) {
+                    Copy Previous Budget
+                } @else {
+                    <mat-spinner
+                        diameter="30"
+                        color="primary"
+                    ></mat-spinner>
+                }
+            </button>
+        </span>
+    }
+    <span
+        class="scratch-container"
+        [class.no-copy]="!isBudgetCopyAvailable()"
+    >
+        <h2>
+            {{
+                !isBudgetCopyAvailable()
+                    ? "Create your first Budget Category"
+                    : "Or, start from scratch"
+            }}
+        </h2>
+        <button
+            tabindex="-1"
+            mat-raised-button
+            class="buttons"
+            (click)="emitOption('new')"
+        >
+            Begin
+        </button>
+    </span>
+</section>
+<mat-icon
+    class="logo-overlay"
+    fontIcon="attach_money"
+/>

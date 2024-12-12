@@ -1,0 +1,106 @@
+@use "bb-core";
+
+:host {
+    height: 100%;
+    width: 100%;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    margin-top: 4rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.options-container {
+    width: 100%;
+
+    .copy-container {
+        margin-top: 3rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        h1 {
+            font-size: 1.4rem;
+            font-style: italic;
+            text-align: center;
+            color: bb-core.$bb-secondary-title-color;
+        }
+    }
+
+    .scratch-container {
+        margin-top: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        h2 {
+            font-size: 1rem;
+            font-style: italic;
+            color: bb-core.$bb-secondary-title-color;
+        }
+
+        button {
+            width: 40%;
+            font-size: 1rem;
+            background-color: bb-core.$bb-secondary-title-color;
+        }
+    }
+
+    .no-copy {
+        margin-top: 4rem;
+
+        h2 {
+            font-size: 1.4rem;
+        }
+    }
+
+    .buttons {
+        width: 60%;
+        height: 3rem;
+        font-size: 1.1rem;
+        color: white;
+        z-index: 2;
+    }
+}
+
+.logo-overlay {
+    position: absolute;
+    bottom: -10rem;
+    left: 7rem;
+    rotate: 25deg;
+    font-size: 40rem;
+    height: 40rem;
+    width: 40rem;
+    opacity: 0.13;
+}
+
+@media (max-width: 1145px) {
+    :host {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        translate: 0 100vh;
+        z-index: 2;
+        overflow: hidden;
+        border-radius: 0.5rem;
+        animation: loadModal 0.65s cubic-bezier(0.22, 1, 0.22, 1) forwards;
+
+        @keyframes loadModal {
+            100% {
+                translate: 0 calc(4vh + min(3.25vh, env(safe-area-inset-top)));
+            }
+        }
+    }
+
+    .logo-overlay {
+        left: -4rem;
+    }
+}

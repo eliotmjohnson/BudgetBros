@@ -6,12 +6,16 @@ import { TransactionModalData } from '../components/transaction-modal/transactio
 })
 export class MobileModalService {
     isMobileDevice = signal(false);
+    isIOSDevice = signal(false);
+
     isAddTransactionModalOpen = signal(false);
     isBudgetTransactionsModalOpen = signal(false);
+    isMobileBudgetStarterModalOpen = signal(false);
     isFeatureModalOpen = signal(false);
-    isIOSDevice = signal(false);
+
     isReorderingCategories = signal(false);
     showPlannedAmounts = signal(false);
+    budgetCopyOption = signal('');
 
     mobileModalData: TransactionModalData = { mode: 'add' };
 
@@ -24,5 +28,6 @@ export class MobileModalService {
         this.isAddTransactionModalOpen.set(false);
         this.isBudgetTransactionsModalOpen.set(false);
         this.isFeatureModalOpen.set(false);
+        this.isMobileBudgetStarterModalOpen.set(false);
     }
 }

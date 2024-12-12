@@ -29,7 +29,7 @@ export type UpdateLineItemPayload = Omit<
 > & { id: string };
 
 export interface LineItemReduced {
-    lineItemId: string;
+    lineItemId?: string | null;
     lineItemName: string;
 }
 

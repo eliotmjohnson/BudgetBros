@@ -105,7 +105,7 @@ pub async fn add_fund(
         .await?;
 
     let fund_id: String = row.get("fund_id");
-    return Ok(fund_id);
+    Ok(fund_id)
 }
 
 pub async fn update_fund(

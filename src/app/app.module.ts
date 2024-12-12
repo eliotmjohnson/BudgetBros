@@ -26,6 +26,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
@@ -130,7 +131,8 @@ import { BudgetStarterComponent } from './components/budget-starter/budget-start
         MatSelectModule,
         OverlayModule,
         LayoutModule,
-        MatRadioModule
+        MatRadioModule,
+        MatSidenavModule
     ],
     providers: [
         provideHttpClient(withInterceptors([httpInterceptor])),

@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { BudgetCategoryService } from 'src/app/services/budget-category.service';
 import { MobileModalService } from 'src/app/services/mobile-modal.service';
 import { TransactionService } from 'src/app/services/transaction.service';
@@ -13,7 +15,8 @@ import { TransactionService } from 'src/app/services/transaction.service';
         '[class.is-reordering]': 'mobileModalService.isReorderingCategories()',
         '[class.is-feature-modal-open]':
             'mobileModalService.isFeatureModalOpen()'
-    }
+    },
+    imports: [RouterLink, MatIcon, RouterLinkActive]
 })
 export class TabsBarComponent {
     constructor(

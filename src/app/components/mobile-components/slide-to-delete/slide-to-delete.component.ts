@@ -10,6 +10,7 @@ import {
     EventEmitter,
     OnInit
 } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
 import { MobileModalService } from 'src/app/services/mobile-modal.service';
 
 @Component({
@@ -20,7 +21,8 @@ import { MobileModalService } from 'src/app/services/mobile-modal.service';
         '(scroll)': 'setSlideToDelete()',
         '(touchstart)': 'createTouchEndListener()',
         '[class.overflow-visible]': 'disabled'
-    }
+    },
+    imports: [MatIcon]
 })
 export class SlideToDeleteComponent implements OnInit {
     @Input() disabled = false;

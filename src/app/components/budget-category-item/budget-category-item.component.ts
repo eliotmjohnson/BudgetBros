@@ -14,8 +14,8 @@ import {
     untracked,
     ViewChild
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { MatMenuTrigger } from '@angular/material/menu';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import { filter, take } from 'rxjs';
 import { Budget } from 'src/app/models/budget';
 import {
@@ -32,11 +32,22 @@ import {
     addValueToCurrencyInput,
     checkCurrencyInputKeyValid
 } from 'src/app/utils/currencyUtils';
+import { SlideToDeleteComponent } from '../mobile-components/slide-to-delete/slide-to-delete.component';
+import { MatIcon } from '@angular/material/icon';
+import { CurrencyPipe } from '@angular/common';
 
 @Component({
     selector: 'BudgetCategoryItem',
     templateUrl: './budget-category-item.component.html',
-    styleUrls: ['./budget-category-item.component.scss']
+    styleUrls: ['./budget-category-item.component.scss'],
+    imports: [
+        SlideToDeleteComponent,
+        MatIcon,
+        MatMenu,
+        MatMenuTrigger,
+        CurrencyPipe,
+        ReactiveFormsModule
+    ]
 })
 export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     @ViewChild('lineItemTitleInput') lineItemTitleInput!: ElementRef;

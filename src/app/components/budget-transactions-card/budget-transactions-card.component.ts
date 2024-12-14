@@ -19,6 +19,15 @@ import {
     TransactionModalComponent,
     TransactionModalData
 } from '../transaction-modal/transaction-modal.component';
+import { CardComponent } from '../card/card.component';
+import { MatIcon } from '@angular/material/icon';
+import { InlineFeatureComponent } from '../inline-feature/inline-feature.component';
+import { MatFormField } from '@angular/material/form-field';
+import { BBLogoComponent } from '../bb-logo/bb-logo.component';
+import { InlineTransactionComponent } from '../inline-transaction/inline-transaction.component';
+import { FeatureModalComponent } from '../mobile-components/feature-modal/feature-modal.component';
+import { DecimalPipe } from '@angular/common';
+import { SortByDatePipe } from 'src/app/pipes/sort-by-date.pipe';
 
 @Component({
     selector: 'BudgetTransactionsCard',
@@ -32,7 +41,18 @@ import {
     host: {
         '[class.open-budget-transactions-modal]': 'isMobileComponent',
         '[class.feature-modal-open]': 'isFeatureModalOpen'
-    }
+    },
+    imports: [
+        CardComponent,
+        MatIcon,
+        InlineFeatureComponent,
+        MatFormField,
+        BBLogoComponent,
+        InlineTransactionComponent,
+        FeatureModalComponent,
+        DecimalPipe,
+        SortByDatePipe
+    ]
 })
 export class BudgetTransactionsCardComponent {
     @Input() isMobileComponent = false;

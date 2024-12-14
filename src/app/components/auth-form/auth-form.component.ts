@@ -5,8 +5,13 @@ import { Router } from '@angular/router';
 import { User, UserLoginResponse } from 'src/app/models/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { BBLogoComponent } from '../bb-logo/bb-logo.component';
-import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
+import {
+    MatError,
+    MatFormFieldModule,
+    MatLabel
+} from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
     selector: 'AuthForm',
@@ -18,7 +23,8 @@ import { MatIcon } from '@angular/material/icon';
     imports: [
         BBLogoComponent,
         ReactiveFormsModule,
-        MatFormField,
+        MatFormFieldModule,
+        MatInputModule,
         MatLabel,
         MatError,
         MatIcon

@@ -7,8 +7,13 @@ import {
     Renderer2
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
+import {
+    MatError,
+    MatFormFieldModule,
+    MatLabel
+} from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { UpdateBudgetIncomePayload } from 'src/app/models/budget';
 import { BudgetService } from 'src/app/services/budget.service';
 import { MobileModalService } from 'src/app/services/mobile-modal.service';
@@ -29,7 +34,14 @@ import {
         '[class.is-sliding]': 'isSliding'
     },
     providers: [CurrencyPipe],
-    imports: [ReactiveFormsModule, MatFormField, MatLabel, MatError, MatIcon]
+    imports: [
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatLabel,
+        MatError,
+        MatIcon
+    ]
 })
 export class IncomeDrawerComponent implements AfterViewInit {
     isDrawerOpen = false;

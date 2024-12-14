@@ -22,12 +22,13 @@ import {
 import { CardComponent } from '../card/card.component';
 import { MatIcon } from '@angular/material/icon';
 import { InlineFeatureComponent } from '../inline-feature/inline-feature.component';
-import { MatFormField } from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { BBLogoComponent } from '../bb-logo/bb-logo.component';
 import { InlineTransactionComponent } from '../inline-transaction/inline-transaction.component';
 import { FeatureModalComponent } from '../mobile-components/feature-modal/feature-modal.component';
 import { DecimalPipe } from '@angular/common';
 import { SortByDatePipe } from 'src/app/pipes/sort-by-date.pipe';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
     selector: 'BudgetTransactionsCard',
@@ -46,7 +47,8 @@ import { SortByDatePipe } from 'src/app/pipes/sort-by-date.pipe';
         CardComponent,
         MatIcon,
         InlineFeatureComponent,
-        MatFormField,
+        MatFormFieldModule,
+        MatInputModule,
         BBLogoComponent,
         InlineTransactionComponent,
         FeatureModalComponent,

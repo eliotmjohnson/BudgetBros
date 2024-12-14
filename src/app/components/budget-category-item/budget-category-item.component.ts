@@ -33,8 +33,8 @@ import {
     checkCurrencyInputKeyValid
 } from 'src/app/utils/currencyUtils';
 import { SlideToDeleteComponent } from '../mobile-components/slide-to-delete/slide-to-delete.component';
-import { MatIcon } from '@angular/material/icon';
-import { CurrencyPipe } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 
 @Component({
     selector: 'BudgetCategoryItem',
@@ -42,11 +42,12 @@ import { CurrencyPipe } from '@angular/common';
     styleUrls: ['./budget-category-item.component.scss'],
     imports: [
         SlideToDeleteComponent,
-        MatIcon,
+        MatIconModule,
         MatMenu,
         MatMenuTrigger,
         CurrencyPipe,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        CommonModule
     ]
 })
 export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {

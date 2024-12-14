@@ -58,16 +58,16 @@
                 matInput
                 formControlName="{{ register ? 'email' : 'username' }}"
             />
-            <mat-error
-                *ngIf="
-                    (register
-                        ? registerForm.controls.email
-                        : loginForm.controls.username
-                    ).errors
-                "
-            >
-                {{ register ? "Email" : "Username" }} is required
-            </mat-error>
+            @if (
+                (register
+                    ? registerForm.controls.email
+                    : loginForm.controls.username
+                ).errors
+            ) {
+                <mat-error>
+                    {{ register ? "Email" : "Username" }} is required
+                </mat-error>
+            }
         </mat-form-field>
         <mat-form-field appearance="outline">
             <mat-label class="login-label">Password</mat-label>
@@ -76,18 +76,18 @@
                 matInput
                 formControlName="password"
             />
-            <mat-error
-                *ngIf="
-                    (register ? registerForm : loginForm).controls.password
-                        .errors as errors
-                "
-            >
-                {{
-                    errors["pattern"]
-                        ? "No spaces please"
-                        : "Password is required"
-                }}
-            </mat-error>
+            @let errors =
+                (register ? registerForm : loginForm).controls.password.errors;
+
+            @if (errors) {
+                <mat-error>
+                    {{
+                        errors["pattern"]
+                            ? "No spaces please"
+                            : "Password is required"
+                    }}
+                </mat-error>
+            }
         </mat-form-field>
         <button
             class="submit-{{ register ? 'register' : 'login' }}"

@@ -44,12 +44,12 @@ import {
 import { IncomeExpenseSelectorComponent } from '../mobile-components/income-expense-selector/income-expense-selector.component';
 import {
     MatError,
-    MatFormField,
+    MatFormFieldModule,
     MatHint,
     MatLabel
 } from '@angular/material/form-field';
 import { CurrencyPipe } from '@angular/common';
-import { MatInput } from '@angular/material/input';
+import { MatInput, MatInputModule } from '@angular/material/input';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatOptgroup, MatOption } from '@angular/material/core';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
@@ -75,7 +75,8 @@ export interface TransactionModalData {
         IncomeExpenseSelectorComponent,
         MatDialogModule,
         ReactiveFormsModule,
-        MatFormField,
+        MatFormFieldModule,
+        MatInputModule,
         MatLabel,
         MatError,
         CurrencyPipe,

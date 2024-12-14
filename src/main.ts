@@ -5,11 +5,15 @@ import { routes } from './app/routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { httpInterceptor } from './app/interceptors/http.interceptor';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { CommonModule } from '@angular/common';
 
 bootstrapApplication(AppComponent, {
     providers: [
         provideRouter(routes),
         provideHttpClient(withInterceptors([httpInterceptor])),
-        provideNativeDateAdapter()
+        provideNativeDateAdapter(),
+        provideAnimations(),
+        CommonModule
     ]
 });

@@ -3,9 +3,11 @@ import { ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import {
     MatDatepickerToggle,
     MatDateRangeInput,
-    MatDateRangePicker
+    MatDateRangePicker,
+    MatStartDate
 } from '@angular/material/datepicker';
 import { MatFormFieldModule, MatSuffix } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
     selector: 'TransactionsDatePicker',
@@ -13,10 +15,12 @@ import { MatFormFieldModule, MatSuffix } from '@angular/material/form-field';
     styleUrl: './transactions-date-picker.component.scss',
     imports: [
         MatFormFieldModule,
+        MatInputModule,
         MatDateRangeInput,
         MatDateRangePicker,
         MatDatepickerToggle,
         ReactiveFormsModule,
+        MatStartDate,
         MatSuffix
     ]
 })

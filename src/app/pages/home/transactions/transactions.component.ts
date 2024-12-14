@@ -1,3 +1,4 @@
+import { CurrencyPipe } from '@angular/common';
 import {
     Component,
     OnInit,
@@ -9,10 +10,17 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatDivider } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSpinner } from '@angular/material/progress-spinner';
+import { TransactionCardComponent } from 'src/app/components/transaction-card/transaction-card.component';
 import {
     TransactionModalComponent,
     TransactionModalData
 } from 'src/app/components/transaction-modal/transaction-modal.component';
+import { TransactionsDatePickerComponent } from 'src/app/components/transactions-date-picker/transactions-date-picker.component';
 import { IsolatedTransaction, Transaction } from 'src/app/models/transaction';
 import { TransactionService } from 'src/app/services/transaction.service';
 import {
@@ -24,7 +32,17 @@ import { getTodayMidnight } from 'src/app/utils/timeUtils';
 @Component({
     selector: 'app-transactions',
     templateUrl: './transactions.component.html',
-    styleUrls: ['./transactions.component.scss']
+    styleUrls: ['./transactions.component.scss'],
+    imports: [
+        MatIcon,
+        TransactionsDatePickerComponent,
+        MatFormFieldModule,
+        MatInputModule,
+        MatDivider,
+        MatSpinner,
+        TransactionCardComponent,
+        CurrencyPipe
+    ]
 })
 export class TransactionsComponent implements OnInit {
     transactionService = inject(TransactionService);

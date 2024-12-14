@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { LinkButtonComponent } from '../link-button/link-button.component';
 
 @Component({
     selector: 'Sidebar',
     templateUrl: './sidebar.component.html',
-    styleUrls: ['./sidebar.component.scss']
+    styleUrls: ['./sidebar.component.scss'],
+    imports: [LinkButtonComponent]
 })
 export class SidebarComponent implements OnInit {
     currentTab = 'Budget';

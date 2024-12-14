@@ -1,4 +1,10 @@
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import {
+    CdkDrag,
+    CdkDragDrop,
+    CdkDropList,
+    moveItemInArray
+} from '@angular/cdk/drag-drop';
+import { CommonModule } from '@angular/common';
 import {
     AfterViewChecked,
     ChangeDetectorRef,
@@ -14,8 +20,16 @@ import {
 import { toObservable } from '@angular/core/rxjs-interop';
 import { MatCalendar, MatCalendarView } from '@angular/material/datepicker';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
+import { MatSpinner } from '@angular/material/progress-spinner';
 import { skip, take } from 'rxjs';
+import { BudgetCalculatorComponent } from 'src/app/components/budget-calculator/budget-calculator.component';
+import { BudgetCategoryCardComponent } from 'src/app/components/budget-category-card/budget-category-card.component';
 import { BudgetStarterComponent } from 'src/app/components/budget-starter/budget-starter.component';
+import { BudgetTransactionsCardComponent } from 'src/app/components/budget-transactions-card/budget-transactions-card.component';
+import { CardComponent } from 'src/app/components/card/card.component';
+import { IncomeDrawerComponent } from 'src/app/components/income-drawer/income-drawer.component';
+import { AmountTypeSelectorComponent } from 'src/app/components/mobile-components/amount-type-selector/amount-type-selector.component';
 import { MONTHS } from 'src/app/constants/constants';
 import { BudgetCategory } from 'src/app/models/budgetCategory';
 import { BudgetCategoryService } from 'src/app/services/budget-category.service';
@@ -26,7 +40,21 @@ import { TransactionService } from 'src/app/services/transaction.service';
 @Component({
     selector: 'app-budget',
     templateUrl: './budget.component.html',
-    styleUrls: ['./budget.component.scss']
+    styleUrls: ['./budget.component.scss'],
+    imports: [
+        BudgetCalculatorComponent,
+        MatIcon,
+        CardComponent,
+        MatCalendar,
+        AmountTypeSelectorComponent,
+        IncomeDrawerComponent,
+        MatSpinner,
+        CdkDropList,
+        BudgetCategoryCardComponent,
+        BudgetTransactionsCardComponent,
+        CdkDrag,
+        CommonModule
+    ]
 })
 export class BudgetComponent implements OnInit, AfterViewChecked {
     @ViewChild('calendarSelector') calendarSelector!: MatCalendar<Date>;

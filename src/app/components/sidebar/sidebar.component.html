@@ -1,14 +1,15 @@
 <aside class="sidebar">
     <div class="tabs-wrapper">
-        <LinkButton
-            *ngFor="let tab of tabs"
-            [description]="tab.description"
-            [iconName]="tab.iconName"
-            variant="primary"
-            [isActive]="
-                currentTab.toUpperCase() === tab.description.toUpperCase()
-            "
-            (handleClick)="currentTab = $event"
-        />
+        @for (tab of tabs; track tab.iconName) {
+            <LinkButton
+                [description]="tab.description"
+                [iconName]="tab.iconName"
+                variant="primary"
+                [isActive]="
+                    currentTab.toUpperCase() === tab.description.toUpperCase()
+                "
+                (handleClick)="currentTab = $event"
+            />
+        }
     </div>
 </aside>

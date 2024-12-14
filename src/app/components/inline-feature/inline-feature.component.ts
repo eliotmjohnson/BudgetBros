@@ -10,7 +10,9 @@ import {
     Output,
     ViewChild
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatFormField } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
 import { UpdateFundPayload } from 'src/app/models/lineItem';
 import { LineItemService } from 'src/app/services/line-item.service';
 import { MobileModalService } from 'src/app/services/mobile-modal.service';
@@ -29,7 +31,8 @@ import {
         '[class.is-creating-fund]':
             'isPanelExpanded && (isCreatingFund || isFund)'
     },
-    providers: [CurrencyPipe]
+    providers: [CurrencyPipe],
+    imports: [MatIcon, MatFormField, ReactiveFormsModule, CurrencyPipe]
 })
 export class InlineFeatureComponent implements OnInit, AfterViewChecked {
     @ViewChild('formInput') formInput?: ElementRef<HTMLInputElement>;

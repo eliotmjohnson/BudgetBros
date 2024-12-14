@@ -1,4 +1,9 @@
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import {
+    CdkDrag,
+    CdkDragDrop,
+    CdkDropList,
+    moveItemInArray
+} from '@angular/cdk/drag-drop';
 import {
     AfterViewChecked,
     ChangeDetectorRef,
@@ -24,6 +29,9 @@ import { BudgetService } from 'src/app/services/budget.service';
 import { LineItemService } from 'src/app/services/line-item.service';
 import { MobileModalService } from 'src/app/services/mobile-modal.service';
 import { TransactionService } from 'src/app/services/transaction.service';
+import { CardComponent } from '../card/card.component';
+import { BudgetCategoryItemComponent } from '../budget-category-item/budget-category-item.component';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'BudgetCategoryCard',
@@ -37,7 +45,14 @@ import { TransactionService } from 'src/app/services/transaction.service';
         '[style.height]': 'hostHeight',
         '[style.translate.rem]':
             'this.mobileModalService.isIOSDevice() && isNewBudgetCategory ? 50 : 0'
-    }
+    },
+    imports: [
+        CardComponent,
+        BudgetCategoryItemComponent,
+        CdkDropList,
+        CdkDrag,
+        MatIcon
+    ]
 })
 export class BudgetCategoryCardComponent implements OnInit, AfterViewChecked {
     @ViewChild('titleInput') titleInput!: ElementRef<HTMLInputElement>;

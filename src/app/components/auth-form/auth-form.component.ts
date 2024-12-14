@@ -1,10 +1,12 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { User, UserLoginResponse } from 'src/app/models/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { BBLogoComponent } from '../bb-logo/bb-logo.component';
+import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'AuthForm',
@@ -13,7 +15,14 @@ import { BBLogoComponent } from '../bb-logo/bb-logo.component';
     host: {
         '[class.back]': 'register'
     },
-    imports: [BBLogoComponent]
+    imports: [
+        BBLogoComponent,
+        ReactiveFormsModule,
+        MatFormField,
+        MatLabel,
+        MatError,
+        MatIcon
+    ]
 })
 export class AuthFormComponent {
     @Input() register = false;

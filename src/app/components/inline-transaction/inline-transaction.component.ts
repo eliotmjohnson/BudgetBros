@@ -9,6 +9,10 @@ import {
     TransactionModalComponent,
     TransactionModalData
 } from '../transaction-modal/transaction-modal.component';
+import { SlideToDeleteComponent } from '../mobile-components/slide-to-delete/slide-to-delete.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { DecimalPipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'InlineTransaction',
@@ -16,7 +20,8 @@ import {
     styleUrl: './inline-transaction.component.scss',
     host: {
         '[@.disabled]': '!isDeletingTransaction'
-    }
+    },
+    imports: [SlideToDeleteComponent, MatTooltip, DecimalPipe, MatIcon]
 })
 export class InlineTransactionComponent {
     @Input() transactionId?: string | undefined;

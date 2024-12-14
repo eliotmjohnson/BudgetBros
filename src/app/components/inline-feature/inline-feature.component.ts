@@ -29,8 +29,7 @@ import {
         '[class.is-creating-fund]':
             'isPanelExpanded && (isCreatingFund || isFund)'
     },
-    providers: [CurrencyPipe],
-    standalone: false
+    providers: [CurrencyPipe]
 })
 export class InlineFeatureComponent implements OnInit, AfterViewChecked {
     @ViewChild('formInput') formInput?: ElementRef<HTMLInputElement>;

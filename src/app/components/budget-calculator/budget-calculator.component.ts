@@ -8,8 +8,7 @@ import { BudgetService } from 'src/app/services/budget.service';
     selector: 'BudgetCalculator',
     templateUrl: './budget-calculator.component.html',
     styleUrl: './budget-calculator.component.scss',
-    animations: [deleteItemAnimation],
-    standalone: false
+    animations: [deleteItemAnimation]
 })
 export class BudgetCalculatorComponent {
     previousBudget?: Budget;

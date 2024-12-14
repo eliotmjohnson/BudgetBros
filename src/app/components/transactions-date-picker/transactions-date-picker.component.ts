@@ -4,8 +4,7 @@ import { UntypedFormGroup } from '@angular/forms';
 @Component({
     selector: 'TransactionsDatePicker',
     templateUrl: './transactions-date-picker.component.html',
-    styleUrl: './transactions-date-picker.component.scss',
-    standalone: false
+    styleUrl: './transactions-date-picker.component.scss'
 })
 export class TransactionsDatePickerComponent implements OnInit {
     form = input.required<UntypedFormGroup>();

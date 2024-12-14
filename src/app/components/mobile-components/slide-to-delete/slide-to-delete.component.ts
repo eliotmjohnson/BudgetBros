@@ -20,8 +20,7 @@ import { MobileModalService } from 'src/app/services/mobile-modal.service';
         '(scroll)': 'setSlideToDelete()',
         '(touchstart)': 'createTouchEndListener()',
         '[class.overflow-visible]': 'disabled'
-    },
-    standalone: false
+    }
 })
 export class SlideToDeleteComponent implements OnInit {
     @Input() disabled = false;

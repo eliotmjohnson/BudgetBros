@@ -44,8 +44,7 @@ export interface TransactionModalData {
 @Component({
     selector: 'app-transaction-modal',
     templateUrl: './transaction-modal.component.html',
-    styleUrl: './transaction-modal.component.scss',
-    standalone: false
+    styleUrl: './transaction-modal.component.scss'
 })
 export class TransactionModalComponent implements AfterViewInit, OnInit {
     @ViewChild('titleInput') titleInput!: ElementRef;

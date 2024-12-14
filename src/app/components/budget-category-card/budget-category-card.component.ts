@@ -37,8 +37,7 @@ import { TransactionService } from 'src/app/services/transaction.service';
         '[style.height]': 'hostHeight',
         '[style.translate.rem]':
             'this.mobileModalService.isIOSDevice() && isNewBudgetCategory ? 50 : 0'
-    },
-    standalone: false
+    }
 })
 export class BudgetCategoryCardComponent implements OnInit, AfterViewChecked {
     @ViewChild('titleInput') titleInput!: ElementRef<HTMLInputElement>;

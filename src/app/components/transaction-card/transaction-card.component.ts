@@ -12,8 +12,7 @@ import { getMonth, getYear } from 'src/app/utils/timeUtils';
 @Component({
     selector: 'TransactionCard',
     templateUrl: './transaction-card.component.html',
-    styleUrl: './transaction-card.component.scss',
-    standalone: false
+    styleUrl: './transaction-card.component.scss'
 })
 export class TransactionCardComponent {
     transactionService = inject(TransactionService);

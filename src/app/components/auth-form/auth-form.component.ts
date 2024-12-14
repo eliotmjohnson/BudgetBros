@@ -4,6 +4,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { User, UserLoginResponse } from 'src/app/models/user';
 import { AuthService } from 'src/app/services/auth.service';
+import { BBLogoComponent } from '../bb-logo/bb-logo.component';
 
 @Component({
     selector: 'AuthForm',
@@ -12,7 +13,7 @@ import { AuthService } from 'src/app/services/auth.service';
     host: {
         '[class.back]': 'register'
     },
-    standalone: false
+    imports: [BBLogoComponent]
 })
 export class AuthFormComponent {
     @Input() register = false;

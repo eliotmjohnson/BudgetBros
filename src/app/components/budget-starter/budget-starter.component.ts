@@ -4,7 +4,6 @@ import { MobileModalService } from 'src/app/services/mobile-modal.service';
 
 @Component({
     selector: 'BudgetStarter',
-    standalone: false,
     templateUrl: './budget-starter.component.html',
     styleUrl: './budget-starter.component.scss'
 })

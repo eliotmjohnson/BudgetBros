@@ -5,8 +5,7 @@ import { BudgetService } from 'src/app/services/budget.service';
 @Component({
     selector: 'HomeHeader',
     templateUrl: './home-header.component.html',
-    styleUrls: ['./home-header.component.scss'],
-    standalone: false
+    styleUrls: ['./home-header.component.scss']
 })
 export class HomeHeaderComponent {
     constructor(

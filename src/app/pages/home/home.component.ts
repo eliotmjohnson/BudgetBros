@@ -14,8 +14,7 @@ import { MobileModalService } from 'src/app/services/mobile-modal.service';
             && !this.mobileModalService.isBudgetTransactionsModalOpen()) || this.mobileModalService.isMobileBudgetStarterModalOpen()`,
         '[class.slide-body]':
             'this.mobileModalService.isBudgetTransactionsModalOpen()'
-    },
-    standalone: false
+    }
 })
 export class HomeComponent {
     constructor(

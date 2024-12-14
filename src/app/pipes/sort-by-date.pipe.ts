@@ -2,8 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { Transaction } from '../models/transaction';
 
 @Pipe({
-    name: 'sortByDate',
-    standalone: false
+    name: 'sortByDate'
 })
 export class SortByDatePipe implements PipeTransform {
     transform(transactions: Transaction[]): Transaction[] {

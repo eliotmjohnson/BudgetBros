@@ -9,8 +9,7 @@ export interface DialogData {
 @Component({
     selector: 'BBSnag',
     templateUrl: './bb-snag.component.html',
-    styleUrl: './bb-snag.component.scss',
-    standalone: false
+    styleUrl: './bb-snag.component.scss'
 })
 export class BBSnagComponent implements OnInit {
     errorMessage = '';

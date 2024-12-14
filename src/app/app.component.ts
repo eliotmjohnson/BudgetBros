@@ -22,8 +22,7 @@ import { MatDialog } from '@angular/material/dialog';
     host: {
         '[class.modal-present]': `(this.mobileModalService.isAddTransactionModalOpen()
             && !this.mobileModalService.isBudgetTransactionsModalOpen()) || mobileModalService.isMobileBudgetStarterModalOpen()`
-    },
-    standalone: false
+    }
 })
 export class AppComponent implements OnInit {
     animationEnd = false;

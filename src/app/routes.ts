@@ -1,5 +1,4 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 import { MobileConstructionComponent } from './components/mobile-construction/mobile-construction.component';
 import { authGuard } from './guards/auth.guard';
 import { loginGuard } from './guards/login.guard';
@@ -11,7 +10,7 @@ import { SettingsComponent } from './pages/home/settings/settings.component';
 import { TransactionsComponent } from './pages/home/transactions/transactions.component';
 import { LoginComponent } from './pages/login/login.component';
 
-const routes: Routes = [
+export const routes: Routes = [
     { path: '', redirectTo: 'home/budget', pathMatch: 'full' },
     { path: 'home', redirectTo: 'home/budget', pathMatch: 'full' },
     {
@@ -50,9 +49,3 @@ const routes: Routes = [
     { path: 'mobile', component: MobileConstructionComponent },
     { path: '**', redirectTo: 'home/budget' }
 ];
-
-@NgModule({
-    imports: [RouterModule.forRoot(routes)],
-    exports: [RouterModule]
-})
-export class AppRoutingModule {}

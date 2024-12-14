@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { BBLogoComponent } from '../bb-logo/bb-logo.component';
 
 export interface DialogData {
     errorResponse: HttpErrorResponse;
@@ -9,7 +10,8 @@ export interface DialogData {
 @Component({
     selector: 'BBSnag',
     templateUrl: './bb-snag.component.html',
-    styleUrl: './bb-snag.component.scss'
+    styleUrl: './bb-snag.component.scss',
+    imports: [BBLogoComponent]
 })
 export class BBSnagComponent implements OnInit {
     errorMessage = '';

@@ -12,6 +12,8 @@ import {
 } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'AuthForm',
@@ -27,7 +29,9 @@ import { MatInputModule } from '@angular/material/input';
         MatInputModule,
         MatLabel,
         MatError,
-        MatIcon
+        MatIcon,
+        CommonModule,
+        MatButtonModule
     ]
 })
 export class AuthFormComponent {

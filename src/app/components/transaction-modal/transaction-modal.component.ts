@@ -48,7 +48,7 @@ import {
     MatHint,
     MatLabel
 } from '@angular/material/form-field';
-import { CurrencyPipe } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { MatInput, MatInputModule } from '@angular/material/input';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatOptgroup, MatOption } from '@angular/material/core';
@@ -88,7 +88,8 @@ export interface TransactionModalData {
         MatOption,
         CdkTextareaAutosize,
         MatButtonModule,
-        MatRadioButton
+        MatRadioButton,
+        CommonModule
     ]
 })
 export class TransactionModalComponent implements AfterViewInit, OnInit {

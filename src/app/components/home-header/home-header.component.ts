@@ -4,12 +4,19 @@ import { BudgetService } from 'src/app/services/budget.service';
 import { BBLogoComponent } from '../bb-logo/bb-logo.component';
 import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'HomeHeader',
     templateUrl: './home-header.component.html',
     styleUrls: ['./home-header.component.scss'],
-    imports: [BBLogoComponent, MatMenuTrigger, MatIcon, MatMenu]
+    imports: [
+        BBLogoComponent,
+        MatMenuTrigger,
+        MatIcon,
+        MatMenu,
+        MatButtonModule
+    ]
 })
 export class HomeHeaderComponent {
     constructor(

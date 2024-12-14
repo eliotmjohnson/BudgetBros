@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
@@ -7,7 +8,7 @@ import { RouterLink } from '@angular/router';
     selector: 'LinkButton',
     templateUrl: './link-button.component.html',
     styleUrls: ['./link-button.component.scss'],
-    imports: [MatIcon, RouterLink, MatButtonModule]
+    imports: [MatIcon, RouterLink, MatButtonModule, CommonModule]
 })
 export class LinkButtonComponent {
     @Input() description = '';

@@ -1,23 +1,22 @@
-@if (!isActive) {
+<a
+    mat-button
+    (click)="handleClick.emit(description)"
+    [routerLink]="description.toLowerCase()"
+    class="link-button"
+    *ngIf="!isActive; else selectedButton"
+>
+    <mat-icon [fontIcon]="iconName"></mat-icon>
+    {{ description }}
+</a>
+
+<ng-template #selectedButton>
     <a
-        mat-button
+        mat-raised-button
         (click)="handleClick.emit(description)"
-        [routerLink]="description.toLowerCase()"
-        class="link-button"
+        [color]="variant"
+        class="link-button raised"
     >
         <mat-icon [fontIcon]="iconName"></mat-icon>
         {{ description }}
     </a>
-} @else {
-    <ng-template>
-        <a
-            mat-raised-button
-            (click)="handleClick.emit(description)"
-            [color]="variant"
-            class="link-button raised"
-        >
-            <mat-icon [fontIcon]="iconName"></mat-icon>
-            {{ description }}
-        </a>
-    </ng-template>
-}
+</ng-template>

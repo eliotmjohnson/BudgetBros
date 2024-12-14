@@ -4,6 +4,7 @@ import {
     MatDatepickerToggle,
     MatDateRangeInput,
     MatDateRangePicker,
+    MatEndDate,
     MatStartDate
 } from '@angular/material/datepicker';
 import { MatFormFieldModule, MatSuffix } from '@angular/material/form-field';
@@ -21,6 +22,7 @@ import { MatInputModule } from '@angular/material/input';
         MatDatepickerToggle,
         ReactiveFormsModule,
         MatStartDate,
+        MatEndDate,
         MatSuffix
     ]
 })

@@ -10,9 +10,21 @@ import {
     signal,
     ViewChild
 } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+    FormControl,
+    FormGroup,
+    ReactiveFormsModule,
+    Validators
+} from '@angular/forms';
+import {
+    MatDatepickerInputEvent,
+    MatDatepickerModule
+} from '@angular/material/datepicker';
+import {
+    MAT_DIALOG_DATA,
+    MatDialogModule,
+    MatDialogRef
+} from '@angular/material/dialog';
 import { take } from 'rxjs';
 import { BudgetCategoryWithLineItems } from 'src/app/models/budgetCategory';
 import { LineItemReduced } from 'src/app/models/lineItem';
@@ -29,6 +41,20 @@ import {
     addValueToCurrencyInput,
     checkCurrencyInputKeyValid
 } from 'src/app/utils/currencyUtils';
+import { IncomeExpenseSelectorComponent } from '../mobile-components/income-expense-selector/income-expense-selector.component';
+import {
+    MatError,
+    MatFormField,
+    MatHint,
+    MatLabel
+} from '@angular/material/form-field';
+import { CurrencyPipe } from '@angular/common';
+import { MatInput } from '@angular/material/input';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatOptgroup, MatOption } from '@angular/material/core';
+import { CdkTextareaAutosize } from '@angular/cdk/text-field';
+import { MatButtonModule } from '@angular/material/button';
+import { MatRadioButton } from '@angular/material/radio';
 
 export interface TransactionModalData {
     mode:
@@ -44,7 +70,25 @@ export interface TransactionModalData {
 @Component({
     selector: 'app-transaction-modal',
     templateUrl: './transaction-modal.component.html',
-    styleUrl: './transaction-modal.component.scss'
+    styleUrl: './transaction-modal.component.scss',
+    imports: [
+        IncomeExpenseSelectorComponent,
+        MatDialogModule,
+        ReactiveFormsModule,
+        MatFormField,
+        MatLabel,
+        MatError,
+        CurrencyPipe,
+        MatInput,
+        MatDatepickerModule,
+        MatHint,
+        MatTooltip,
+        MatOptgroup,
+        MatOption,
+        CdkTextareaAutosize,
+        MatButtonModule,
+        MatRadioButton
+    ]
 })
 export class TransactionModalComponent implements AfterViewInit, OnInit {
     @ViewChild('titleInput') titleInput!: ElementRef;

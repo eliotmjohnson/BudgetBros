@@ -1,10 +1,24 @@
 import { Component, OnInit, input, output } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
+import { ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
+import {
+    MatDatepickerToggle,
+    MatDateRangeInput,
+    MatDateRangePicker
+} from '@angular/material/datepicker';
+import { MatFormFieldModule, MatSuffix } from '@angular/material/form-field';
 
 @Component({
     selector: 'TransactionsDatePicker',
     templateUrl: './transactions-date-picker.component.html',
-    styleUrl: './transactions-date-picker.component.scss'
+    styleUrl: './transactions-date-picker.component.scss',
+    imports: [
+        MatFormFieldModule,
+        MatDateRangeInput,
+        MatDateRangePicker,
+        MatDatepickerToggle,
+        ReactiveFormsModule,
+        MatSuffix
+    ]
 })
 export class TransactionsDatePickerComponent implements OnInit {
     form = input.required<UntypedFormGroup>();

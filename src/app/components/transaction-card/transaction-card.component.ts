@@ -8,11 +8,26 @@ import {
 } from '../transaction-modal/transaction-modal.component';
 import { BudgetCategoryService } from 'src/app/services/budget-category.service';
 import { getMonth, getYear } from 'src/app/utils/timeUtils';
+import { MatCardModule } from '@angular/material/card';
+import { MatDivider } from '@angular/material/divider';
+import { MatIcon } from '@angular/material/icon';
+import { MatChip } from '@angular/material/chips';
+import { CurrencyPipe, DatePipe } from '@angular/common';
+import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 
 @Component({
     selector: 'TransactionCard',
     templateUrl: './transaction-card.component.html',
-    styleUrl: './transaction-card.component.scss'
+    styleUrl: './transaction-card.component.scss',
+    imports: [
+        MatCardModule,
+        MatDivider,
+        MatIcon,
+        MatChip,
+        CurrencyPipe,
+        CdkOverlayOrigin,
+        DatePipe
+    ]
 })
 export class TransactionCardComponent {
     transactionService = inject(TransactionService);

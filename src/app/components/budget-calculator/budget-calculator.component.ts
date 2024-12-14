@@ -1,3 +1,4 @@
+import { CurrencyPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { cloneDeep, isEqual } from 'lodash';
 import { deleteItemAnimation } from 'src/app/animations/mobile-item-animations';
@@ -8,7 +9,8 @@ import { BudgetService } from 'src/app/services/budget.service';
     selector: 'BudgetCalculator',
     templateUrl: './budget-calculator.component.html',
     styleUrl: './budget-calculator.component.scss',
-    animations: [deleteItemAnimation]
+    animations: [deleteItemAnimation],
+    imports: [CurrencyPipe]
 })
 export class BudgetCalculatorComponent {
     previousBudget?: Budget;

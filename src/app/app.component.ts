@@ -1,6 +1,6 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { loaderOverlayAnimation } from './animations/loader-overlay-animation';
 import {
     addTransactionModalAnimation,
@@ -9,6 +9,12 @@ import {
 import { AuthService } from './services/auth.service';
 import { MobileModalService } from './services/mobile-modal.service';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSpinner } from '@angular/material/progress-spinner';
+import { BBLogoComponent } from './components/bb-logo/bb-logo.component';
+import { TabsBarComponent } from './components/mobile-components/tabs-bar/tabs-bar.component';
+import { AddTransactionMobileModalComponent } from './components/mobile-components/add-transaction-mobile-modal/add-transaction-mobile-modal.component';
+import { BudgetTransactionsCardComponent } from './components/budget-transactions-card/budget-transactions-card.component';
+import { BudgetStarterComponent } from './components/budget-starter/budget-starter.component';
 
 @Component({
     selector: 'app-root',
@@ -22,7 +28,16 @@ import { MatDialog } from '@angular/material/dialog';
     host: {
         '[class.modal-present]': `(this.mobileModalService.isAddTransactionModalOpen()
             && !this.mobileModalService.isBudgetTransactionsModalOpen()) || mobileModalService.isMobileBudgetStarterModalOpen()`
-    }
+    },
+    imports: [
+        BBLogoComponent,
+        MatSpinner,
+        RouterOutlet,
+        TabsBarComponent,
+        AddTransactionMobileModalComponent,
+        BudgetTransactionsCardComponent,
+        BudgetStarterComponent
+    ]
 })
 export class AppComponent implements OnInit {
     animationEnd = false;

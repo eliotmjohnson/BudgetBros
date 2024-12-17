@@ -35,6 +35,7 @@ import {
 import { SlideToDeleteComponent } from '../mobile-components/slide-to-delete/slide-to-delete.component';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule, CurrencyPipe } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'BudgetCategoryItem',
@@ -44,6 +45,7 @@ import { CommonModule, CurrencyPipe } from '@angular/common';
         SlideToDeleteComponent,
         MatIconModule,
         MatMenu,
+        MatButtonModule,
         MatMenuTrigger,
         CurrencyPipe,
         ReactiveFormsModule,

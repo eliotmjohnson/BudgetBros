@@ -14,6 +14,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatChip } from '@angular/material/chips';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'TransactionCard',
@@ -26,7 +27,8 @@ import { CdkOverlayOrigin } from '@angular/cdk/overlay';
         MatChip,
         CurrencyPipe,
         CdkOverlayOrigin,
-        DatePipe
+        DatePipe,
+        MatButtonModule
     ]
 })
 export class TransactionCardComponent {

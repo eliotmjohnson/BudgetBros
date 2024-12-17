@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { BudgetCategoryService } from 'src/app/services/budget-category.service';
@@ -16,7 +17,7 @@ import { TransactionService } from 'src/app/services/transaction.service';
         '[class.is-feature-modal-open]':
             'mobileModalService.isFeatureModalOpen()'
     },
-    imports: [RouterLink, MatIcon, RouterLinkActive]
+    imports: [RouterLink, MatIcon, RouterLinkActive, MatButtonModule]
 })
 export class TabsBarComponent {
     constructor(

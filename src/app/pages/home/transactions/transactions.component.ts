@@ -9,6 +9,7 @@ import {
     signal
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDivider } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -41,7 +42,8 @@ import { getTodayMidnight } from 'src/app/utils/timeUtils';
         MatDivider,
         MatSpinner,
         TransactionCardComponent,
-        CurrencyPipe
+        CurrencyPipe,
+        MatButtonModule
     ]
 })
 export class TransactionsComponent implements OnInit {

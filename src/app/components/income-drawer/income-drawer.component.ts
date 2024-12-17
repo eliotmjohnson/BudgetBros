@@ -7,6 +7,7 @@ import {
     Renderer2
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import {
     MatError,
     MatFormFieldModule,
@@ -40,7 +41,8 @@ import {
         MatInputModule,
         MatLabel,
         MatError,
-        MatIcon
+        MatIcon,
+        MatButtonModule
     ]
 })
 export class IncomeDrawerComponent implements AfterViewInit {

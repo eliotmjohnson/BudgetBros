@@ -29,6 +29,7 @@ import { FeatureModalComponent } from '../mobile-components/feature-modal/featur
 import { DecimalPipe } from '@angular/common';
 import { SortByDatePipe } from 'src/app/pipes/sort-by-date.pipe';
 import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'BudgetTransactionsCard',
@@ -48,6 +49,7 @@ import { MatInputModule } from '@angular/material/input';
         MatIcon,
         InlineFeatureComponent,
         MatFormFieldModule,
+        MatButtonModule,
         MatInputModule,
         BBLogoComponent,
         InlineTransactionComponent,

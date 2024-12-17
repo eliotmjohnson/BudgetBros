@@ -4,12 +4,13 @@ import { MobileModalService } from 'src/app/services/mobile-modal.service';
 import { BBLogoComponent } from '../bb-logo/bb-logo.component';
 import { MatSpinner } from '@angular/material/progress-spinner';
 import { MatIcon } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'BudgetStarter',
     templateUrl: './budget-starter.component.html',
     styleUrl: './budget-starter.component.scss',
-    imports: [BBLogoComponent, MatSpinner, MatIcon]
+    imports: [BBLogoComponent, MatSpinner, MatIcon, MatButtonModule]
 })
 export class BudgetStarterComponent implements OnInit {
     budgetService = inject(BudgetService);

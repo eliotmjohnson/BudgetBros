@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { BudgetService } from 'src/app/services/budget.service';
 import { BBLogoComponent } from '../bb-logo/bb-logo.component';
-import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
+import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
@@ -14,7 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
         BBLogoComponent,
         MatMenuTrigger,
         MatIcon,
-        MatMenu,
+        MatMenuModule,
         MatButtonModule
     ]
 })

@@ -33,6 +33,7 @@ import { CardComponent } from '../card/card.component';
 import { BudgetCategoryItemComponent } from '../budget-category-item/budget-category-item.component';
 import { MatIcon } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'BudgetCategoryCard',
@@ -53,7 +54,8 @@ import { CommonModule } from '@angular/common';
         CdkDropList,
         CdkDrag,
         MatIcon,
-        CommonModule
+        CommonModule,
+        MatButtonModule
     ]
 })
 export class BudgetCategoryCardComponent implements OnInit, AfterViewChecked {

@@ -14,6 +14,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { UpdateFundPayload } from 'src/app/models/lineItem';
 import { LineItemService } from 'src/app/services/line-item.service';
 import { MobileModalService } from 'src/app/services/mobile-modal.service';
@@ -38,7 +39,8 @@ import {
         MatFormFieldModule,
         ReactiveFormsModule,
         CurrencyPipe,
-        MatButtonModule
+        MatButtonModule,
+        MatInputModule
     ]
 })
 export class InlineFeatureComponent implements OnInit, AfterViewChecked {

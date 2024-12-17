@@ -55,6 +55,7 @@ import { MatOptgroup, MatOption } from '@angular/material/core';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRadioButton } from '@angular/material/radio';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 export interface TransactionModalData {
     mode:

@@ -15,7 +15,7 @@ import {
     ViewChild
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
+import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { filter, take } from 'rxjs';
 import { Budget } from 'src/app/models/budget';
 import {
@@ -44,7 +44,7 @@ import { MatButtonModule } from '@angular/material/button';
     imports: [
         SlideToDeleteComponent,
         MatIconModule,
-        MatMenu,
+        MatMenuModule,
         MatButtonModule,
         MatMenuTrigger,
         CurrencyPipe,

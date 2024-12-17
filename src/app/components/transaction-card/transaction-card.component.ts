@@ -13,7 +13,7 @@ import { MatDivider } from '@angular/material/divider';
 import { MatIcon } from '@angular/material/icon';
 import { MatChip } from '@angular/material/chips';
 import { CurrencyPipe, DatePipe } from '@angular/common';
-import { CdkOverlayOrigin } from '@angular/cdk/overlay';
+import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
@@ -28,7 +28,8 @@ import { MatButtonModule } from '@angular/material/button';
         CurrencyPipe,
         CdkOverlayOrigin,
         DatePipe,
-        MatButtonModule
+        MatButtonModule,
+        CdkConnectedOverlay
     ]
 })
 export class TransactionCardComponent {

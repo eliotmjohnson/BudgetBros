@@ -15,8 +15,8 @@ use crate::{
 
 use super::transactions_services::{
     add_transaction, delete_transaction, get_all_transactions_between_dates,
-    get_line_item_transactions, get_untracked_transactions, soft_delete_transaction,
-    update_transaction,
+    get_line_item_transactions, get_untracked_transactions, recover_transaction,
+    soft_delete_transaction, update_transaction,
 };
 
 #[get("/untracked/{user_id}")]
@@ -169,7 +169,7 @@ pub async fn update_transaction_handler(
     }
 }
 
-#[delete("/soft/{transaction_id}")]
+#[delete("/soft-delete/{transaction_id}")]
 pub async fn soft_delete_transaction_handler(
     state: Data<AppState>,
     params: Path<String>,
@@ -180,6 +180,24 @@ pub async fn soft_delete_transaction_handler(
 
     match delete_transaction_result {
         Ok(_) => HttpResponse::Ok().json("Transaction deleted successfully"),
+        Err(e) => {
+            println!("{}", e);
+            HttpResponse::InternalServerError().body(e.to_string())
+        }
+    }
+}
+
+#[put("/recover/{transaction_id}")]
+pub async fn recover_transaction_handler(
+    state: Data<AppState>,
+    params: Path<String>,
+) -> impl Responder {
+    let transaction_id = params.into_inner();
+
+    let recovered_transaction_result = recover_transaction(state, transaction_id).await;
+
+    match recovered_transaction_result {
+        Ok(_) => HttpResponse::Ok().json("Transaction recovered successfully"),
         Err(e) => {
             println!("{}", e);
             HttpResponse::InternalServerError().body(e.to_string())

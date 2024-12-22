@@ -148,6 +148,23 @@ pub async fn soft_delete_transaction(state: Data<AppState>, id: String) -> Resul
     Ok(id)
 }
 
+pub async fn recover_transaction(state: Data<AppState>, id: String) -> Result<String, sqlx::Error> {
+    let query = 
+        "UPDATE 
+            transactions 
+        SET 
+            deleted = false       
+        WHERE 
+            id = $1";
+
+    let _ = sqlx::query_as::<_, Transaction>(query)
+                .bind(id.clone())   
+                .fetch_one(&state.db)
+                .await;
+
+    Ok(id)
+}
+
 pub async fn delete_transaction(state: Data<AppState>, id: String) -> Result<String, sqlx::Error> {
     let query = 
         "DELETE FROM transactions

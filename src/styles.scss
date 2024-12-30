@@ -46,6 +46,7 @@ $BudgetBros-theme: mat.m2-define-light-theme(
 * {
     box-sizing: border-box;
     margin: 0;
+    user-select: none;
 }
 html,
 body {

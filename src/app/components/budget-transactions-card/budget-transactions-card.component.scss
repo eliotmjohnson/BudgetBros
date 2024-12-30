@@ -223,6 +223,17 @@
     align-items: center;
 }
 
+@media (max-width: 1340px) {
+    .title-section {
+        .top {
+            h1 {
+                font-size: 1.65rem;
+                margin-right: 0.2rem;
+            }
+        }
+    }
+}
+
 @media (max-width: 1145px) {
     :host {
         display: none;
@@ -239,6 +250,14 @@
         border-top-left-radius: 0;
         border-top-right-radius: 0;
         min-height: calc(6rem + min(2.5rem, env(safe-area-inset-top)));
+    }
+
+    .title-section {
+        .top {
+            h1 {
+                font-size: 1.9rem;
+            }
+        }
     }
 
     .back-button {

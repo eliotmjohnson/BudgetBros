@@ -52,7 +52,7 @@
     </span>
     <AmountTypeSelector />
     <IncomeDrawer />
-    @if (!budgetService.isLoading() && isScrolling) {
+    @if (!budgetService.isLoading() && isRefreshEnabled) {
         <div
             class="pull-refresh-icon-container"
             style.transform="translateY({{ -(scrollPosition / 30) }}rem)"

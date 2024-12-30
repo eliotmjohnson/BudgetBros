@@ -184,7 +184,7 @@ pub async fn copy_budget_handler(
         Ok(budget_id) => budget_id,
         Err(err) => {
             return HttpResponse::InternalServerError()
-                .json(format!("Error adding budget, {}", err.to_string()))
+                .json(format!("Error adding budget, {}", err))
         }
     };
 
@@ -205,13 +205,13 @@ pub async fn copy_budget_handler(
             Ok(budget_category_id) => budget_category_id,
             Err(err) => {
                 return HttpResponse::InternalServerError()
-                    .json(format!("Error adding budget category, {}", err.to_string()))
+                    .json(format!("Error adding budget category, {}", err))
             }
         };
         new_category_order.push(budget_category_id.id.clone());
 
         let mut current_line_items = category.line_items.clone();
-        if current_line_items.len() > 0 {
+        if !current_line_items.is_empty() {
             sort_by_line_item_order(&mut current_line_items, category.line_item_order.clone());
 
             let new_line_items: Vec<CopyLineItem> = current_line_items
@@ -242,7 +242,7 @@ pub async fn copy_budget_handler(
             let new_line_item_ids = copy_line_items(state.clone(), new_line_items).await;
             if let Err(err) = new_line_item_ids {
                 return HttpResponse::InternalServerError()
-                    .json(format!("Error copying line items, {}", err.to_string()));
+                    .json(format!("Error copying line items, {}", err));
             }
 
             if let Err(err) = update_line_item_order(

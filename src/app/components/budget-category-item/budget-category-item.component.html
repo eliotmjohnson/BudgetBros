@@ -5,7 +5,10 @@
     [deleteButtonPosition]="90"
     [deleteDistance]="70"
 >
-    <span class="slide-to-delete-content">
+    <span
+        class="slide-to-delete-content"
+        [class.is-reordering]="isReordering"
+    >
         <span
             #lineItemContainer
             class="budget-item-wrapper"
@@ -16,7 +19,7 @@
                 <ng-content></ng-content>
                 <mat-icon
                     class="fund-logo"
-                    *ngIf="fund"
+                    *ngIf="fund()"
                     fontIcon="savings"
                 />
                 <input
@@ -25,7 +28,7 @@
                     [class.edit-enabled-title]="editConfig()"
                     [formControl]="lineItemInputValue"
                     (click)="enableEditMode(lineItemTitleInput)"
-                    [value]="itemTitle"
+                    [value]="itemTitle()"
                 />
             </span>
             <input

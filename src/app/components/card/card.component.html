@@ -1,8 +1,9 @@
 <div
-    class="card {{ isBudgetTransactionsModal ? 'is-modal' : '' }}"
-    [style.padding]="padding"
-    [style.paddingBottom]="paddingBottom"
-    [style.paddingLeft]="paddingLeft"
+    class="card {{ isBudgetTransactionsModal() ? 'is-modal' : '' }}"
+    [style.padding]="padding()"
+    [style.paddingBottom]="paddingBottom()"
+    [style.paddingLeft]="paddingLeft()"
+    [style.paddingRight]="paddingRight()"
 >
     <ng-content></ng-content>
 </div>

@@ -10,6 +10,7 @@
         transform 0.35s,
         border-radius 0.45s cubic-bezier(0.25, 1, 0.25, 1),
         translate 0.35s;
+    overflow: hidden;
 }
 
 :host(.modal-present) {
@@ -77,6 +78,10 @@
 @media (max-width: 1145px) {
     :host {
         padding-top: env(safe-area-inset-top);
+    }
+
+    .sidebar-budget-wrapper {
+        height: 100%;
     }
 
     .main-window {

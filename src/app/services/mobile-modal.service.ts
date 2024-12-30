@@ -7,6 +7,7 @@ import { TransactionModalData } from '../components/transaction-modal/transactio
 export class MobileModalService {
     isMobileDevice = signal(false);
     isIOSDevice = signal(false);
+    isMidsizeDevice = signal(false);
 
     isAddTransactionModalOpen = signal(false);
     isBudgetTransactionsModalOpen = signal(false);
@@ -14,7 +15,7 @@ export class MobileModalService {
     isFeatureModalOpen = signal(false);
 
     isReorderingCategories = signal(false);
-    showPlannedAmounts = signal(false);
+    showPlannedAmounts = signal(true);
     budgetCopyOption = signal('');
 
     mobileModalData: TransactionModalData = { mode: 'add' };

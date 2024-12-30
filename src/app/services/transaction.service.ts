@@ -65,12 +65,21 @@ export class TransactionService {
             transactions?.filter((t) => t.transactionId !== transactionId)
         );
 
-        this.http.delete(`${this.baseUrl}/soft/${transactionId}`).subscribe({
-            error: (error) => {
-                console.error(error);
-                this.transactions.set(currentTransactions);
-            }
-        });
+        this.http
+            .delete(`${this.baseUrl}/soft-delete/${transactionId}`)
+            .subscribe({
+                error: (error) => {
+                    console.error(error);
+                    this.transactions.set(currentTransactions);
+                }
+            });
+    }
+
+    recoverTransaction(transactionId: IsolatedTransaction['transactionId']) {
+        return this.http.put<void>(
+            `${this.baseUrl}/recover/${transactionId}`,
+            null
+        );
     }
 
     addTransaction(transaction: NewTransaction, needsRefresh = true) {

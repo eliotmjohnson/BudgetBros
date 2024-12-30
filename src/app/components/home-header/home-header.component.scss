@@ -22,6 +22,10 @@ header {
 }
 
 @media (max-width: 1145px) {
+    :host {
+        display: none;
+    }
+
     .account {
         mat-icon {
             display: none;

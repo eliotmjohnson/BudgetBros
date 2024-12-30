@@ -4,12 +4,10 @@ import {
     computed,
     effect,
     ElementRef,
-    EventEmitter,
     input,
-    Input,
     model,
     OnInit,
-    Output,
+    output,
     signal,
     untracked,
     ViewChild
@@ -37,30 +35,41 @@ import {
     selector: 'BudgetCategoryItem',
     templateUrl: './budget-category-item.component.html',
     styleUrls: ['./budget-category-item.component.scss'],
-    standalone: false
+    standalone: false,
+    host: {
+        '(touchstart)': 'triggerReorderTimeout()',
+        '(touchmove)': 'clearReorderTimeout()',
+        '(touchend)': 'clearReorderTimeout()'
+    }
 })
 export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     @ViewChild('lineItemTitleInput') lineItemTitleInput!: ElementRef;
     @ViewChild('plannedAmountInput') plannedAmountInput!: ElementRef;
     @ViewChild(MatMenuTrigger) itemMenu?: MatMenuTrigger;
-    @Input() itemTitle = '';
-    @Input() fund = false;
-    @Output() undoCreateNewLineItem = new EventEmitter();
-    @Output() updateNewLineItemId = new EventEmitter<string>();
-    @Output() saveNewLineItem = new EventEmitter<SaveLineItemPayload>();
-    @Output() deleteSavedLineItem = new EventEmitter<string>();
+
+    readonly itemTitle = input('');
+    readonly fund = input(false);
+    readonly fundId = input<string | undefined>();
+    readonly startingBalance = input<number | undefined>(0);
+    readonly transactions = input<Transaction[]>([]);
 
     itemId = model('');
-    fundId = input<string | undefined>();
-    transactions = input<Transaction[]>([]);
     plannedAmount = model<number>(0);
-    startingBalance = input<number | undefined>(0);
+
+    undoCreateNewLineItem = output();
+    updateNewLineItemId = output<string>();
+    saveNewLineItem = output<SaveLineItemPayload>();
+    deleteSavedLineItem = output<string>();
+
     lineItemInputValue = new FormControl('');
     initialLineItemTitle = '';
     initialPlannedAmount = 0;
     isEditModeEnabled = signal(false);
     isNewLineItem = false;
     previousRemainingAmount: number | null = null;
+    reorderTimeout?: ReturnType<typeof setInterval>;
+    isReordering = false;
+
     remainingAmount = computed(() => {
         if (!this.isEditModeEnabled()) {
             const newRemainingAmount = parseFloat(
@@ -86,6 +95,7 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
             return this.previousRemainingAmount || 0;
         }
     });
+
     progressPercentage = computed(() => {
         const calculation =
             (this.remainingAmount() / (this.plannedAmount() || 0.01)) * 100;
@@ -98,11 +108,13 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
                   : calculation
             : 0;
     });
+
     isLineItemSelected = computed(
         () =>
             this.itemId() ===
             this.transactionService.currentSelectedLineItem()?.lineItemId
     );
+
     editConfig = computed(
         () =>
             this.isEditModeEnabled() &&
@@ -131,9 +143,10 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     }
 
     ngOnInit(): void {
-        this.lineItemInputValue.setValue(this.itemTitle);
+        const itemTitle = this.itemTitle();
+        this.lineItemInputValue.setValue(itemTitle);
 
-        this.isNewLineItem = this.itemTitle === 'Add Title' && !this.itemId();
+        this.isNewLineItem = itemTitle === 'Add Title' && !this.itemId();
 
         if (this.isNewLineItem) {
             this.enableEditMode();
@@ -174,7 +187,7 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
         const currentBudget = untracked(() => this.budgetService.budget());
 
         return !!(
-            this.fund &&
+            this.fund() &&
             this.fundId() &&
             this.previousRemainingAmount !== null &&
             newRemainingAmount !== this.previousRemainingAmount &&
@@ -203,7 +216,7 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
             plannedAmount: this.plannedAmount(),
             remainingAmount: this.remainingAmount(),
             lineItemId: this.itemId(),
-            isFund: this.fund,
+            isFund: this.fund(),
             transactions: this.transactions(),
             startingBalance: this.startingBalance()
         };
@@ -352,6 +365,17 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
         }
 
         if (this.isNewLineItem) this.isNewLineItem = false;
+    }
+
+    triggerReorderTimeout() {
+        this.reorderTimeout = setTimeout(() => (this.isReordering = true), 250);
+    }
+
+    clearReorderTimeout() {
+        if (this.reorderTimeout) {
+            clearTimeout(this.reorderTimeout);
+        }
+        this.isReordering = false;
     }
 
     blurInputs() {

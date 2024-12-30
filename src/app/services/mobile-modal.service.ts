@@ -15,7 +15,7 @@ export class MobileModalService {
     isFeatureModalOpen = signal(false);
 
     isReorderingCategories = signal(false);
-    showPlannedAmounts = signal(true);
+    showPlannedAmounts = signal(false);
     budgetCopyOption = signal('');
 
     mobileModalData: TransactionModalData = { mode: 'add' };

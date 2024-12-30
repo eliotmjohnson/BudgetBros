@@ -1,7 +1,10 @@
 <Card
     style="position: relative"
     paddingBottom="0.5rem"
-    paddingLeft="1.5rem"
+    paddingLeft="{{ !mobileModalService.isMobileDevice() ? '1.5rem' : '1rem' }}"
+    paddingRight="{{
+        !mobileModalService.isMobileDevice() ? '1.5rem' : '1rem'
+    }}"
 >
     <ng-content></ng-content>
     <span class="header">
@@ -68,13 +71,16 @@
             cdkDropListLockAxis="y"
             cdkDragBoundary=".budget-items-wrapper"
             [cdkDragDisabled]="isAddingLineItem"
+            [cdkDragStartDelay]="mobileModalService.isMobileDevice() ? 250 : 0"
             cdkDrag
         >
-            <mat-icon
-                class="drag-handle"
-                fontIcon="drag_indicator"
-                cdkDragHandle
-            />
+            @if (!mobileModalService.isMobileDevice()) {
+                <mat-icon
+                    class="drag-handle"
+                    fontIcon="drag_indicator"
+                    cdkDragHandle
+                />
+            }
         </BudgetCategoryItem>
         <span class="add-item-button">
             <button

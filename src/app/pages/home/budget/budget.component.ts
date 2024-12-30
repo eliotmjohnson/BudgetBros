@@ -1,11 +1,13 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import {
     AfterViewChecked,
+    AfterViewInit,
     ChangeDetectorRef,
     Component,
     computed,
     effect,
     ElementRef,
+    OnDestroy,
     OnInit,
     signal,
     untracked,
@@ -14,7 +16,7 @@ import {
 import { toObservable } from '@angular/core/rxjs-interop';
 import { MatCalendar, MatCalendarView } from '@angular/material/datepicker';
 import { MatDialog } from '@angular/material/dialog';
-import { skip, take } from 'rxjs';
+import { fromEvent, skip, Subscription, take } from 'rxjs';
 import { BudgetStarterComponent } from 'src/app/components/budget-starter/budget-starter.component';
 import { MONTHS } from 'src/app/constants/constants';
 import { BudgetCategory } from 'src/app/models/budgetCategory';
@@ -29,9 +31,13 @@ import { TransactionService } from 'src/app/services/transaction.service';
     styleUrls: ['./budget.component.scss'],
     standalone: false
 })
-export class BudgetComponent implements OnInit, AfterViewChecked {
+export class BudgetComponent
+    implements OnInit, AfterViewChecked, AfterViewInit, OnDestroy
+{
     @ViewChild('calendarSelector') calendarSelector!: MatCalendar<Date>;
     @ViewChild('phantomInput') phantomInput!: ElementRef<HTMLInputElement>;
+    @ViewChild('budgets') budgets!: ElementRef;
+
     months = MONTHS;
     selectedMonth = computed(() => {
         return MONTHS[(this.budget()?.monthNumber ?? 1) - 1];
@@ -47,12 +53,14 @@ export class BudgetComponent implements OnInit, AfterViewChecked {
     isBudgetBrosBudget = true;
     isReordering = false;
     scrollPosition = 0;
-    isScrolling = false;
+    isRefreshEnabled = false;
+    isScrollEnabled = false;
     isOpeningKeyboard = signal(false);
     isCopyingBudget = toObservable(this.budgetService.isCopyingBudget).pipe(
         skip(1),
         take(2)
     );
+    touchstartListener!: Subscription;
 
     selectedDate = computed(() => {
         const currentBudget = this.budget();
@@ -89,6 +97,20 @@ export class BudgetComponent implements OnInit, AfterViewChecked {
             );
         } else {
             this.budgetService.refreshBudget();
+        }
+    }
+
+    ngAfterViewInit() {
+        if (!this.touchstartListener) {
+            this.touchstartListener = fromEvent(
+                this.budgets.nativeElement,
+                'touchstart',
+                {
+                    capture: true
+                }
+            ).subscribe(() => {
+                this.setIsScrolling();
+            });
         }
     }
 
@@ -213,9 +235,9 @@ export class BudgetComponent implements OnInit, AfterViewChecked {
             this.scrollPosition = (event.target as HTMLDivElement).scrollTop;
 
             if (this.scrollPosition > 10) {
-                this.isScrolling = false;
-            } else if (this.scrollPosition <= -110 && this.isScrolling) {
-                this.isScrolling = false;
+                this.isRefreshEnabled = false;
+            } else if (this.scrollPosition <= -110 && this.isRefreshEnabled) {
+                this.isRefreshEnabled = false;
                 this.refreshBudget();
             }
         }
@@ -223,7 +245,7 @@ export class BudgetComponent implements OnInit, AfterViewChecked {
 
     setIsScrolling() {
         if (this.scrollPosition <= 10) {
-            this.isScrolling = true;
+            this.isRefreshEnabled = true;
         }
     }
 
@@ -298,5 +320,9 @@ export class BudgetComponent implements OnInit, AfterViewChecked {
                 currentBudget.year
             );
         }
+    }
+
+    ngOnDestroy(): void {
+        this.touchstartListener.unsubscribe();
     }
 }

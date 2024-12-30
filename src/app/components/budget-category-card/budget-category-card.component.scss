@@ -83,6 +83,7 @@
 
 .cdk-drag-preview {
     background-color: white;
+    opacity: 0.5;
     overflow: visible;
 }
 
@@ -139,17 +140,32 @@
 
 @media (max-width: 1145px) {
     .header {
-        h1 {
-            width: 70%;
-        }
+        margin-bottom: 0rem;
 
         .title-form {
-            width: 70%;
+            width: 80%;
 
             span {
                 .category-name-input {
                     max-width: 35vw;
                     width: 100%;
+                }
+            }
+        }
+
+        p {
+            text-align: right;
+            padding-right: 0.3rem;
+        }
+    }
+
+    .header {
+        .title-form {
+            span {
+                .category-name-input {
+                    &:focus {
+                        outline-offset: -0.1rem;
+                    }
                 }
             }
         }

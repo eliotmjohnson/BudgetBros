@@ -7,14 +7,14 @@ $hidden-tab-distance: calc(5rem + min(2vh, env(safe-area-inset-bottom)));
     position: fixed;
     bottom: 0rem;
     left: 0rem;
-    height: 5rem;
+    height: calc(5rem + min(1rem, env(safe-area-inset-bottom)));
     width: 100vw;
     background-color: #fafafa;
     border-top: #ebebeb 1px solid;
     transition: translate 0.4s;
     animation: slideUp 1s;
     z-index: 2;
-    margin-bottom: min(1rem, env(safe-area-inset-bottom));
+    padding-bottom: min(1rem, env(safe-area-inset-bottom));
 }
 
 :host(.modal-open) {

@@ -326,6 +326,10 @@
 }
 
 @media (max-width: 1145px) {
+    .header {
+        padding-top: 1.5rem;
+    }
+
     .budget-dashboard-wrapper {
         padding: 1rem;
         padding-top: 0rem;
@@ -340,7 +344,7 @@
             width: 100vw;
             padding-right: 0rem;
             padding-top: 1rem;
-            padding-bottom: 30vh;
+            padding-bottom: 35vh;
             height: calc(100% + 1px);
             overscroll-behavior: contain;
         }
@@ -373,7 +377,7 @@
 @media (max-width: 1145px) and (display-mode: standalone) {
     .budget-dashboard-wrapper {
         .budgets {
-            padding-bottom: 15vh;
+            padding-bottom: 20vh;
         }
     }
 }

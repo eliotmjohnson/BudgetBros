@@ -38,7 +38,7 @@
             cursor: pointer;
             width: calc(100% - 2rem);
             font-family: inherit;
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 500;
             opacity: 0.8;
             border: none;
@@ -98,6 +98,10 @@
         font-weight: 400;
         text-align: center;
     }
+}
+
+.is-reordering {
+    opacity: 0.5;
 }
 
 .item-menu {
@@ -174,7 +178,7 @@
 
     .budget-item-wrapper {
         .title-wrapper {
-            width: 63%;
+            width: 80%;
         }
 
         .planned-amount {
@@ -186,18 +190,22 @@
                 outline: none;
             }
             &:focus {
-                @include line-item-input();
+                outline: none;
             }
         }
 
         .add-planned-mobile {
+            width: 27%;
             display: flex;
-            width: 35%;
+            text-align: right;
+            padding-right: 0.3rem;
         }
 
         p {
-            width: 35%;
+            width: 27%;
             margin-top: 0.1rem;
+            text-align: right;
+            padding-right: 0.3rem;
         }
 
         .remove-remaining-mobile {

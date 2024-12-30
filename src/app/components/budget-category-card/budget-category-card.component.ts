@@ -97,7 +97,7 @@ export class BudgetCategoryCardComponent implements OnInit, AfterViewChecked {
     }
 
     enableEditMode() {
-        this.isEditingName = true;
+        if (!this.isEditingName) this.isEditingName = true;
     }
 
     updateCategoryName(submitEvent?: SubmitEvent): void {
@@ -336,5 +336,9 @@ export class BudgetCategoryCardComponent implements OnInit, AfterViewChecked {
             const indexB = this.order.indexOf(b.lineItemId);
             return indexA - indexB;
         });
+    }
+
+    setPlannedAmountsWeb(showPlannedAmounts: boolean) {
+        this.mobileModalService.showPlannedAmounts.set(showPlannedAmounts);
     }
 }

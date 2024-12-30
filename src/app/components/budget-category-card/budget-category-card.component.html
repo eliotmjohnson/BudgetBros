@@ -20,7 +20,8 @@
                     }}"
                     type="text"
                     [defaultValue]="name"
-                    (click)="enableEditMode()"
+                    (focus)="enableEditMode()"
+                    (mouseup)="$event.preventDefault()"
                     (mouseover)="addRemoveHoverClass()"
                     (mouseout)="addRemoveHoverClass(true)"
                     (blur)="updateCategoryName()"
@@ -36,16 +37,47 @@
         </form>
         @if (
             mobileModalService.showPlannedAmounts() ||
-            !mobileModalService.isMobileDevice()
+            (!mobileModalService.isMobileDevice() &&
+                !mobileModalService.isMidsizeDevice())
         ) {
             <p class="planned">Planned</p>
         }
         @if (
             !mobileModalService.showPlannedAmounts() ||
-            !mobileModalService.isMobileDevice()
+            (!mobileModalService.isMobileDevice() &&
+                !mobileModalService.isMidsizeDevice())
         ) {
             <p>Remaining</p>
         }
+        <mat-icon
+            [matMenuTriggerFor]="menu"
+            class="planned-options-button"
+        >
+            keyboard_double_arrow_down
+        </mat-icon>
+        <mat-menu
+            #menu="matMenu"
+            xPosition="after"
+        >
+            <button
+                mat-menu-item
+                [class.planned-menu-selected]="
+                    mobileModalService.showPlannedAmounts()
+                "
+                (click)="setPlannedAmountsWeb(true)"
+            >
+                Planned
+            </button>
+            <button
+                mat-menu-item
+                [class.planned-menu-selected]="
+                    !mobileModalService.showPlannedAmounts()
+                "
+                (click)="setPlannedAmountsWeb(false)"
+            >
+                Remaining
+            </button>
+        </mat-menu>
     </span>
     <section
         class="budget-items-wrapper"

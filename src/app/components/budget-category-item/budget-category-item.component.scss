@@ -171,6 +171,31 @@
     color: bb-core.$bb-error-main;
 }
 
+@media (max-width: 1340px) {
+    .budget-item-wrapper {
+        .title-wrapper {
+            width: 68%;
+        }
+
+        .planned-amount {
+            display: none;
+        }
+
+        .add-planned-mobile {
+            display: flex;
+            width: 30%;
+        }
+
+        p {
+            width: 30%;
+        }
+
+        .remove-remaining-mobile {
+            display: none;
+        }
+    }
+}
+
 @media (max-width: 1145px) {
     .item-menu {
         display: none;

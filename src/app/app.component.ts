@@ -40,16 +40,14 @@ export class AppComponent implements OnInit {
         this.layout
             .observe([
                 '(max-width: 500px)',
-                '(max-width: 1155px) and (min-width: 500px)'
+                '(max-width: 1155px) and (min-width: 500px)',
+                '(max-width: 1340px) and (min-width: 1155px)'
             ])
             .subscribe((result) => {
                 const states = Object.values(result.breakpoints);
 
-                if (states[0]) {
-                    this.mobileModalService.isMobileDevice.set(true);
-                } else {
-                    this.mobileModalService.isMobileDevice.set(false);
-                }
+                this.mobileModalService.isMobileDevice.set(!!states[0]);
+                this.mobileModalService.isMidsizeDevice.set(!!states[2]);
 
                 if (states[1]) {
                     this.closeAllModals();

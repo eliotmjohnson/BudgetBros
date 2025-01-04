@@ -35,6 +35,19 @@ pub async fn get_untracked_transactions(state: Data<AppState>, user_id: String) 
         .await
 }
 
+pub async fn get_deleted_transactions(state: Data<AppState>, user_id: String) -> Result<Vec<Transaction>, sqlx::Error> {
+    let query = 
+        "SELECT * 
+        FROM transactions 
+        WHERE user_id = $1 
+        AND deleted = true";
+
+    sqlx::query_as::<_, Transaction>(query)
+        .bind(user_id)   
+        .fetch_all(&state.db)
+        .await
+}
+
 pub async fn get_all_transactions_between_dates(
     state: Data<AppState>,
     user_id: String,

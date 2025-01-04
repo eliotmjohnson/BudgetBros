@@ -38,10 +38,12 @@ export class TransactionsComponent implements OnInit {
 
     transactions = this.transactionService.transactions.value;
     untrackedTransactions = this.transactionService.untrackedTransactions.value;
+    deletedTransactions = this.transactionService.deletedTransactions.value;
 
     areTransactionsLoading = this.transactionService.transactions.isLoading;
 
     areUntrackedTransactionsBeingViewed = signal(false);
+    areDeletedTransactionsBeingViewed = signal(false);
     isFilterOpen = signal(false);
     filterFields = signal([
         {
@@ -62,12 +64,27 @@ export class TransactionsComponent implements OnInit {
         IsolatedTransaction[] | Transaction[] | undefined
     >(() => {
         const untrackedTransactions = this.untrackedTransactions();
-        const transactions = this.areUntrackedTransactionsBeingViewed()
-            ? untrackedTransactions
-            : this.transactions();
+        const deletedTransactions = this.deletedTransactions();
+
+        let currentViewedTransactions:
+            | IsolatedTransaction[]
+            | Transaction[]
+            | undefined;
+
+        switch (true) {
+            case this.areDeletedTransactionsBeingViewed():
+                currentViewedTransactions = deletedTransactions;
+                break;
+            case this.areUntrackedTransactionsBeingViewed():
+                currentViewedTransactions = untrackedTransactions;
+                break;
+            default:
+                currentViewedTransactions = this.transactions();
+        }
+
         const [titleField, amountField, merchantField] = this.filterFields();
 
-        return transactions?.filter((transaction) => {
+        return currentViewedTransactions?.filter((transaction) => {
             const titleFilter = titleField.value
                 ? transaction.title
                       ?.toLowerCase()
@@ -157,6 +174,9 @@ export class TransactionsComponent implements OnInit {
         if (start && end) {
             this.transactionService.selectedStartDate.set(start);
             this.transactionService.selectedEndDate.set(end);
+
+            this.areDeletedTransactionsBeingViewed.set(false);
+            this.areUntrackedTransactionsBeingViewed.set(false);
         }
     }
 
@@ -165,6 +185,14 @@ export class TransactionsComponent implements OnInit {
     }
 
     toggleUntracked() {
+        this.areDeletedTransactionsBeingViewed.set(false);
         this.areUntrackedTransactionsBeingViewed.update((prev) => !prev);
+    }
+
+    toggleDeleted() {
+        this.transactionService.deletedTransactions.reload(); // need to figure out when this actually needs to happen later...
+
+        this.areUntrackedTransactionsBeingViewed.set(false);
+        this.areDeletedTransactionsBeingViewed.update((prev) => !prev);
     }
 }

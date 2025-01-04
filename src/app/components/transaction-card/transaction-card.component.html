@@ -71,11 +71,17 @@
             </mat-chip>
             <button
                 mat-icon-button
-                (click)="deleteTransaction(transaction().transactionId)"
+                (click)="
+                    transaction().deleted
+                        ? recoverTransaction(transaction().transactionId)
+                        : deleteTransaction(transaction().transactionId)
+                "
             >
                 <mat-icon
-                    fontIcon="delete"
-                    class="error"
+                    [fontIcon]="
+                        transaction().deleted ? 'restore_from_trash' : 'delete'
+                    "
+                    [class]="transaction().deleted ? 'recover' : 'error'"
                 />
             </button>
         </div>

@@ -44,6 +44,10 @@ export class TransactionService {
         loader: () => this.getUntrackedTransactions()
     });
 
+    deletedTransactions = rxResource({
+        loader: () => this.getDeletedTransactions()
+    });
+
     getTransactionsBetweenDates(date1: Date, date2: Date) {
         return this.http.get<IsolatedTransaction[]>(
             `
@@ -55,6 +59,12 @@ export class TransactionService {
     getUntrackedTransactions() {
         return this.http.get<Transaction[]>(
             `${this.baseUrl}/untracked/${this.authService.userId}`
+        );
+    }
+
+    getDeletedTransactions() {
+        return this.http.get<Transaction[]>(
+            `${this.baseUrl}/deleted/${this.authService.userId}`
         );
     }
 
@@ -76,10 +86,20 @@ export class TransactionService {
     }
 
     recoverTransaction(transactionId: IsolatedTransaction['transactionId']) {
-        return this.http.put<void>(
-            `${this.baseUrl}/recover/${transactionId}`,
-            null
-        );
+        return this.http
+            .put<void>(`${this.baseUrl}/recover/${transactionId}`, null)
+            .subscribe({
+                next: () => {
+                    this.deletedTransactions.update((transactions) =>
+                        transactions?.filter(
+                            (t) => t.transactionId !== transactionId
+                        )
+                    );
+                },
+                error: (error) => {
+                    console.error(error);
+                }
+            });
     }
 
     addTransaction(transaction: NewTransaction, needsRefresh = true) {

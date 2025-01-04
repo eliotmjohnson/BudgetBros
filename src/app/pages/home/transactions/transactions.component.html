@@ -21,17 +21,29 @@
                     gap: '1rem'
                 }"
             >
-                <button
-                    mat-icon-button
-                    matTooltip="View untracked transactions"
-                    [disabled]="!untrackedTransactions()?.length"
-                    (click)="toggleUntracked()"
-                >
-                    <mat-icon
-                        fontIcon="receipt"
-                        class="icon"
-                    />
-                </button>
+                <div>
+                    <button
+                        mat-icon-button
+                        matTooltip="View & restore deleted transactions"
+                        (click)="toggleDeleted()"
+                    >
+                        <mat-icon
+                            fontIcon="restore_from_trash"
+                            class="icon"
+                        />
+                    </button>
+                    <button
+                        mat-icon-button
+                        matTooltip="View untracked transactions"
+                        [disabled]="!untrackedTransactions()?.length"
+                        (click)="toggleUntracked()"
+                    >
+                        <mat-icon
+                            fontIcon="receipt"
+                            class="icon"
+                        />
+                    </button>
+                </div>
                 @if (transactions()?.length) {
                     <button
                         mat-icon-button

@@ -21,6 +21,8 @@ import {
 } from 'src/app/utils/currencyUtils';
 import { getTodayMidnight } from 'src/app/utils/timeUtils';
 
+type MaybeTransaction = IsolatedTransaction[] | Transaction[] | undefined;
+
 @Component({
     selector: 'app-transactions',
     templateUrl: './transactions.component.html',
@@ -60,16 +62,11 @@ export class TransactionsComponent implements OnInit {
         }
     ]);
 
-    filteredTransactions = linkedSignal<
-        IsolatedTransaction[] | Transaction[] | undefined
-    >(() => {
+    filteredTransactions = linkedSignal<MaybeTransaction>(() => {
         const untrackedTransactions = this.untrackedTransactions();
         const deletedTransactions = this.deletedTransactions();
 
-        let currentViewedTransactions:
-            | IsolatedTransaction[]
-            | Transaction[]
-            | undefined;
+        let currentViewedTransactions: MaybeTransaction;
 
         switch (true) {
             case this.areDeletedTransactionsBeingViewed():

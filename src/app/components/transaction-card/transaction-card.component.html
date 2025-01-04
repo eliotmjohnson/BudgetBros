@@ -17,16 +17,18 @@
                 </p>
             }
         </mat-card-title>
-        <button
-            mat-icon-button
-            class="edit-button"
-            (click)="openEditModal()"
-        >
-            <mat-icon
-                fontIcon="edit"
-                class="edit"
-            />
-        </button>
+        @if (!transaction().deleted) {
+            <button
+                mat-icon-button
+                class="edit-button"
+                (click)="openEditModal()"
+            >
+                <mat-icon
+                    fontIcon="edit"
+                    class="edit"
+                />
+            </button>
+        }
     </mat-card-header>
     <mat-card-content>
         {{ budgetCategoryName() }}

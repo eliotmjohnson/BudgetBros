@@ -25,6 +25,7 @@
                     <button
                         mat-icon-button
                         matTooltip="View & restore deleted transactions"
+                        [disabled]="!deletedTransactions()?.length"
                         (click)="toggleDeleted()"
                     >
                         <mat-icon

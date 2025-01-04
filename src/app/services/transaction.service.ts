@@ -78,6 +78,9 @@ export class TransactionService {
         this.http
             .delete(`${this.baseUrl}/soft-delete/${transactionId}`)
             .subscribe({
+                next: () => {
+                    this.deletedTransactions.reload();
+                },
                 error: (error) => {
                     console.error(error);
                     this.transactions.set(currentTransactions);

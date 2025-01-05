@@ -62,16 +62,17 @@ pub async fn get_deleted_transactions_handler(
 
     match transactions_result {
         Ok(transactions) => {
-            let transactions_response: Vec<TransactionResponse> = transactions
+            let transactions_response: Vec<IsolatedTransactionResponse> = transactions
                 .into_iter()
-                .map(|transaction| TransactionResponse {
-                    line_item_id: transaction.line_item_id.unwrap_or_default(),
+                .map(|transaction| IsolatedTransactionResponse {
+                    line_item_id: transaction.line_item_id,
                     transaction_id: transaction.id,
                     title: transaction.title,
                     amount: transaction.amount,
-                    notes: transaction.notes.unwrap_or_default(),
+                    notes: transaction.notes,
                     date: transaction.date,
                     merchant: transaction.merchant,
+                    budget_category_name: transaction.budget_category_name,
                     deleted: transaction.deleted,
                     is_income_transaction: transaction.is_income_transaction,
                 })

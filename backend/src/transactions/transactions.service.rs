@@ -35,14 +35,24 @@ pub async fn get_untracked_transactions(state: Data<AppState>, user_id: String) 
         .await
 }
 
-pub async fn get_deleted_transactions(state: Data<AppState>, user_id: String) -> Result<Vec<Transaction>, sqlx::Error> {
+pub async fn get_deleted_transactions(state: Data<AppState>, user_id: String) -> Result<Vec<IsolatedTransaction>, sqlx::Error> {
     let query = 
-        "SELECT * 
-        FROM transactions 
-        WHERE user_id = $1 
-        AND deleted = true";
+        "SELECT 
+            t.*
+            , bc.name as budget_category_name 
+        FROM 
+            transactions t
+        JOIN 
+            line_items li ON t.line_item_id = li.id
+        JOIN 
+            budget_categories bc ON li.budget_category_id = bc.id
+        JOIN 
+            budgets b ON bc.budget_id = b.id
+        WHERE 
+            b.user_id = $1 
+            AND t.deleted = true";
 
-    sqlx::query_as::<_, Transaction>(query)
+    sqlx::query_as::<_, IsolatedTransaction>(query)
         .bind(user_id)   
         .fetch_all(&state.db)
         .await

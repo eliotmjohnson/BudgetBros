@@ -63,7 +63,7 @@ export class TransactionService {
     }
 
     getDeletedTransactions() {
-        return this.http.get<Transaction[]>(
+        return this.http.get<IsolatedTransaction[]>(
             `${this.baseUrl}/deleted/${this.authService.userId}`
         );
     }
@@ -113,10 +113,8 @@ export class TransactionService {
             .subscribe({
                 next: (transaction) => {
                     if (needsRefresh) {
-                        this.getTransactionsBetweenDates(
-                            new Date(transaction.date),
-                            new Date(transaction.date)
-                        );
+                        this.selectedStartDate.set(new Date(transaction.date));
+                        this.selectedEndDate.set(new Date(transaction.date));
                     } else {
                         this.newlyCreatedTransactionId.next(
                             transaction.transactionId

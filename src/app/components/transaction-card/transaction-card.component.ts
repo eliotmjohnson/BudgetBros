@@ -41,6 +41,10 @@ export class TransactionCardComponent {
         this.transactionService.softDeleteTransaction(transactionId);
     }
 
+    recoverTransaction(transactionId: Transaction['transactionId']) {
+        this.transactionService.recoverTransaction(transactionId);
+    }
+
     openEditModal() {
         const month = getMonth(this.transaction().date);
         const year = getYear(this.transaction().date);

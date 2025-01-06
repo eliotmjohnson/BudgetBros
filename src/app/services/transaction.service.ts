@@ -44,6 +44,10 @@ export class TransactionService {
         loader: () => this.getUntrackedTransactions()
     });
 
+    deletedTransactions = rxResource({
+        loader: () => this.getDeletedTransactions()
+    });
+
     getTransactionsBetweenDates(date1: Date, date2: Date) {
         return this.http.get<IsolatedTransaction[]>(
             `
@@ -58,6 +62,12 @@ export class TransactionService {
         );
     }
 
+    getDeletedTransactions() {
+        return this.http.get<IsolatedTransaction[]>(
+            `${this.baseUrl}/deleted/${this.authService.userId}`
+        );
+    }
+
     softDeleteTransaction(transactionId: IsolatedTransaction['transactionId']) {
         const currentTransactions = this.transactions.value();
 
@@ -68,6 +78,9 @@ export class TransactionService {
         this.http
             .delete(`${this.baseUrl}/soft-delete/${transactionId}`)
             .subscribe({
+                next: () => {
+                    this.deletedTransactions.reload();
+                },
                 error: (error) => {
                     console.error(error);
                     this.transactions.set(currentTransactions);
@@ -76,10 +89,20 @@ export class TransactionService {
     }
 
     recoverTransaction(transactionId: IsolatedTransaction['transactionId']) {
-        return this.http.put<void>(
-            `${this.baseUrl}/recover/${transactionId}`,
-            null
-        );
+        return this.http
+            .put<void>(`${this.baseUrl}/recover/${transactionId}`, null)
+            .subscribe({
+                next: () => {
+                    this.deletedTransactions.update((transactions) =>
+                        transactions?.filter(
+                            (t) => t.transactionId !== transactionId
+                        )
+                    );
+                },
+                error: (error) => {
+                    console.error(error);
+                }
+            });
     }
 
     addTransaction(transaction: NewTransaction, needsRefresh = true) {
@@ -90,10 +113,8 @@ export class TransactionService {
             .subscribe({
                 next: (transaction) => {
                     if (needsRefresh) {
-                        this.getTransactionsBetweenDates(
-                            new Date(transaction.date),
-                            new Date(transaction.date)
-                        );
+                        this.selectedStartDate.set(new Date(transaction.date));
+                        this.selectedEndDate.set(new Date(transaction.date));
                     } else {
                         this.newlyCreatedTransactionId.next(
                             transaction.transactionId

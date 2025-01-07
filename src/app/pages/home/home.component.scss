@@ -54,7 +54,8 @@
     height: 100%;
     width: 100%;
     background-color: black;
-    opacity: 0.5;
+    opacity: 0.15;
+    transition: opacity 0.3s;
 }
 
 @keyframes onLoad {

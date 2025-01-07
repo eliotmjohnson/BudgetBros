@@ -25,5 +25,9 @@
                   : 'noDim'
         "
         class="dimmer"
+        [style.opacity]="opacityCalc()"
+        [style.transition]="
+            this.mobileModalService.modalDismissalProgress() ? '0s' : undefined
+        "
     ></div>
 }

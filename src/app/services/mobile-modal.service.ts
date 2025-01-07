@@ -18,6 +18,8 @@ export class MobileModalService {
     showPlannedAmounts = signal(false);
     budgetCopyOption = signal('');
 
+    modalDismissalProgress = signal<number | undefined>(undefined);
+
     mobileModalData: TransactionModalData = { mode: 'add' };
 
     constructor() {

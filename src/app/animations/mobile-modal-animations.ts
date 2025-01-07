@@ -37,7 +37,6 @@ export const featureModalAnimation = trigger('featureModalAnimation', [
 ]);
 
 export const dimmerAnimation = trigger('dimmerAnimation', [
-    state('lightDim', style({ opacity: 0.15 })),
     state('darkDim', style({ opacity: 0.5 })),
     transition('* => lightDim', [
         style({ opacity: 0 }),

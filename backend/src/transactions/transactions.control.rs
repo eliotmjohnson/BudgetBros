@@ -15,8 +15,8 @@ use crate::{
 
 use super::transactions_services::{
     add_transaction, delete_transaction, get_all_transactions_between_dates,
-    get_line_item_transactions, get_untracked_transactions, recover_transaction,
-    soft_delete_transaction, update_transaction,
+    get_deleted_transactions, get_line_item_transactions, get_untracked_transactions,
+    recover_transaction, soft_delete_transaction, update_transaction,
 };
 
 #[get("/untracked/{user_id}")]
@@ -39,6 +39,40 @@ pub async fn get_untracked_transactions_handler(
                     notes: transaction.notes.unwrap_or_default(),
                     date: transaction.date,
                     merchant: transaction.merchant,
+                    deleted: transaction.deleted,
+                    is_income_transaction: transaction.is_income_transaction,
+                })
+                .collect();
+            HttpResponse::Ok().json(transactions_response)
+        }
+        Err(e) => {
+            println!("{}", e);
+            HttpResponse::InternalServerError().body(e.to_string())
+        }
+    }
+}
+
+#[get("/deleted/{user_id}")]
+pub async fn get_deleted_transactions_handler(
+    state: Data<AppState>,
+    params: Path<String>,
+) -> impl Responder {
+    let user_id = params.into_inner();
+    let transactions_result = get_deleted_transactions(state, user_id).await;
+
+    match transactions_result {
+        Ok(transactions) => {
+            let transactions_response: Vec<IsolatedTransactionResponse> = transactions
+                .into_iter()
+                .map(|transaction| IsolatedTransactionResponse {
+                    line_item_id: transaction.line_item_id,
+                    transaction_id: transaction.id,
+                    title: transaction.title,
+                    amount: transaction.amount,
+                    notes: transaction.notes,
+                    date: transaction.date,
+                    merchant: transaction.merchant,
+                    budget_category_name: transaction.budget_category_name,
                     deleted: transaction.deleted,
                     is_income_transaction: transaction.is_income_transaction,
                 })

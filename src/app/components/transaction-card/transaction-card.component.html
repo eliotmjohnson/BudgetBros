@@ -17,16 +17,18 @@
                 </p>
             }
         </mat-card-title>
-        <button
-            mat-icon-button
-            class="edit-button"
-            (click)="openEditModal()"
-        >
-            <mat-icon
-                fontIcon="edit"
-                class="edit"
-            />
-        </button>
+        @if (!transaction().deleted) {
+            <button
+                mat-icon-button
+                class="edit-button"
+                (click)="openEditModal()"
+            >
+                <mat-icon
+                    fontIcon="edit"
+                    class="edit"
+                />
+            </button>
+        }
     </mat-card-header>
     <mat-card-content>
         {{ budgetCategoryName() }}
@@ -71,11 +73,17 @@
             </mat-chip>
             <button
                 mat-icon-button
-                (click)="deleteTransaction(transaction().transactionId)"
+                (click)="
+                    transaction().deleted
+                        ? recoverTransaction(transaction().transactionId)
+                        : deleteTransaction(transaction().transactionId)
+                "
             >
                 <mat-icon
-                    fontIcon="delete"
-                    class="error"
+                    [fontIcon]="
+                        transaction().deleted ? 'restore_from_trash' : 'delete'
+                    "
+                    [class]="transaction().deleted ? 'recover' : 'error'"
                 />
             </button>
         </div>

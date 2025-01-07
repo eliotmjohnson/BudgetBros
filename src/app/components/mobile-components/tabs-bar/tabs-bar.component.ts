@@ -9,7 +9,7 @@ import { TransactionService } from 'src/app/services/transaction.service';
     styleUrl: './tabs-bar.component.scss',
     host: {
         '[class.modal-open]':
-            'mobileModalService.isAddTransactionModalOpen() || mobileModalService.isBudgetTransactionsModalOpen()',
+            'mobileModalService.isAddTransactionModalOpen() || mobileModalService.isBudgetTransactionsModalOpen() || this.mobileModalService.isMobileBudgetStarterModalOpen()',
         '[class.is-reordering]': 'mobileModalService.isReorderingCategories()',
         '[class.is-feature-modal-open]':
             'mobileModalService.isFeatureModalOpen()'

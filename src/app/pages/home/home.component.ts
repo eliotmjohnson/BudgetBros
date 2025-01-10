@@ -30,13 +30,20 @@ export class HomeComponent {
     scaleCalc = computed(() =>
         this.mobileModalService.modalDismissalProgress()
             ? `scale(${0.9 + 0.1 * this.mobileModalService.modalDismissalProgress()!})
-             translateY(calc(-1.25rem + min(3.5vh, env(safe-area-inset-top))))`
+             translateY(calc(${
+                 this.mobileModalService.isStandalone()
+                     ? `${-1.25 + 1.25 * this.mobileModalService.modalDismissalProgress()!}rem 
+                     + min(${3.5 - 3.5 * this.mobileModalService.modalDismissalProgress()!}vh, env(safe-area-inset-top))`
+                     : `-1.25rem + ${1.25 * this.mobileModalService.modalDismissalProgress()!}rem`
+             }`
             : undefined
     );
 
     radiusCalc = computed(() =>
         this.mobileModalService.modalDismissalProgress()
-            ? 0.5 + 2.5 * this.mobileModalService.modalDismissalProgress()!
+            ? 0.5 +
+              (this.mobileModalService.isStandalone() ? 2.85 : -0.5) *
+                  this.mobileModalService.modalDismissalProgress()!
             : undefined
     );
 

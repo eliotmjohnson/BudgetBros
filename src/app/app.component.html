@@ -21,7 +21,13 @@
 
 <!-- Modals -->
 @if (mobileModalService.isAddTransactionModalOpen()) {
-    <AddTransactionMobileModal @addTransactionModalAnimation />
+    <AddTransactionMobileModal
+        appModalDismiss
+        (onModalDismiss)="
+            this.mobileModalService.isAddTransactionModalOpen.set(false)
+        "
+        @addTransactionModalAnimation
+    />
 }
 @if (mobileModalService.isBudgetTransactionsModalOpen()) {
     <BudgetTransactionsCard
@@ -30,5 +36,11 @@
     />
 }
 @if (mobileModalService.isMobileBudgetStarterModalOpen()) {
-    <BudgetStarter @addTransactionModalAnimation />
+    <BudgetStarter
+        appModalDismiss
+        (onModalDismiss)="
+            this.mobileModalService.isMobileBudgetStarterModalOpen.set(false)
+        "
+        @addTransactionModalAnimation
+    />
 }

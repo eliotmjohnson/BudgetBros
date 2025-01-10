@@ -67,6 +67,7 @@ import { SortByDatePipe } from './pipes/sort-by-date.pipe';
 import { InlineFeatureComponent } from './components/inline-feature/inline-feature.component';
 import { FeatureModalComponent } from './components/mobile-components/feature-modal/feature-modal.component';
 import { BudgetStarterComponent } from './components/budget-starter/budget-starter.component';
+import { ModalDismissDirective } from './directives/modal-dismiss.directive';
 
 @NgModule({
     declarations: [
@@ -104,7 +105,8 @@ import { BudgetStarterComponent } from './components/budget-starter/budget-start
         IncomeExpenseSelectorComponent,
         InlineFeatureComponent,
         FeatureModalComponent,
-        BudgetStarterComponent
+        BudgetStarterComponent,
+        ModalDismissDirective
     ],
     bootstrap: [AppComponent],
     imports: [

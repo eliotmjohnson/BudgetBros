@@ -33,4 +33,8 @@ export class MobileModalService {
         this.isFeatureModalOpen.set(false);
         this.isMobileBudgetStarterModalOpen.set(false);
     }
+
+    isStandalone() {
+        return window.matchMedia('(display-mode: standalone)').matches;
+    }
 }

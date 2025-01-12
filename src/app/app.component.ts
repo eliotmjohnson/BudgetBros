@@ -37,6 +37,8 @@ export class AppComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
+        this.disableDefaultBrowserFunctionality();
+
         this.layout
             .observe([
                 '(max-width: 500px)',
@@ -64,5 +66,24 @@ export class AppComponent implements OnInit {
         this.dialogService.closeAll();
         this.mobileModalService.isAddTransactionModalOpen.set(false);
         this.mobileModalService.isBudgetTransactionsModalOpen.set(false);
+    }
+
+    disableDefaultBrowserFunctionality() {
+        document.ondblclick = (e) => {
+            e.preventDefault();
+        };
+
+        document.addEventListener(
+            'touchstart',
+            (e) => {
+                if (
+                    e.touches[0].clientX < 20 ||
+                    e.touches[0].clientX > window.innerWidth - 20
+                ) {
+                    e.preventDefault();
+                }
+            },
+            { passive: false }
+        );
     }
 }

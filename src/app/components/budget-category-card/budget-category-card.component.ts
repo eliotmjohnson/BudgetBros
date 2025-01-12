@@ -72,7 +72,10 @@ export class BudgetCategoryCardComponent implements OnInit, AfterViewChecked {
             this.isNewBudgetCategory = true;
             this.enableEditMode();
 
-            if (!this.mobileModalService.isIOSDevice()) {
+            if (
+                !this.mobileModalService.isIOSDevice() ||
+                this.mobileModalService.budgetCopyOption()
+            ) {
                 setTimeout(() => this.focusTitleInput(), 400);
             } else if (
                 this.budgetService.budget()!.budgetCategories.length > 1 &&
@@ -88,7 +91,8 @@ export class BudgetCategoryCardComponent implements OnInit, AfterViewChecked {
     ngAfterViewChecked(): void {
         if (this.titleInput && this.isEditingName) {
             if (
-                this.mobileModalService.isIOSDevice() ||
+                (this.mobileModalService.isIOSDevice() &&
+                    !this.mobileModalService.budgetCopyOption()) ||
                 !this.isNewBudgetCategory
             ) {
                 this.focusTitleInput();

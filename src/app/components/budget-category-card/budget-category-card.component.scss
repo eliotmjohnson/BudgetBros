@@ -190,6 +190,9 @@
                     &:focus {
                         outline-offset: -0.1rem;
                     }
+                    &-hover {
+                        outline: none;
+                    }
                 }
             }
         }

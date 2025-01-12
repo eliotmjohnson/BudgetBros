@@ -291,13 +291,15 @@ export class BudgetComponent
             } else if (budgetCopyOptionMobile === 'new') {
                 this.openKeyboard();
 
-                untracked(() =>
+                untracked(() => {
+                    this.createNewBudgetCategoryPlaceholder();
+
                     setTimeout(() => {
-                        this.createNewBudgetCategoryPlaceholder();
                         this.isOpeningKeyboard.set(false);
                         this.mobileModalService.budgetCopyOption.set('');
-                    }, 350)
-                );
+                    }, 400);
+                });
+
                 this.mobileModalService.isMobileBudgetStarterModalOpen.set(
                     false
                 );

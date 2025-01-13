@@ -1,13 +1,19 @@
-use actix_web::{get, web::Data, HttpResponse, Responder};
+use actix_web::{
+    get,
+    web::{Data, Path},
+    HttpResponse, Responder,
+};
 
-use crate::{users::users_services::get_all_users, AppState};
+use crate::{settings::settings_services::get_user_settings, AppState};
 
 #[get("")]
-async fn get_all_users_handler(state: Data<AppState>) -> impl Responder {
-    let users_result = get_all_users(state).await;
+async fn get_user_settings_handler(state: Data<AppState>, params: Path<String>) -> impl Responder {
+    let user_id = params.into_inner();
 
-    match users_result {
-        Ok(users) => HttpResponse::Ok().json(users),
+    let settings_result = get_user_settings(state, user_id).await;
+
+    match settings_result {
+        Ok(settings) => HttpResponse::Ok().json(settings),
         Err(e) => {
             println!("{}", e);
             HttpResponse::InternalServerError().finish()

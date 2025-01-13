@@ -6,19 +6,20 @@ use actix_web_httpauth::middleware::HttpAuthentication;
 use dotenv::dotenv;
 use env_logger::Env;
 use sqlx::{postgres::PgPoolOptions, Pool, Postgres};
-use transactions::transactions_router::transactions_router;
 
 use crate::auth::auth_middleware;
 use crate::auth::auth_router::auth_router;
 use crate::budget_categories::budget_categories_router::budget_categories_router;
 use crate::budgets::budgets_router::budgets_router;
 use crate::line_items::line_items_router::line_items_router;
+use crate::transactions::transactions_router::transactions_router;
 use crate::users::users_router::users_router;
 
 mod auth;
 mod budget_categories;
 mod budgets;
 mod line_items;
+mod settings;
 mod transactions;
 mod users;
 

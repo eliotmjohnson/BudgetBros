@@ -73,7 +73,13 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     remainingAmount = computed(() => {
         if (!this.isEditModeEnabled()) {
             const newRemainingAmount = parseFloat(
-                this.calculateRemainingAmount().toFixed(2)
+                this.lineItemService
+                    .calculateRemainingAmount(
+                        this.transactions(),
+                        this.plannedAmount(),
+                        this.startingBalance()
+                    )
+                    .toFixed(2)
             );
 
             if (this.needsFundBalanceUpdate(newRemainingAmount)) {
@@ -122,25 +128,26 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
                 (this.mobileModalService.isMobileDevice() && !this.itemId()))
     );
 
+    updateTransactionsInfoListener = effect(() => {
+        if (
+            this.transactions() &&
+            this.startingBalance() !== undefined &&
+            untracked(
+                () =>
+                    this.transactionService.currentSelectedLineItem()
+                        ?.lineItemId === this.itemId()
+            )
+        ) {
+            untracked(() => this.setTransactionData());
+        }
+    });
+
     constructor(
         public transactionService: TransactionService,
         private lineItemService: LineItemService,
         public mobileModalService: MobileModalService,
         private budgetService: BudgetService
-    ) {
-        effect(() => {
-            if (
-                this.transactions() &&
-                this.startingBalance() !== undefined &&
-                untracked(
-                    () =>
-                        transactionService.currentSelectedLineItem()?.lineItemId
-                )
-            ) {
-                untracked(() => this.setTransactionData());
-            }
-        });
-    }
+    ) {}
 
     ngOnInit(): void {
         const itemTitle = this.itemTitle();
@@ -158,18 +165,6 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
             this.lineItemTitleInput.nativeElement.focus();
             this.lineItemTitleInput.nativeElement.select();
         }
-    }
-
-    calculateRemainingAmount() {
-        return this.transactions().length
-            ? this.transactions().reduce(
-                  (balance, transaction) =>
-                      transaction.isIncomeTransaction
-                          ? balance + transaction.amount
-                          : balance - transaction.amount,
-                  (this.startingBalance() ?? 0) + this.plannedAmount()
-              )
-            : (this.startingBalance() ?? 0) + this.plannedAmount();
     }
 
     setSelectedLineItem() {

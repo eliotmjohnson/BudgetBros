@@ -31,6 +31,7 @@ export type UpdateLineItemPayload = Omit<
 export interface LineItemReduced {
     lineItemId?: string | null;
     lineItemName: string;
+    remainingAmount?: number;
 }
 
 export interface UpdateFundPayload {

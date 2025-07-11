@@ -6,6 +6,7 @@
     height: 100%;
     padding-top: 2rem;
     padding-bottom: 2rem;
+    will-change: translate, transform;
 }
 
 :host(.open-budget-transactions-modal) {

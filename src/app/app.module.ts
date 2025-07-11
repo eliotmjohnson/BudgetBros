@@ -23,6 +23,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -68,6 +69,7 @@ import { InlineFeatureComponent } from './components/inline-feature/inline-featu
 import { FeatureModalComponent } from './components/mobile-components/feature-modal/feature-modal.component';
 import { BudgetStarterComponent } from './components/budget-starter/budget-starter.component';
 import { ModalDismissDirective } from './directives/modal-dismiss.directive';
+import { LineItemSelectorModalComponent } from './components/mobile-components/line-item-selector-modal/line-item-selector-modal.component';
 
 @NgModule({
     declarations: [
@@ -106,7 +108,8 @@ import { ModalDismissDirective } from './directives/modal-dismiss.directive';
         InlineFeatureComponent,
         FeatureModalComponent,
         BudgetStarterComponent,
-        ModalDismissDirective
+        ModalDismissDirective,
+        LineItemSelectorModalComponent
     ],
     bootstrap: [AppComponent],
     imports: [
@@ -134,7 +137,8 @@ import { ModalDismissDirective } from './directives/modal-dismiss.directive';
         OverlayModule,
         LayoutModule,
         MatRadioModule,
-        MatSidenavModule
+        MatSidenavModule,
+        MatCheckboxModule
     ],
     providers: [
         provideHttpClient(withInterceptors([httpInterceptor])),

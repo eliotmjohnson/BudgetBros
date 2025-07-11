@@ -10,6 +10,7 @@
     translate: 100vw;
     padding-top: env(safe-area-inset-top);
     animation: slideIn 0.5s cubic-bezier(0.4, 1, 0.4, 1) forwards;
+    will-change: translate, transform;
 }
 
 .banner {

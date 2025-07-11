@@ -9,6 +9,16 @@
         border-radius: 1rem;
         padding: 1rem 0.5rem;
     }
+
+    div.transaction-select-panel.mat-mdc-select-panel {
+        padding-bottom: 3.5rem;
+    }
+
+    .transaction-select-panel {
+        .mdc-list-item__primary-text {
+            width: 100%;
+        }
+    }
 }
 
 mat-label {
@@ -45,6 +55,112 @@ mat-label {
     position: absolute;
     top: 1.5rem;
     right: 3rem;
+}
+
+.option-group-label {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    h1 {
+        margin: 0;
+        font-weight: 700;
+    }
+
+    h2 {
+        margin: 0;
+        font-weight: 400;
+        font-style: italic;
+        font-size: 1rem;
+        color: rgb(172, 172, 172);
+    }
+}
+
+.option-label {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+
+    h1 {
+        margin: 0;
+        font-weight: 400;
+        font-size: 1rem;
+    }
+
+    p {
+        margin: 0;
+    }
+}
+
+.inline-split-transaction {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 3rem;
+    padding-left: 0.5rem;
+    margin-bottom: 0.5rem;
+
+    h2 {
+        margin: 0;
+        font-weight: 400;
+        font-size: 1.2rem;
+        color: black;
+    }
+
+    input {
+        text-align: end;
+        border: none;
+        border-bottom: dashed 1px bb-core.$bb-primary-green-text;
+        height: 100%;
+        margin: 0;
+        font-weight: 400;
+        font-size: 1.1rem;
+        color: black;
+
+        &:focus {
+            outline: none;
+        }
+    }
+}
+
+.split-transaction-calculator {
+    display: flex;
+    justify-content: flex-end;
+    align-items: baseline;
+    gap: 0.5rem;
+
+    &.dim-calculation {
+        opacity: 0.5;
+    }
+
+    &__value {
+        margin: 0;
+        font-style: italic;
+        color: bb-core.$bb-primary-green-text;
+
+        &.negative-calc {
+            color: bb-core.$bb-error-main;
+        }
+    }
+
+    p {
+        font-style: italic;
+        color: bb-core.$bb-secondary-title-color;
+        margin: 0;
+    }
+}
+
+.transaction-container {
+    max-height: 13rem;
+    overflow: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    overflow: auto;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
 }
 
 @media (max-width: 1145px) {

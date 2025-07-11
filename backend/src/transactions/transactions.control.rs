@@ -14,9 +14,10 @@ use crate::{
 };
 
 use super::transactions_services::{
-    add_transaction, delete_transaction, get_all_transactions_between_dates,
+    add_transactions, delete_transaction, get_all_transactions_between_dates,
     get_deleted_transactions, get_line_item_transactions, get_untracked_transactions,
-    recover_transaction, soft_delete_transaction, update_transaction,
+    recover_transaction, soft_delete_transaction, soft_delete_transaction_bulk,
+    update_transactions,
 };
 
 #[get("/untracked/{user_id}")]
@@ -156,27 +157,31 @@ pub async fn get_all_transactions_between_dates_handler(
 #[post("")]
 pub async fn add_transaction_handler(
     state: Data<AppState>,
-    body: Json<NewTransaction>,
+    body: Json<Vec<NewTransaction>>,
 ) -> impl Responder {
-    let new_transaction = body.into_inner();
+    let new_transactions = body.into_inner();
 
-    let add_transaction_result = add_transaction(state, new_transaction).await;
+    let add_transactions_result = add_transactions(state, new_transactions).await;
 
-    match add_transaction_result {
-        Ok(transaction) => {
-            let newly_added_transaction = IsolatedTransactionResponse {
-                line_item_id: transaction.line_item_id,
-                transaction_id: transaction.id,
-                title: transaction.title,
-                amount: transaction.amount,
-                notes: transaction.notes,
-                date: transaction.date,
-                merchant: transaction.merchant,
-                budget_category_name: transaction.budget_category_name,
-                deleted: transaction.deleted,
-                is_income_transaction: transaction.is_income_transaction,
-            };
-            HttpResponse::Ok().json(newly_added_transaction)
+    match add_transactions_result {
+        Ok(transactions) => {
+            let new_transactions: Vec<IsolatedTransactionResponse> = transactions
+                .iter()
+                .map(|transaction| IsolatedTransactionResponse {
+                    line_item_id: transaction.line_item_id.clone(),
+                    transaction_id: transaction.id.clone(),
+                    title: transaction.title.clone(),
+                    amount: transaction.amount,
+                    notes: transaction.notes.clone(),
+                    date: transaction.date,
+                    merchant: transaction.merchant.clone(),
+                    budget_category_name: transaction.budget_category_name.clone(),
+                    deleted: transaction.deleted,
+                    is_income_transaction: transaction.is_income_transaction,
+                })
+                .collect();
+
+            return HttpResponse::Ok().json(new_transactions);
         }
         Err(e) => {
             println!("{}", e);
@@ -188,18 +193,64 @@ pub async fn add_transaction_handler(
 #[put("")]
 pub async fn update_transaction_handler(
     state: Data<AppState>,
-    body: Json<UpdatedTransaction>,
+    body: Json<Vec<UpdatedTransaction>>,
 ) -> impl Responder {
-    let updated_transaction = body.into_inner();
+    let transactions = body.into_inner();
 
-    let updated_transaction_result = update_transaction(state, updated_transaction).await;
+    let updated_transactions: Vec<_> = transactions
+        .iter()
+        .filter(|trx| !trx.transaction_id.is_empty() && !trx.deleted)
+        .cloned()
+        .collect();
+    let update_result = update_transactions(state.clone(), updated_transactions).await;
 
-    match updated_transaction_result {
-        Ok(_) => HttpResponse::Ok().json("Transaction updated successfully"),
-        Err(e) => {
-            println!("{}", e);
-            HttpResponse::InternalServerError().body(e.to_string())
-        }
+    let post_transactions: Vec<NewTransaction> = transactions
+        .iter()
+        .filter(|trx| trx.transaction_id.is_empty())
+        .map(|trx| NewTransaction {
+            user_id: trx.user_id.clone(),
+            title: trx.title.clone(),
+            merchant: trx.merchant.clone(),
+            amount: trx.amount,
+            notes: trx.notes.clone(),
+            date: trx.date.to_string(),
+            line_item_id: trx.line_item_id.clone().unwrap(),
+            deleted: trx.deleted,
+            split_transaction_id: trx.split_transaction_id.clone(),
+            is_income_transaction: trx.is_income_transaction,
+        })
+        .collect();
+    let add_result = add_transactions(state.clone(), post_transactions).await;
+
+    let remove_transactions: Vec<String> = transactions
+        .iter()
+        .filter(|trx| trx.deleted)
+        .map(|trx| &trx.transaction_id)
+        .cloned()
+        .collect();
+
+    let delete_result = soft_delete_transaction_bulk(state.clone(), remove_transactions).await;
+
+    if update_result.is_ok() && add_result.is_ok() && delete_result.is_ok() {
+        let new_transactions: Vec<IsolatedTransactionResponse> = add_result
+            .unwrap()
+            .iter()
+            .map(|transaction| IsolatedTransactionResponse {
+                line_item_id: transaction.line_item_id.clone(),
+                transaction_id: transaction.id.clone(),
+                title: transaction.title.clone(),
+                amount: transaction.amount,
+                notes: transaction.notes.clone(),
+                date: transaction.date,
+                merchant: transaction.merchant.clone(),
+                budget_category_name: transaction.budget_category_name.clone(),
+                deleted: transaction.deleted,
+                is_income_transaction: transaction.is_income_transaction,
+            })
+            .collect();
+        HttpResponse::Ok().json(new_transactions)
+    } else {
+        HttpResponse::InternalServerError().json("One or more operations failed")
     }
 }
 

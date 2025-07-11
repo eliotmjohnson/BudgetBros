@@ -10,6 +10,7 @@ import {
 } from '../models/lineItem';
 import { BudgetService } from './budget.service';
 import { Budget } from '../models/budget';
+import { Transaction } from '../models/transaction';
 
 @Injectable({
     providedIn: 'root'
@@ -134,5 +135,21 @@ export class LineItemService {
                     }
                 });
         }
+    }
+
+    calculateRemainingAmount(
+        transactions: Transaction[],
+        plannedAmount: number,
+        startingBalance?: number
+    ) {
+        return transactions.length
+            ? transactions.reduce(
+                  (balance, transaction) =>
+                      transaction.isIncomeTransaction
+                          ? balance + transaction.amount
+                          : balance - transaction.amount,
+                  (startingBalance ?? 0) + plannedAmount
+              )
+            : (startingBalance ?? 0) + plannedAmount;
     }
 }

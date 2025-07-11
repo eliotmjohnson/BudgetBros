@@ -27,6 +27,7 @@
             this.mobileModalService.isAddTransactionModalOpen.set(false)
         "
         @addTransactionModalAnimation
+        [toolbarDismiss]="true"
     />
 }
 @if (mobileModalService.isBudgetTransactionsModalOpen()) {

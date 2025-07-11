@@ -1,4 +1,4 @@
-import { Directive, ElementRef, output, Renderer2 } from '@angular/core';
+import { Directive, ElementRef, model, output, Renderer2 } from '@angular/core';
 import { MobileModalService } from '../services/mobile-modal.service';
 
 @Directive({
@@ -12,6 +12,9 @@ import { MobileModalService } from '../services/mobile-modal.service';
 })
 export class ModalDismissDirective {
     onModalDismiss = output();
+    canDismiss = model<boolean>(true);
+    toolbarDismiss = model<boolean>(false);
+    fullScreen = model<boolean>(false);
 
     translateY = '';
     modalTransition: string | undefined = undefined;
@@ -23,7 +26,11 @@ export class ModalDismissDirective {
     ) {}
 
     startDismissalDrag(e: TouchEvent) {
+        e.stopPropagation();
         const initialYPos = e.touches[0].clientY;
+        if (initialYPos > 110 && this.toolbarDismiss()) {
+            return;
+        }
         const initialTime = e.timeStamp;
         this.modalTransition = 'transform 0.08s';
 
@@ -37,9 +44,21 @@ export class ModalDismissDirective {
                 );
                 const currentYPos = e.touches[0].clientY;
                 const diff = currentYPos - initialYPos;
-                this.mobileModalService.modalDismissalProgress.set(
-                    diff < 0 ? diff / 6000 : diff / 650
-                );
+
+                if (Math.abs(diff) === 1) {
+                    e.preventDefault();
+                    return;
+                } else if (diff > 1 && this.canDismiss()) {
+                    e.preventDefault();
+                } else {
+                    return;
+                }
+
+                if (!this.fullScreen()) {
+                    this.mobileModalService.modalDismissalProgress.set(
+                        diff < 0 ? diff / 6000 : diff / 650
+                    );
+                }
                 this.translateY = `translateY(${diff < 0 ? diff * 0.03 : diff}px)`;
             }
         );
@@ -53,10 +72,12 @@ export class ModalDismissDirective {
                 const velocity =
                     (endYPos - initialYPos) / (endTime - initialTime);
 
-                if (endYPos - initialYPos < 400 && velocity < 0.75) {
-                    setTimeout(() => (this.translateY = ''), 40); // iOS is crippled :(
-                } else {
-                    this.onModalDismiss.emit();
+                if (this.canDismiss()) {
+                    if (endYPos - initialYPos < 400 && velocity < 0.75) {
+                        setTimeout(() => (this.translateY = ''), 40); // iOS is crippled :(
+                    } else {
+                        this.onModalDismiss.emit();
+                    }
                 }
 
                 this.mobileModalService.modalDismissalProgress.set(undefined);

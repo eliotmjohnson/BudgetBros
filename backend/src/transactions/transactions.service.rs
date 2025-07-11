@@ -1,6 +1,5 @@
 use actix_web::{ web::Data, Result};
-use sqlx::postgres::PgQueryResult;
-
+use sqlx::{postgres::PgQueryResult, Postgres, Transaction as SqlxTransaction};
 
 use crate::AppState;
 
@@ -92,12 +91,15 @@ pub async fn get_all_transactions_between_dates(
         .await
 }
 
-pub async fn add_transaction(state: Data<AppState>, new_transaction: NewTransaction) -> Result<IsolatedTransaction, sqlx::Error> {
+pub async fn add_transactions(state: Data<AppState>, new_transactions: Vec<NewTransaction>) -> Result<Vec<IsolatedTransaction>, sqlx::Error> {
+    let tx: SqlxTransaction<'_, Postgres> = state.db.begin().await?;
+    let mut results = Vec::new();
+    
     let query = 
         "WITH inserted_transaction AS (
             INSERT INTO transactions 
-            (user_id, title, merchant, amount, notes, date, line_item_id, deleted, is_income_transaction) 
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+            (user_id, title, merchant, amount, notes, date, line_item_id, deleted, split_transaction_id, is_income_transaction) 
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
             RETURNING *
         )
         SELECT 
@@ -112,24 +114,42 @@ pub async fn add_transaction(state: Data<AppState>, new_transaction: NewTransact
         JOIN 
             budgets b ON bc.budget_id = b.id";
 
-    sqlx::query_as::<_, IsolatedTransaction>(query)
-        .bind(new_transaction.user_id)
-        .bind(new_transaction.title)   
-        .bind(new_transaction.merchant)   
-        .bind(new_transaction.amount)   
-        .bind(new_transaction.notes)   
-        .bind(new_transaction.date)   
-        .bind(new_transaction.line_item_id)   
-        .bind(new_transaction.deleted)
-        .bind(new_transaction.is_income_transaction)
-        .fetch_one(&state.db)
-        .await
+    for new_transaction in new_transactions {
+        let result = sqlx::query_as::<_, IsolatedTransaction>(query)
+            .bind(new_transaction.user_id)
+            .bind(new_transaction.title)   
+            .bind(new_transaction.merchant)   
+            .bind(new_transaction.amount)   
+            .bind(new_transaction.notes)   
+            .bind(new_transaction.date)   
+            .bind(new_transaction.line_item_id)   
+            .bind(new_transaction.deleted)
+            .bind(new_transaction.split_transaction_id)
+            .bind(new_transaction.is_income_transaction)
+            .fetch_one(&state.db)
+            .await;
+ println!("{:?}", result);
+        if result.is_ok() {
+            results.push(result.unwrap());
+        } else {
+            continue;
+        }
+       
+    }
+    
+    tx.commit().await?;
+    Ok(results)
 }
 
-pub async fn update_transaction(state: Data<AppState>, new_transaction: UpdatedTransaction) -> Result<PgQueryResult, sqlx::Error> {
-    let query = 
-        "UPDATE 
-            transactions 
+pub async fn update_transactions(
+    state: Data<AppState>,
+    updated_transactions: Vec<UpdatedTransaction>,
+) -> Result<Vec<PgQueryResult>, sqlx::Error> {
+    let mut tx: SqlxTransaction<'_, Postgres> = state.db.begin().await?;
+    let mut results = Vec::new();
+
+    let query = "
+        UPDATE transactions 
         SET 
             title = $1,
             merchant = $2,
@@ -137,22 +157,31 @@ pub async fn update_transaction(state: Data<AppState>, new_transaction: UpdatedT
             notes = $4,
             date = $5,
             line_item_id = $6,
-            is_income_transaction = $7      
-        WHERE id = $8
+            split_transaction_id = $7,
+            is_income_transaction = $8
+        WHERE id = $9
     ";
 
-    sqlx::query(query)
-        .bind(new_transaction.title)   
-        .bind(new_transaction.merchant)   
-        .bind(new_transaction.amount)   
-        .bind(new_transaction.notes)   
-        .bind(new_transaction.date)   
-        .bind(new_transaction.line_item_id)
-        .bind(new_transaction.is_income_transaction) 
-        .bind(new_transaction.transaction_id)  
-        .execute(&state.db)
-        .await
+    for t in updated_transactions {
+        let result = sqlx::query(query)
+            .bind(t.title)
+            .bind(t.merchant)
+            .bind(t.amount)
+            .bind(t.notes)
+            .bind(t.date)
+            .bind(t.line_item_id)
+            .bind(t.split_transaction_id)
+            .bind(t.is_income_transaction)
+            .bind(t.transaction_id)
+            .execute(&mut *tx)
+            .await?;
+        results.push(result);
+    }
+
+    tx.commit().await?;
+    Ok(results)
 }
+
 
 pub async fn soft_delete_transaction(state: Data<AppState>, id: String) -> Result<String, sqlx::Error> {
     let query = 
@@ -169,6 +198,27 @@ pub async fn soft_delete_transaction(state: Data<AppState>, id: String) -> Resul
                 .await;
 
     Ok(id)
+}
+
+pub async fn soft_delete_transaction_bulk(
+    state: Data<AppState>,
+    ids: Vec<String>,
+) -> Result<Vec<String>, sqlx::Error> {
+    let query = r#"
+        UPDATE 
+            transactions 
+        SET 
+            deleted = true       
+        WHERE 
+            id = ANY($1)
+    "#;
+
+    let _ = sqlx::query(query)
+        .bind(ids.clone()) // Binds Vec<String> to the ANY clause
+        .execute(&state.db)
+        .await?;
+
+    Ok(ids)
 }
 
 pub async fn recover_transaction(state: Data<AppState>, id: String) -> Result<String, sqlx::Error> {

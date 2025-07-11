@@ -20,7 +20,7 @@ import { AbstractControl, FormGroup } from '@angular/forms';
  */
 export const checkCurrencyInputKeyValid = (
     e: KeyboardEvent,
-    valueToCheck: number
+    valueToCheck: number | string
 ) => {
     return (
         !!(
@@ -51,7 +51,7 @@ export function addValueToCurrencyInput(amount: number): number;
 
 export function addValueToCurrencyInput(
     e: Event,
-    form: FormGroup,
+    form?: FormGroup,
     controlName?: string
 ): void;
 

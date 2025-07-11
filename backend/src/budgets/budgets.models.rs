@@ -60,6 +60,7 @@ pub struct BudgetRowData {
     pub notes: Option<String>,
     pub date: Option<DateTime<Local>>,
     pub is_income_transaction: Option<bool>,
+    pub split_transaction_id: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -71,6 +72,7 @@ pub struct TransactionData {
     pub amount: f64,
     pub notes: String,
     pub date: DateTime<Local>,
+    pub split_transaction_id: Option<String>,
     pub is_income_transaction: bool,
 }
 

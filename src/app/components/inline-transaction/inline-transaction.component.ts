@@ -26,6 +26,7 @@ export class InlineTransactionComponent {
     @Input() merchant: string | null = '';
     @Input() notes = '';
     @Input() isIncomeTransaction = false;
+    @Input() splitTransactionId: string | null = '';
     @Input({ transform: (date: string) => new Date(date) }) date!: Date;
 
     isDeletingTransaction = false;
@@ -77,6 +78,7 @@ export class InlineTransactionComponent {
             merchant: this.merchant,
             notes: this.notes,
             title: this.title,
+            splitTransactionId: this.splitTransactionId,
             isIncomeTransaction: this.isIncomeTransaction
         } as IsolatedTransaction;
 

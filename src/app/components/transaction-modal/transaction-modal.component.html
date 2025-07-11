@@ -1,7 +1,6 @@
 <h2 mat-dialog-title>
     {{
-        (modalData || mobileModalData).mode !== "edit" &&
-        (modalData || mobileModalData).mode !== "budgetTransactionsEdit"
+        modalData.mode !== "edit" && modalData.mode !== "budgetTransactionsEdit"
             ? "Add "
             : "Update"
     }}
@@ -9,8 +8,7 @@
 </h2>
 <IncomeExpenseSelector
     [isIncomeSelected]="
-        (this.modalData || this.mobileModalData).transaction
-            ?.isIncomeTransaction || false
+        this.modalData.transaction?.isIncomeTransaction || false
     "
     (setIncomeSelectedValue)="setIsIncomeSelectedValue($event)"
 />
@@ -46,16 +44,16 @@
                 matInput
                 type="text"
                 pattern="\d*"
-                formControlName="amount"
+                formControlName="totalAmount"
                 (keydown)="checkIfValidKey($event)"
                 (input)="addValue($event)"
                 (click)="amountInput.select()"
-                [value]="form.value.amount | currency"
+                [value]="form.value.totalAmount | currency"
             />
             <mat-error>
                 {{
-                    form.get("amount")?.hasError("min") &&
-                    form.get("amount")?.touched
+                    form.get("totalAmount")?.hasError("min") &&
+                    form.get("totalAmount")?.touched
                         ? "Amount must be more than 0"
                         : ""
                 }}
@@ -99,53 +97,146 @@
                 />
             </mat-form-field>
         </div>
-        @if (!isBudgetTransactionsModal) {
-            <mat-form-field
-                appearance="outline"
-                [matTooltip]="
-                    !dropdownCategories().length
-                        ? form.value.date
-                            ? 'There are no budget items for this month. Please choose another month'
-                            : 'Please pick a date to show budget items'
-                        : ''
-                "
-            >
-                <mat-label> Select Budget Item </mat-label>
-                <mat-select
-                    formControlName="lineItem"
-                    appearance="outline"
+        @if (form.controls.transactions.controls.length > 1) {
+            <div formArrayName="transactions">
+                <section class="transaction-container">
+                    <div
+                        *ngFor="
+                            let transaction of form.controls.transactions
+                                .controls;
+                            let i = index
+                        "
+                        [formGroupName]="i"
+                        class="inline-split-transaction"
+                    >
+                        <h2>{{ transaction.value.lineItem?.lineItemName }}</h2>
+                        <input
+                            #splitTrxInput
+                            type="text"
+                            pattern="\d*"
+                            formControlName="amount"
+                            (keydown)="checkIfValidKey($event, i)"
+                            (input)="addValue($event, i)"
+                            (focus)="splitTrxInput.select()"
+                        />
+                    </div>
+                </section>
+                @let isCalculationNegative =
+                    calculatedSplitTransactions() &&
+                    calculatedSplitTransactions()! < 0;
+                <span
+                    class="split-transaction-calculator"
+                    [class.dim-calculation]="
+                        form.controls.totalAmount.value! <= 0
+                    "
                 >
-                    @if (dropdownCategories().length) {
-                        @for (
-                            category of dropdownCategories();
-                            track category.budgetCategoryId
-                        ) {
-                            <mat-optgroup
-                                [label]="category.budgetCategoryName"
-                                style="font-weight: bold"
-                            >
-                                @for (
-                                    lineItem of category.lineItems;
-                                    track lineItem.lineItemId
-                                ) {
-                                    <mat-option [value]="lineItem">
-                                        {{ lineItem.lineItemName }}
-                                    </mat-option>
-                                }
-                            </mat-optgroup>
-                        }
-                    }
-                </mat-select>
-                <mat-error>
-                    {{
-                        form.get("lineItem")?.errors &&
-                        form.get("lineItem")?.touched
-                            ? "Budget item is required"
-                            : ""
-                    }}
-                </mat-error>
-            </mat-form-field>
+                    <h2
+                        class="split-transaction-calculator__value"
+                        [class.negative-calc]="isCalculationNegative"
+                    >
+                        {{ calculatedSplitTransactions() ?? 0 | currency }}
+                    </h2>
+                    <p>
+                        {{ isCalculationNegative ? "over" : "remaining" }}
+                    </p>
+                </span>
+            </div>
         }
+        <mat-form-field
+            appearance="outline"
+            (touchstart)="$event.preventDefault()"
+            (touchend)="openMobileLineItemModal($event)"
+            [matTooltip]="
+                !dropdownCategories().length
+                    ? form.value.date
+                        ? 'There are no budget items for this month. Please choose another month'
+                        : 'Please pick a date to show budget items'
+                    : ''
+            "
+        >
+            <mat-label> Select Budget Item </mat-label>
+            <mat-select
+                #lineItemSelect
+                panelClass="transaction-select-panel"
+                [compareWith]="getSelectedLineItem"
+                formControlName="lineItems"
+                appearance="outline"
+                multiple
+            >
+                <mat-select-trigger>
+                    {{ getSelectedLineItemLabel() }}
+                </mat-select-trigger>
+                @if (dropdownCategories().length) {
+                    @for (
+                        category of dropdownCategories();
+                        track category.budgetCategoryId
+                    ) {
+                        <mat-optgroup style="font-weight: bold">
+                            <span class="option-group-label">
+                                <h1>
+                                    {{ category.budgetCategoryName }}
+                                </h1>
+                                <h2>Remaining</h2>
+                            </span>
+                            @for (
+                                lineItem of category.lineItems;
+                                track lineItem.lineItemId
+                            ) {
+                                <mat-option
+                                    (onSelectionChange)="
+                                        handleLineItemSelectionChange($event)
+                                    "
+                                    [value]="lineItem"
+                                >
+                                    <span class="option-label">
+                                        <h1>{{ lineItem.lineItemName }}</h1>
+                                        <p>
+                                            {{
+                                                lineItem.remainingAmount
+                                                    | currency
+                                            }}
+                                        </p>
+                                    </span>
+                                </mat-option>
+                            }
+                        </mat-optgroup>
+                    }
+                }
+                <span
+                    style="
+                        position: absolute;
+                        display: flex;
+                        width: 100%;
+                        bottom: 0;
+                        right: 0;
+                        border-bottom-right-radius: 0.5rem;
+                        border-bottom-left-radius: 0.5rem;
+                        justify-content: flex-end;
+                        align-items: center;
+                        height: 3rem;
+                        padding: 0.5rem;
+                        background-color: white;
+                        box-shadow: 0 -0.4rem 0.5rem -0.2rem rgb(0, 0, 0, 0.1);
+                    "
+                >
+                    <button
+                        (click)="lineItemSelect.close()"
+                        mat-button
+                    >
+                        Close
+                    </button>
+                </span>
+            </mat-select>
+            <mat-error>
+                {{
+                    form.get("lineItems")?.errors &&
+                    form.get("lineItems")?.touched
+                        ? "Budget item is required"
+                        : ""
+                }}
+            </mat-error>
+        </mat-form-field>
+
         <mat-form-field
             class="fullwidth"
             appearance="outline"
@@ -190,15 +281,31 @@
             style="color: white"
             type="submit"
             [disabled]="
-                !(form.valid && form.dirty && form.get('lineItem')?.valid)
+                !(
+                    form.valid &&
+                    form.dirty &&
+                    form.get('lineItems')?.valid &&
+                    (!calculatedSplitTransactions() ||
+                        calculatedSplitTransactions() === 0)
+                )
             "
         >
             {{
-                (modalData || mobileModalData).mode !== "edit" &&
-                (modalData || mobileModalData).mode !== "budgetTransactionsEdit"
+                modalData.mode !== "edit" &&
+                modalData.mode !== "budgetTransactionsEdit"
                     ? "Add"
                     : "Update"
             }}
         </button>
     </mat-dialog-actions>
 </form>
+@if (isMobileLineItemModalOpen()) {
+    <LineItemSelectorModal
+        @addTransactionModalAnimation
+        appModalDismiss
+        [fullScreen]="true"
+        [lineItems]="form.controls.lineItems"
+        [budgetCategoryData]="dropdownCategories()"
+        (onModalClose)="handleLineItemSelectionModalClose()"
+    />
+}

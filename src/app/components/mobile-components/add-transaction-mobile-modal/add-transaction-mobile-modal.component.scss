@@ -18,7 +18,7 @@
 }
 
 :host(.sheet-modal) {
-    animation: loadModal 0.65s cubic-bezier(0.22, 1, 0.22, 1) forwards;
+    animation: loadModal 0.65s 0.025s cubic-bezier(0.22, 1, 0.22, 1) forwards;
 
     @keyframes loadModal {
         100% {

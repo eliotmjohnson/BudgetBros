@@ -21,7 +21,7 @@ export class TransactionService {
     authService = inject(AuthService);
 
     currentSelectedLineItem = signal<SelectedLineItem | null>(null);
-    newlyCreatedTransactionId = new Subject<string>();
+    newlyCreatedTransactions = new Subject<IsolatedTransaction[]>();
 
     selectedStartDate = signal<Date | null>(null);
     selectedEndDate = signal<Date | null>(null);
@@ -105,20 +105,22 @@ export class TransactionService {
             });
     }
 
-    addTransaction(transaction: NewTransaction, needsRefresh = true) {
-        transaction.userId = this.authService.userId!;
+    addTransactions(transactions: NewTransaction[], needsRefresh = true) {
+        transactions.forEach((trx) => (trx.userId = this.authService.userId!));
 
         this.http
-            .post<IsolatedTransaction>(this.baseUrl, transaction)
+            .post<IsolatedTransaction[]>(this.baseUrl, transactions)
             .subscribe({
-                next: (transaction) => {
+                next: (transactions) => {
                     if (needsRefresh) {
-                        this.selectedStartDate.set(new Date(transaction.date));
-                        this.selectedEndDate.set(new Date(transaction.date));
-                    } else {
-                        this.newlyCreatedTransactionId.next(
-                            transaction.transactionId
+                        this.selectedStartDate.set(
+                            new Date(transactions[0].date)
                         );
+                        this.selectedEndDate.set(
+                            new Date(transactions[0].date)
+                        );
+                    } else {
+                        this.newlyCreatedTransactions.next(transactions);
                     }
                 },
                 error: (error) => {
@@ -127,48 +129,59 @@ export class TransactionService {
             });
     }
 
-    updateTransaction(
-        transaction: Transaction,
+    updateTransactions(
+        transactions: Transaction[],
         budgetCategoryName?: string,
         needsRefresh = true
     ) {
-        this.http.put<string>(this.baseUrl, transaction).subscribe({
-            next: () => {
-                if (needsRefresh) {
-                    const prevTransaction = this.transactions
-                        .value()
-                        ?.find(
-                            (t) => t.transactionId === transaction.transactionId
-                        );
+        this.http
+            .put<IsolatedTransaction[]>(this.baseUrl, transactions)
+            .subscribe({
+                next: (newCreatedTrxs) => {
+                    if (needsRefresh) {
+                        const prevTransaction = this.transactions
+                            .value()
+                            ?.find(
+                                (t) =>
+                                    t.transactionId ===
+                                    transactions[0].transactionId
+                            );
+                        if (
+                            !prevTransaction ||
+                            new Date(transactions[0].date).getMonth() !==
+                                new Date(prevTransaction!.date).getMonth()
+                        ) {
+                            this.getTransactionsBetweenDates(
+                                new Date(transactions[0].date),
+                                new Date(transactions[0].date)
+                            );
+                        } else {
+                            this.transactions.update((trxs) =>
+                                trxs?.map((t) => {
+                                    const foundTrx = transactions.find(
+                                        (updatedTrx) =>
+                                            t.transactionId ===
+                                            updatedTrx.transactionId
+                                    );
 
-                    if (
-                        !prevTransaction ||
-                        new Date(transaction.date).getMonth() !==
-                            new Date(prevTransaction!.date).getMonth()
-                    ) {
-                        this.getTransactionsBetweenDates(
-                            new Date(transaction.date),
-                            new Date(transaction.date)
-                        );
+                                    return foundTrx
+                                        ? {
+                                              ...foundTrx,
+                                              budgetCategoryName:
+                                                  budgetCategoryName!
+                                          }
+                                        : t;
+                                })
+                            );
+                        }
                     } else {
-                        this.transactions.update((transactions) =>
-                            transactions?.map((t) =>
-                                t.transactionId === transaction.transactionId
-                                    ? {
-                                          ...transaction,
-                                          budgetCategoryName:
-                                              budgetCategoryName!
-                                      }
-                                    : t
-                            )
-                        );
+                        this.newlyCreatedTransactions.next(newCreatedTrxs);
                     }
+                },
+                error: (error) => {
+                    console.error(error);
                 }
-            },
-            error: (error) => {
-                console.error(error);
-            }
-        });
+            });
     }
 
     clearSelectedTransactionData() {

@@ -1,0 +1,75 @@
+<h2
+    class="line-item-selection"
+    mat-dialog-title
+>
+    <button
+        class="cancel-button"
+        mat-flat-button
+        [disableRipple]="true"
+        type="button"
+        (click)="closeModal(true)"
+    >
+        Cancel
+    </button>
+    Select Budget Item(s)
+    <button
+        mat-flat-button
+        [disableRipple]="true"
+        class="submit-button"
+        color="primary"
+        style="color: white"
+        type="submit"
+        (click)="closeModal()"
+        [disabled]="lineItems()!.value!.length === 0"
+    >
+        Done
+    </button>
+</h2>
+<main
+    class="main-content"
+    (scroll)="handleScrollDismiss($event)"
+>
+    @for (category of budgetCategoryData(); track category.budgetCategoryId) {
+        <section
+            style="font-weight: bold"
+            class="option-group"
+        >
+            <span class="option-group-label">
+                <h3>
+                    {{ category.budgetCategoryName }}
+                </h3>
+                <h2>Remaining</h2>
+            </span>
+            @for (
+                lineItem of category.lineItems;
+                let i = $index;
+                track lineItem.lineItemId
+            ) {
+                <div (click)="updateSelectedLineItems(lineItem)">
+                    <span class="option-label">
+                        <span
+                            style="
+                                display: flex;
+                                align-items: center;
+                                gap: 0.4rem;
+                            "
+                        >
+                            <mat-checkbox
+                                [checked]="isLineItemSelected(lineItem)"
+                                color="primary"
+                                style="scale: 1.2"
+                            />
+                            <h1>{{ lineItem.lineItemName }}</h1>
+                        </span>
+                        <p>
+                            {{ lineItem.remainingAmount | currency }}
+                        </p>
+                    </span>
+                    @if (i !== category.lineItems.length - 1) {
+                        <mat-divider />
+                    }
+                </div>
+            }
+        </section>
+    }
+</main>

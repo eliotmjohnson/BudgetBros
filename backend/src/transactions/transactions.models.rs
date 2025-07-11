@@ -71,12 +71,14 @@ pub struct NewTransaction {
     pub date: String,
     pub line_item_id: String,
     pub deleted: bool,
+    pub split_transaction_id: Option<String>,
     pub is_income_transaction: bool,
 }
 
-#[derive(Serialize, Deserialize, FromRow, Debug)]
+#[derive(Serialize, Deserialize, FromRow, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct UpdatedTransaction {
+    pub user_id: String,
     pub transaction_id: String,
     pub title: String,
     pub merchant: Option<String>,
@@ -85,5 +87,6 @@ pub struct UpdatedTransaction {
     pub date: DateTime<Local>,
     pub line_item_id: Option<String>,
     pub deleted: bool,
+    pub split_transaction_id: Option<String>,
     pub is_income_transaction: bool,
 }

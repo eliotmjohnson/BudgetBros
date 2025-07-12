@@ -14,7 +14,7 @@ FROM debian:bookworm-slim AS final
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-    libssl3 && \
+    libssl3 ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
 ARG UID=10001

@@ -1,4 +1,4 @@
-FROM --platform=${BUILDPLATFORM} rust:latest AS build
+FROM rust:latest AS build
 
 WORKDIR /app
 
@@ -10,7 +10,7 @@ COPY . .
 RUN cargo build --locked --release && \
     cp ./target/release/budget-bros-backend /bin/server
 
-FROM --platform=${TARGETARCH} debian:bookworm-slim AS final
+FROM debian:bookworm-slim AS final
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \

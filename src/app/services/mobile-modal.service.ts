@@ -34,7 +34,17 @@ export class MobileModalService {
         this.isMobileBudgetStarterModalOpen.set(false);
     }
 
+    isWebView() {
+        const ua = navigator.userAgent;
+        const isIOS = /iPad|iPhone|iPod/.test(ua);
+
+        return isIOS && !ua.includes('Safari');
+    }
+
     isStandalone() {
-        return window.matchMedia('(display-mode: standalone)').matches;
+        return (
+            this.isWebView() ||
+            window.matchMedia('(display-mode: standalone)').matches
+        );
     }
 }

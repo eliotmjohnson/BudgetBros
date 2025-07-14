@@ -60,6 +60,10 @@ export class AppComponent implements OnInit {
                     }
                 }
             });
+
+        if (this.mobileModalService.isWebView()) {
+            document.documentElement.classList.add('is-webview');
+        }
     }
 
     closeAllModals() {

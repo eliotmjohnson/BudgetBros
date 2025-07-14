@@ -95,6 +95,35 @@ body {
     }
 }
 
+// Global WebView Styles
+.is-webview {
+    height: 100vh !important;
+
+    body {
+        height: 100vh !important;
+    }
+
+    .bb-main-overlay {
+        height: 100vh !important;
+    }
+
+    .budget-dashboard-wrapper {
+        .budgets {
+            padding-bottom: 20vh !important;
+        }
+    }
+
+    .card-flip {
+        .card {
+            translate: 0 0 !important;
+        }
+
+        .card.flipped {
+            translate: 0 -6rem !important;
+        }
+    }
+}
+
 @media (max-width: 1145px) and (display-mode: standalone) {
     html,
     body {

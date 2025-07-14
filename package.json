@@ -9,7 +9,8 @@
         "watch": "ng build --watch --configuration development",
         "lint": "ng lint",
         "external": "ng serve --host 0.0.0.0",
-        "build-be": "cd backend && aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 563692880710.dkr.ecr.us-east-2.amazonaws.com && docker build --platform=linux/amd64 -t budget-bros/backend . && docker tag budget-bros/backend:latest 563692880710.dkr.ecr.us-east-2.amazonaws.com/budget-bros/backend:latest && docker push 563692880710.dkr.ecr.us-east-2.amazonaws.com/budget-bros/backend:latest"
+        "be:deploy": "cd backend && aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 563692880710.dkr.ecr.us-east-2.amazonaws.com && docker build --platform=linux/amd64 -t budget-bros/backend . && docker tag budget-bros/backend:latest 563692880710.dkr.ecr.us-east-2.amazonaws.com/budget-bros/backend:latest && docker push 563692880710.dkr.ecr.us-east-2.amazonaws.com/budget-bros/backend:latest",
+        "ios:deploy": "npm run build && npx cap sync && npx cap open ios"
     },
     "private": true,
     "dependencies": {
@@ -23,6 +24,8 @@
         "@angular/platform-browser": "^19.0.0",
         "@angular/platform-browser-dynamic": "^19.0.0",
         "@angular/router": "^19.0.0",
+        "@capacitor/core": "^7.4.2",
+        "@capacitor/ios": "^7.4.2",
         "lodash": "^4.17.21",
         "rxjs": "~7.8.0",
         "tslib": "^2.3.0",
@@ -33,6 +36,7 @@
         "@angular-devkit/build-angular": "^19.0.0",
         "@angular/cli": "^19.0.0",
         "@angular/compiler-cli": "^19.0.0",
+        "@capacitor/cli": "^7.4.2",
         "@types/lodash": "^4.17.11",
         "angular-eslint": "18.3.0",
         "eslint": "^9.9.0",

@@ -62,6 +62,10 @@
         .card {
             translate: 0 -6vh;
         }
+
+        .card.flipped {
+            translate: 0 calc(-6rem + -6vh);
+        }
     }
 }
 
@@ -69,6 +73,10 @@
     .card-flip {
         .card {
             translate: 0 0;
+        }
+
+        .card.flipped {
+            translate: 0 -6rem;
         }
     }
 }

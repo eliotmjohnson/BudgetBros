@@ -31,7 +31,7 @@
         </span>
         @if (isCalMenuOpened) {
             <Card
-                (document:click)="closeCalendarSelector($event)"
+                (window:click)="closeCalendarSelector($event)"
                 class="calendar-selector {{
                     isCalendarClosing && 'close-calendar'
                 }}"

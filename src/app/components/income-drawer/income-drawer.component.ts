@@ -75,7 +75,7 @@ export class IncomeDrawerComponent implements AfterViewInit {
         if (!this.isDrawerOpen) {
             if (needsRefresh) this.setBudgetInputValues();
             this.closeListener = this.renderer.listen(
-                'document',
+                'window',
                 'mousedown',
                 (e) => {
                     if (
@@ -157,7 +157,7 @@ export class IncomeDrawerComponent implements AfterViewInit {
 
         if (!this.touchmoveListener) {
             this.touchmoveListener = this.renderer.listen(
-                'document',
+                'window',
                 'touchmove',
                 (event: TouchEvent) => {
                     this.isSliding = true;
@@ -177,7 +177,7 @@ export class IncomeDrawerComponent implements AfterViewInit {
 
         if (!this.touchendListener) {
             this.touchendListener = this.renderer.listen(
-                'document',
+                'window',
                 'touchend',
                 () => {
                     if (this.isSliding) {

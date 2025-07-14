@@ -716,6 +716,9 @@ export class TransactionModalComponent implements AfterViewInit, OnInit {
 
     openMobileLineItemModal(e: TouchEvent) {
         e.preventDefault();
+        document.querySelectorAll('input').forEach((input) => {
+            input.blur();
+        });
         this.isMobileLineItemModalOpen.set(true);
     }
 

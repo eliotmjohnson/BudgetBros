@@ -99,7 +99,7 @@ pub async fn add_transactions(state: Data<AppState>, new_transactions: Vec<NewTr
         "WITH inserted_transaction AS (
             INSERT INTO transactions 
             (user_id, title, merchant, amount, notes, date, line_item_id, deleted, split_transaction_id, is_income_transaction) 
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+            VALUES ($1, $2, $3, $4, $5, $6::timestamptz, $7, $8, $9, $10)
             RETURNING *
         )
         SELECT 

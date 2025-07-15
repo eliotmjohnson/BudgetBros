@@ -1,9 +1,7 @@
 CREATE TABLE settings (
     id VARCHAR(100) PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id varchar(100) NOT NULL,
-    settings_json TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    settings_json TEXT NOT NULL
 );
 
 ALTER TABLE settings

@@ -751,11 +751,12 @@ export class TransactionModalComponent implements AfterViewInit, OnInit {
         this.updateSplitTransactionValidators();
         this.calculateSplitTransactions();
 
+        const newTransactionsControl = this.form.controls.transactions;
         if (this.form.controls.transactions.value.length > 1) {
-            transactions.enable();
+            newTransactionsControl.enable();
         } else {
             this.calculatedSplitTransactions.set(null);
-            transactions.disable();
+            newTransactionsControl.disable();
         }
 
         this.isMobileLineItemModalOpen.set(false);

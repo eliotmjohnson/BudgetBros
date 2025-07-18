@@ -1,4 +1,4 @@
-export const BASE_BE_URL = 'https://buuuifabjt.us-east-2.awsapprunner.com';
+export const BASE_BE_URL = 'https://i27tu8dmmh.us-east-2.awsapprunner.com';
 export const BE_API_URL = `${BASE_BE_URL}/api`;
 
 export const UNPROTECTED_ROUTES = [

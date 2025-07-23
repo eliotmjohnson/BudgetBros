@@ -15,7 +15,6 @@
     z-index: 999;
     overflow: hidden;
     transition: transform 0.3s;
-    will-change: translate, transform;
 }
 
 :host(.sheet-modal) {

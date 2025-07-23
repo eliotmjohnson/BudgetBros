@@ -260,7 +260,7 @@ export class TransactionModalComponent implements AfterViewInit, OnInit {
                     valueLength
                 );
             }
-            setTimeout(() => (this.isMobileModalFocused = true), 400);
+            setTimeout(() => (this.isMobileModalFocused = true), 450);
         }
 
         this.form.controls.totalAmount.setValue(

@@ -18,6 +18,7 @@
     transform: scale(0.9)
         translateY(calc(-1.25rem + min(3.5vh, env(safe-area-inset-top))));
     border-radius: 0.5rem;
+    transition-delay: 0.05s;
 }
 
 :host(.slide-body) {

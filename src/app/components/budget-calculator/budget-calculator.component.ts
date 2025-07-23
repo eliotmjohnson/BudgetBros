@@ -29,6 +29,9 @@ export class BudgetCalculatorComponent {
     constructor(private budgetService: BudgetService) {}
 
     calculateBudget(budget: Budget) {
+        if (budget.budgetCategories.length === 0) {
+            return 0;
+        }
         const incomeAmount =
             (budget.paycheckAmount ?? 0) + (budget.additionalIncomeAmount ?? 0);
         const totalPlannedAmount = budget.budgetCategories.reduce(

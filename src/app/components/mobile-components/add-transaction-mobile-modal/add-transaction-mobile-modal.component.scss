@@ -15,10 +15,12 @@
     z-index: 999;
     overflow: hidden;
     transition: transform 0.3s;
+    will-change: translate, transform;
 }
 
 :host(.sheet-modal) {
-    animation: loadModal 0.65s 0.025s cubic-bezier(0.22, 1, 0.22, 1) forwards;
+    animation: loadModal 0.65s cubic-bezier(0.22, 1, 0.22, 1) forwards;
+    animation-delay: 0.025s;
 
     @keyframes loadModal {
         100% {

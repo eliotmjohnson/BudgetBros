@@ -1,0 +1,25 @@
+@use "bb-core";
+
+:host {
+    position: sticky;
+    right: 0;
+    display: none;
+    flex-shrink: 0;
+    width: 5rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.delete-icon {
+    font-size: 1.5rem;
+    height: 1.5rem;
+    width: 1.5rem;
+    translate: 0.5rem;
+    color: bb-core.$bb-error-main;
+}
+
+@media (max-width: 1145px) {
+    :host {
+        display: flex;
+    }
+}

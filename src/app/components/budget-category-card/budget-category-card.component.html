@@ -1,127 +1,142 @@
-<Card
-    style="position: relative"
-    paddingBottom="0.5rem"
-    paddingLeft="{{ !mobileModalService.isMobileDevice() ? '1.5rem' : '1rem' }}"
-    paddingRight="{{
-        !mobileModalService.isMobileDevice() ? '1.5rem' : '1rem'
-    }}"
->
-    <ng-content></ng-content>
-    <span class="header">
-        <form
-            class="title-form"
-            (submit)="updateCategoryName($event)"
-        >
-            <span>
-                <input
-                    #titleInput
-                    class="category-name-input {{
-                        isTitleNameHovered ? 'category-name-input-hover' : ''
-                    }}"
-                    type="text"
-                    [defaultValue]="name"
-                    (focus)="enableEditMode()"
-                    (mouseup)="$event.preventDefault()"
-                    (mouseover)="addRemoveHoverClass()"
-                    (mouseout)="addRemoveHoverClass(true)"
-                    (blur)="updateCategoryName()"
-                />
-                @if (budgetCategoryId && isEditingName) {
-                    <mat-icon
-                        class="delete-icon"
-                        (mousedown)="deleteBudgetCategory()"
-                        fontIcon="delete"
-                    ></mat-icon>
-                }
-            </span>
-        </form>
-        @if (
-            mobileModalService.showPlannedAmounts() ||
-            (!mobileModalService.isMobileDevice() &&
-                !mobileModalService.isMidsizeDevice())
-        ) {
-            <p class="planned">Planned</p>
-        }
-        @if (
-            !mobileModalService.showPlannedAmounts() ||
-            (!mobileModalService.isMobileDevice() &&
-                !mobileModalService.isMidsizeDevice())
-        ) {
-            <p>Remaining</p>
-        }
-        <mat-icon
-            [matMenuTriggerFor]="menu"
-            class="planned-options-button"
-        >
-            keyboard_double_arrow_down
-        </mat-icon>
-        <mat-menu
-            #menu="matMenu"
-            xPosition="after"
-        >
-            <button
-                mat-menu-item
-                [class.planned-menu-selected]="
-                    mobileModalService.showPlannedAmounts()
-                "
-                (click)="setPlannedAmountsWeb(true)"
-            >
-                Planned
-            </button>
-            <button
-                mat-menu-item
-                [class.planned-menu-selected]="
-                    !mobileModalService.showPlannedAmounts()
-                "
-                (click)="setPlannedAmountsWeb(false)"
-            >
-                Remaining
-            </button>
-        </mat-menu>
-    </span>
-    <section
-        class="budget-items-wrapper"
-        cdkDropList
-        (cdkDropListDropped)="handleDrop($event)"
+<div style="flex-shrink: 0; z-index: 1; width: 100%">
+    <Card
+        style="position: relative"
+        paddingBottom="0.5rem"
+        paddingLeft="{{
+            !mobileModalService.isMobileDevice() ? '1.5rem' : '1rem'
+        }}"
+        paddingRight="{{
+            !mobileModalService.isMobileDevice() ? '1.5rem' : '1rem'
+        }}"
     >
-        <BudgetCategoryItem
-            @deleteItemAnimation
-            [@.disabled]="!isDeletingLineItem()"
-            class="budget-item"
-            *ngFor="let item of lineItems"
-            [itemId]="item.lineItemId"
-            [itemTitle]="item.name"
-            [startingBalance]="item.startingBalance"
-            [plannedAmount]="item.plannedAmount"
-            [fund]="item.isFund"
-            [fundId]="item.fundId"
-            [transactions]="item.transactions"
-            (undoCreateNewLineItem)="removeNewLineItem()"
-            (saveNewLineItem)="saveNewLineItem($event)"
-            (updateNewLineItemId)="updateNewLineItemId($event)"
-            (deleteSavedLineItem)="deleteSavedLineItem($event)"
-            cdkDropListLockAxis="y"
-            cdkDragBoundary=".budget-items-wrapper"
-            [cdkDragDisabled]="isAddingLineItem"
-            [cdkDragStartDelay]="mobileModalService.isMobileDevice() ? 250 : 0"
-            cdkDrag
-        >
-            @if (!mobileModalService.isMobileDevice()) {
-                <mat-icon
-                    class="drag-handle"
-                    fontIcon="drag_indicator"
-                    cdkDragHandle
-                />
-            }
-        </BudgetCategoryItem>
-        <span class="add-item-button">
-            <button
-                (click)="addNewLineItemPlaceholder($event)"
-                mat-button
-                color="primary"
+        <ng-content></ng-content>
+        <span class="header">
+            <form
+                class="title-form"
+                (submit)="updateCategoryName($event)"
             >
-                Add Item
-            </button>
+                <span>
+                    <input
+                        #titleInput
+                        class="category-name-input {{
+                            isTitleNameHovered
+                                ? 'category-name-input-hover'
+                                : ''
+                        }}"
+                        type="text"
+                        spellcheck="false"
+                        [defaultValue]="name"
+                        (focus)="enableEditMode()"
+                        (mouseup)="$event.preventDefault()"
+                        (mouseover)="addRemoveHoverClass()"
+                        (mouseout)="addRemoveHoverClass(true)"
+                        (blur)="updateCategoryName()"
+                    />
+                    @if (budgetCategoryId && isEditingName) {
+                        <mat-icon
+                            class="delete-icon"
+                            (mousedown)="deleteBudgetCategory()"
+                            fontIcon="delete"
+                        ></mat-icon>
+                    }
+                </span>
+            </form>
+            @if (
+                mobileModalService.showPlannedAmounts() ||
+                (!mobileModalService.isMobileDevice() &&
+                    !mobileModalService.isMidsizeDevice())
+            ) {
+                <p class="planned">Planned</p>
+            }
+            @if (
+                !mobileModalService.showPlannedAmounts() ||
+                (!mobileModalService.isMobileDevice() &&
+                    !mobileModalService.isMidsizeDevice())
+            ) {
+                <p>Remaining</p>
+            }
+            <mat-icon
+                [matMenuTriggerFor]="menu"
+                class="planned-options-button"
+            >
+                keyboard_double_arrow_down
+            </mat-icon>
+            <mat-menu
+                #menu="matMenu"
+                xPosition="after"
+            >
+                <button
+                    mat-menu-item
+                    [class.planned-menu-selected]="
+                        mobileModalService.showPlannedAmounts()
+                    "
+                    (click)="setPlannedAmountsWeb(true)"
+                >
+                    Planned
+                </button>
+                <button
+                    mat-menu-item
+                    [class.planned-menu-selected]="
+                        !mobileModalService.showPlannedAmounts()
+                    "
+                    (click)="setPlannedAmountsWeb(false)"
+                >
+                    Remaining
+                </button>
+            </mat-menu>
         </span>
-    </section>
-</Card>
+        <section
+            class="budget-items-wrapper"
+            cdkDropList
+            (cdkDropListDropped)="handleDrop($event)"
+        >
+            <BudgetCategoryItem
+                @deleteItemAnimation
+                [@.disabled]="!isDeletingLineItem()"
+                class="budget-item"
+                *ngFor="let item of lineItems"
+                [itemId]="item.lineItemId"
+                [itemTitle]="item.name"
+                [startingBalance]="item.startingBalance"
+                [plannedAmount]="item.plannedAmount"
+                [fund]="item.isFund"
+                [fundId]="item.fundId"
+                [transactions]="item.transactions"
+                (undoCreateNewLineItem)="removeNewLineItem()"
+                (saveNewLineItem)="saveNewLineItem($event)"
+                (updateNewLineItemId)="updateNewLineItemId($event)"
+                (deleteSavedLineItem)="deleteSavedLineItem($event)"
+                cdkDropListLockAxis="y"
+                cdkDragBoundary=".budget-items-wrapper"
+                [cdkDragDisabled]="isAddingLineItem"
+                [cdkDragStartDelay]="
+                    mobileModalService.isMobileDevice() ? 250 : 0
+                "
+                cdkDrag
+            >
+                @if (!mobileModalService.isMobileDevice()) {
+                    <mat-icon
+                        class="drag-handle"
+                        fontIcon="drag_indicator"
+                        cdkDragHandle
+                    />
+                }
+            </BudgetCategoryItem>
+            <span class="add-item-button">
+                <button
+                    (click)="addNewLineItemPlaceholder($event)"
+                    mat-button
+                    color="primary"
+                >
+                    Add Item
+                </button>
+            </span>
+        </section>
+    </Card>
+</div>
+@if (budgetCategoryId) {
+    <CategoryCardDeleteButton
+        [categoryContainer]="hostElement.nativeElement"
+        (onBudgetCategoryDelete)="deleteBudgetCategory()"
+    />
+}

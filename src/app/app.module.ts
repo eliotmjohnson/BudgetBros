@@ -70,6 +70,7 @@ import { FeatureModalComponent } from './components/mobile-components/feature-mo
 import { BudgetStarterComponent } from './components/budget-starter/budget-starter.component';
 import { ModalDismissDirective } from './directives/modal-dismiss.directive';
 import { LineItemSelectorModalComponent } from './components/mobile-components/line-item-selector-modal/line-item-selector-modal.component';
+import { CategoryCardDeleteButtonComponent } from './components/mobile-components/category-card-delete-button/category-card-delete-button.component';
 
 @NgModule({
     declarations: [
@@ -109,7 +110,8 @@ import { LineItemSelectorModalComponent } from './components/mobile-components/l
         FeatureModalComponent,
         BudgetStarterComponent,
         ModalDismissDirective,
-        LineItemSelectorModalComponent
+        LineItemSelectorModalComponent,
+        CategoryCardDeleteButtonComponent
     ],
     bootstrap: [AppComponent],
     imports: [

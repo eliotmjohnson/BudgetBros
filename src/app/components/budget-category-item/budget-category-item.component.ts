@@ -142,6 +142,10 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
         }
     });
 
+    updateLineItemTitleListener = effect(() => {
+        this.lineItemInputValue.setValue(this.itemTitle());
+    });
+
     constructor(
         public transactionService: TransactionService,
         private lineItemService: LineItemService,
@@ -150,10 +154,7 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
     ) {}
 
     ngOnInit(): void {
-        const itemTitle = this.itemTitle();
-        this.lineItemInputValue.setValue(itemTitle);
-
-        this.isNewLineItem = itemTitle === 'Add Title' && !this.itemId();
+        this.isNewLineItem = this.itemTitle() === 'Add Title' && !this.itemId();
 
         if (this.isNewLineItem) {
             this.enableEditMode();
@@ -164,6 +165,10 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
         if (this.isNewLineItem && this.lineItemTitleInput) {
             this.lineItemTitleInput.nativeElement.focus();
             this.lineItemTitleInput.nativeElement.select();
+
+            if (this.mobileModalService.isMobileDevice()) {
+                this.isNewLineItem = false;
+            }
         }
     }
 
@@ -215,6 +220,7 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
             transactions: this.transactions(),
             startingBalance: this.startingBalance()
         };
+        console.log(selectedLineItem);
 
         this.transactionService.currentSelectedLineItem.set(selectedLineItem);
     }
@@ -293,7 +299,7 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
         };
 
         this.saveNewLineItem.emit(saveLineItemPayload);
-        this.updateLineItemPlannedAmountState(saveLineItemPayload);
+        this.updateLineItemState(saveLineItemPayload);
         this.isEditModeEnabled.set(false);
 
         this.lineItemService.newlyAddedLineItemId
@@ -319,7 +325,7 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
         };
 
         this.lineItemService.updateLineItem(updateLineItemPayload);
-        this.updateLineItemPlannedAmountState(updateLineItemPayload);
+        this.updateLineItemState(updateLineItemPayload);
         this.isEditModeEnabled.set(false);
 
         if (!this.mobileModalService.isMobileDevice()) {
@@ -332,14 +338,17 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
         this.deleteSavedLineItem.emit(this.itemId());
     }
 
-    updateLineItemPlannedAmountState(
-        payload: UpdateLineItemPayload | SaveLineItemPayload
-    ) {
+    updateLineItemState(payload: UpdateLineItemPayload | SaveLineItemPayload) {
         const fetchedLineItem = this.lineItemService.fetchLineItem(
             this.itemId()
         );
         if (fetchedLineItem) {
             fetchedLineItem.plannedAmount = payload.plannedAmount;
+            fetchedLineItem.name = payload.name;
+
+            if ('startingBalance' in payload) {
+                fetchedLineItem.startingBalance = payload.startingBalance;
+            }
         }
     }
 

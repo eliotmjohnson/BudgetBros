@@ -204,6 +204,15 @@
     .budget-item-wrapper {
         .title-wrapper {
             width: 80%;
+
+            .line-item-title {
+                &:hover {
+                    outline: none;
+                }
+                &:focus {
+                    outline: none;
+                }
+            }
         }
 
         .planned-amount {

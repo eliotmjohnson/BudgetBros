@@ -31,6 +31,7 @@ import { TransactionService } from 'src/app/services/transaction.service';
     styleUrls: ['./budget-category-card.component.scss'],
     animations: [deleteItemAnimation],
     host: {
+        '(touchend)': 'handleCategoryScrollEnd()',
         '[class.add-animation]': 'isNewBudgetCategory',
         '[class.deleting-category]': 'isDeletingBudgetCategory',
         '[style.min-height]': 'hostHeight',
@@ -62,7 +63,7 @@ export class BudgetCategoryCardComponent implements OnInit, AfterViewChecked {
         private lineItemService: LineItemService,
         private budgetService: BudgetService,
         private budgetCategoryService: BudgetCategoryService,
-        private hostElement: ElementRef<HTMLElement>,
+        public hostElement: ElementRef<HTMLDivElement>,
         public mobileModalService: MobileModalService,
         private cdr: ChangeDetectorRef
     ) {}
@@ -344,5 +345,31 @@ export class BudgetCategoryCardComponent implements OnInit, AfterViewChecked {
 
     setPlannedAmountsWeb(showPlannedAmounts: boolean) {
         this.mobileModalService.showPlannedAmounts.set(showPlannedAmounts);
+    }
+
+    handleCategoryScrollEnd() {
+        let lastScrollTop = this.hostElement.nativeElement.scrollLeft;
+
+        const checkScroll = () => {
+            const currentScrollLeft = this.hostElement.nativeElement.scrollLeft;
+            if (currentScrollLeft !== lastScrollTop) {
+                lastScrollTop = currentScrollLeft;
+                requestAnimationFrame(checkScroll);
+            } else {
+                if (this.hostElement.nativeElement.scrollLeft < 30) {
+                    this.hostElement.nativeElement.scrollTo({
+                        left: 0,
+                        behavior: 'smooth'
+                    });
+                } else {
+                    this.hostElement.nativeElement.scrollTo({
+                        left: 80,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+        };
+
+        requestAnimationFrame(checkScroll);
     }
 }

@@ -33,9 +33,16 @@
             <section class="title-section">
                 <span class="available">Available</span>
                 <span class="top">
-                    <h1>
-                        {{ transactionService.currentSelectedLineItem()?.name }}
-                    </h1>
+                    <input
+                        #lineItemTitleInput
+                        class="line-item-title-input"
+                        type="text"
+                        spellcheck="false"
+                        (blur)="updateLineItemName(lineItemTitleInput.value)"
+                        [value]="
+                            transactionService.currentSelectedLineItem()?.name
+                        "
+                    />
                     <h2
                         [class.unhappy-remaining]="
                             transactionService.currentSelectedLineItem()!

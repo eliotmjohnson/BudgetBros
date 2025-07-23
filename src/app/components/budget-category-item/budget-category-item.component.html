@@ -24,10 +24,16 @@
                 />
                 <input
                     #lineItemTitleInput
+                    type="text"
+                    spellcheck="false"
                     class="line-item-title"
                     [class.edit-enabled-title]="editConfig()"
                     [formControl]="lineItemInputValue"
                     (click)="enableEditMode(lineItemTitleInput)"
+                    (blur)="
+                        mobileModalService.isMobileDevice() &&
+                            createOrUpdateLineItem(false)
+                    "
                     [value]="itemTitle()"
                 />
             </span>
@@ -79,7 +85,7 @@
                     </button>
                 </mat-menu>
             }
-            @if (editConfig()) {
+            @if (editConfig() && !mobileModalService.isMobileDevice()) {
                 <span
                     (document:keydown.enter)="createOrUpdateLineItem(true)"
                     (document:click)="

@@ -1,8 +1,15 @@
 @use "bb-core";
 
 :host {
+    width: 100%;
+    position: relative;
     z-index: 0;
+    display: flex;
+    overflow-x: scroll;
+    overscroll-behavior: none;
     margin-bottom: 1rem;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
 .header {
@@ -204,7 +211,7 @@
     }
 
     .delete-icon {
-        right: -1.8rem;
+        display: none;
     }
 
     .cdk-drag-preview {

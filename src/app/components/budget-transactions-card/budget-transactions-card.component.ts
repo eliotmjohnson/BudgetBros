@@ -19,6 +19,8 @@ import {
     TransactionModalComponent,
     TransactionModalData
 } from '../transaction-modal/transaction-modal.component';
+import { LineItemService } from 'src/app/services/line-item.service';
+import { UpdateLineItemPayload } from 'src/app/models/lineItem';
 
 @Component({
     selector: 'BudgetTransactionsCard',
@@ -68,7 +70,8 @@ export class BudgetTransactionsCardComponent {
         public transactionService: TransactionService,
         public mobileModalService: MobileModalService,
         private dialogService: MatDialog,
-        public cdr: ChangeDetectorRef
+        public cdr: ChangeDetectorRef,
+        private lineItemService: LineItemService
     ) {}
 
     closeBudgetTransactionsModal() {
@@ -104,5 +107,30 @@ export class BudgetTransactionsCardComponent {
 
     updateViewAnimation() {
         this.cdr.detectChanges();
+    }
+
+    updateLineItemName(newTitle: string) {
+        const updateLineItemPayload: UpdateLineItemPayload = {
+            id:
+                this.transactionService.currentSelectedLineItem()?.lineItemId ??
+                '',
+            name: newTitle,
+            plannedAmount:
+                this.transactionService.currentSelectedLineItem()
+                    ?.plannedAmount ?? 0
+        };
+
+        this.lineItemService.updateLineItem(updateLineItemPayload);
+        const fetchedLineItem = this.lineItemService.fetchLineItem(
+            this.transactionService.currentSelectedLineItem()?.lineItemId ?? ''
+        );
+        if (fetchedLineItem) {
+            fetchedLineItem.plannedAmount = updateLineItemPayload.plannedAmount;
+            fetchedLineItem.name = updateLineItemPayload.name;
+        }
+        this.transactionService.currentSelectedLineItem.update((lineItem) => ({
+            ...lineItem!,
+            name: updateLineItemPayload.name
+        }));
     }
 }

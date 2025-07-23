@@ -115,8 +115,8 @@
             </main>
         } @else {
             <BudgetCategoryCard
-                class="budget-card"
                 *ngFor="let budgetCategory of budget()?.budgetCategories"
+                class="budget-card"
                 [budgetCategoryId]="budgetCategory.budgetCategoryId"
                 [lineItems]="budgetCategory.lineItems"
                 [name]="budgetCategory.name"

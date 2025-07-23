@@ -11,6 +11,7 @@
         border-radius 0.45s cubic-bezier(0.25, 1, 0.25, 1),
         translate 0.35s;
     overflow: hidden;
+    will-change: translate, transform, border-radius;
 }
 
 :host(.modal-present) {

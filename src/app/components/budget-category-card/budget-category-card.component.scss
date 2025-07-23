@@ -6,6 +6,7 @@
     z-index: 0;
     display: flex;
     overflow-x: scroll;
+    flex-shrink: 0;
     overscroll-behavior: none;
     margin-bottom: 1rem;
     -ms-overflow-style: none;

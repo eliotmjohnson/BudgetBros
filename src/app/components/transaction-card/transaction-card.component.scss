@@ -78,3 +78,13 @@ mat-card-header {
         }
     }
 }
+
+@media (max-width: 1145px) {
+    .actions-wrapper {
+        .date-wrapper {
+            button {
+                display: none;
+            }
+        }
+    }
+}

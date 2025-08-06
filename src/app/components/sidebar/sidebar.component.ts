@@ -11,10 +11,10 @@ export class SidebarComponent implements OnInit {
     currentTab = 'Budget';
     tabs = [
         { description: 'Budget', iconName: 'savings' },
-        { description: 'Transactions', iconName: 'paid' },
-        { description: 'Goals', iconName: 'verified' },
-        { description: 'Accounts', iconName: 'group' },
-        { description: 'Settings', iconName: 'settings' }
+        { description: 'Transactions', iconName: 'paid' }
+        // { description: 'Goals', iconName: 'verified' },
+        // { description: 'Accounts', iconName: 'group' },
+        // { description: 'Settings', iconName: 'settings' }
     ];
 
     constructor(private router: Router) {}

@@ -29,7 +29,7 @@ export class BudgetCalculatorComponent {
     constructor(private budgetService: BudgetService) {}
 
     calculateBudget(budget: Budget) {
-        if (budget.budgetCategories.length === 0) {
+        if (budget.budgetCategories.length === 0 || !budget.budgetId) {
             return 0;
         }
         const incomeAmount =

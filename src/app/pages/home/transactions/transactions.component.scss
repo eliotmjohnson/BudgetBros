@@ -33,6 +33,11 @@
             display: flex;
             width: 100%;
             justify-content: space-between;
+
+            .search-filters-container {
+                display: flex;
+                gap: 1rem;
+            }
         }
 
         .filters-container {
@@ -52,6 +57,35 @@
 
         &::-webkit-scrollbar {
             display: none;
+        }
+    }
+}
+
+@media (max-width: 1145px) {
+    .transactions-container {
+        .upper-section-container {
+            .title-wrapper {
+                justify-content: space-between;
+
+                .title {
+                    font-size: 1.8rem;
+                }
+
+                .plus-button {
+                    display: none;
+                }
+            }
+
+            .header-container {
+                flex-direction: column;
+
+                .search-filters-container {
+                    margin-top: 2rem;
+                    flex-direction: column-reverse;
+                    align-items: center;
+                    gap: 0.5rem;
+                }
+            }
         }
     }
 }

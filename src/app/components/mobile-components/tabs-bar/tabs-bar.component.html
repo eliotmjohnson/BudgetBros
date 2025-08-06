@@ -24,6 +24,7 @@
         <p [class.tab-active]="trxTab.isActive">Transactions</p>
     </button>
     <button
+        style="display: none"
         #settingsTab="routerLinkActive"
         class="tab-button"
         [routerLink]="['/home/settings']"

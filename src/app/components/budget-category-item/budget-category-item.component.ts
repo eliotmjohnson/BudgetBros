@@ -220,7 +220,6 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
             transactions: this.transactions(),
             startingBalance: this.startingBalance()
         };
-        console.log(selectedLineItem);
 
         this.transactionService.currentSelectedLineItem.set(selectedLineItem);
     }
@@ -246,7 +245,8 @@ export class BudgetCategoryItemComponent implements OnInit, AfterViewChecked {
 
         if (!this.isEditModeEnabled()) {
             this.isEditModeEnabled.set(true);
-            this.initialLineItemTitle = this.lineItemInputValue.value ?? '';
+            this.initialLineItemTitle =
+                this.lineItemInputValue.value || 'Add Title';
             this.initialPlannedAmount = this.plannedAmount();
 
             if (this.mobileModalService.isMobileDevice()) {
